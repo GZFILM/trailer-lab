@@ -207,8 +207,9 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 
 /* camera */
 .cam{flex:1;min-height:0;display:grid;grid-template-rows:1fr auto}
-.stagewrap{min-height:0;display:grid;place-items:center;padding:10px;position:relative}
-.stage{position:relative;width:100%;max-height:100%;aspect-ratio:16/9;max-width:100%;background:#0a0a0a;overflow:hidden;border-radius:4px}
+.stagewrap{min-height:0;display:grid;grid-template-rows:1fr auto;gap:8px;padding:10px;position:relative}
+.stagecell{container-type:size;min-height:0;display:grid;place-items:center}
+.stage{position:relative;width:100%;width:min(100cqw,calc(100cqh * 16 / 9));aspect-ratio:16/9;background:#0a0a0a;overflow:hidden;border-radius:4px}
 .stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .stage .lb{position:absolute;left:0;right:0;height:12.8%;background:rgba(0,0,0,.55)}
 .stage .lb.t{top:0;border-bottom:1px solid rgba(240,165,64,.5)}
@@ -220,7 +221,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .stage .recdot{color:var(--rec);font-weight:500}
 .stage .camerr{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;background:#0d0e11}
 .stage .camerr div{max-width:420px;display:flex;flex-direction:column;gap:10px;align-items:center}
-.brief{position:absolute;bottom:12px;inset-inline:12px;display:flex;justify-content:center;pointer-events:none}
+.brief{display:flex;justify-content:center}
 .brief p{margin:0;background:rgba(10,11,13,.82);border:1px solid var(--line2);border-radius:8px;padding:8px 12px;font-size:13px;max-width:560px;pointer-events:auto}
 .brief p b{color:var(--accent)}
 .rotate{position:absolute;top:10px;inset-inline:10px;display:flex;justify-content:center}
@@ -262,6 +263,27 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .pbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .pbar i{display:block;height:100%;width:0;background:var(--accent)}
 .result video{width:100%;aspect-ratio:16/9;max-width:100%;background:#000;border-radius:6px;display:block}
+
+/* shot-type diagrams: storyboard thumbs and camera framing guide */
+.sa{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.sa *{vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.sa .f{fill:rgba(240,165,64,.13);stroke:#f0a540;stroke-width:1.2}
+.sa .d{fill:none;stroke:#4a515b;stroke-width:1}
+.sa .a{fill:none;stroke:#f0a540;stroke-width:1.2}
+.sa .a.dash{stroke-dasharray:3 3}
+.sa .lt{fill:rgba(240,165,64,.28);stroke:none}
+.sa .k{fill:#050506;stroke:#f0a540;stroke-width:1.2}
+.sa .cg{fill:none;stroke:#cfd3d9;stroke-width:1.1}
+.sa.guide .f{fill:rgba(255,255,255,.06);stroke:rgba(255,255,255,.8);stroke-width:2;stroke-dasharray:6 4}
+.sa.guide .d{stroke:rgba(255,255,255,.3);stroke-width:1.2}
+.sa.guide .a{stroke-width:2}
+.sa.guide .lt{fill:rgba(240,165,64,.12)}
+.sa.guide .k{fill:rgba(0,0,0,.25);stroke:rgba(255,255,255,.8);stroke-width:2;stroke-dasharray:6 4}
+.sa.guide .cg{stroke:rgba(255,255,255,.8);stroke-width:1.6}
+.it .th .board{position:absolute;inset:0}
+.it .th .board::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent 45%)}
+#camGuide{position:absolute;inset:0;pointer-events:none}
+.ib.on{border-color:var(--accent);color:var(--accent);background:rgba(240,165,64,.12)}
 
 /* splash */
 .splash{position:fixed;inset:0;z-index:200;background:radial-gradient(60% 45% at 50% 45%,#2a1d0c 0%,#0b0c0e 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;cursor:pointer;transition:opacity .5s}
@@ -410,23 +432,25 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
   <div class="ovbar gut">
     <button class="ib" id="camClose" aria-label="סגור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="t"><span class="eyebrow" id="camEyebrow"></span><b id="camTitle"></b></div>
+    <button class="ib on" id="camGuideBtn" aria-label="קווי מסגור של השוט" aria-pressed="true" title="קווי מסגור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="12" cy="10" r="2.3"/><path d="M7.5 19c.8-3 2.4-4.6 4.5-4.6s3.7 1.6 4.5 4.6"/></svg></button>
     <button class="ib" id="camFlip" aria-label="החלף מצלמה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><path d="M9.5 13.5a2.5 2.5 0 0 0 4.6 1.4M14.5 12.5a2.5 2.5 0 0 0-4.6-1.4"/></svg></button>
   </div>
   <div class="cam">
     <div class="stagewrap">
-      <div class="stage" id="stage">
+      <div class="stagecell"><div class="stage" id="stage">
         <video id="camVideo" playsinline muted autoplay></video>
         <div class="lb t"></div><div class="lb b"></div>
         <div class="thirds"></div>
+        <div id="camGuide"></div>
         <div class="hud"><span id="camTc">00:00:00</span><span id="camState">STBY</span></div>
         <div class="rotate"><span>לצילום קולנועי סובב את הטלפון לרוחב</span></div>
-        <div class="brief"><p id="camHint"></p></div>
         <div class="camerr" id="camErr" hidden><div>
           <b>המצלמה לא זמינה כאן</b>
           <span class="dim" id="camErrMsg"></span>
           <button class="btn pri" id="camImport">ייבוא קליפ מהגלריה</button>
         </div></div>
-      </div>
+      </div></div>
+      <div class="brief"><p id="camHint"></p></div>
     </div>
     <div class="camctl gut">
       <div class="sd"><button class="btn sm ghost" id="camGallery">גלריה</button></div>
@@ -940,6 +964,35 @@ const ART={
   investigation:()=>sky("in","#141210","#221d17","#2e261d")+`<rect x="20" y="30" width="70" height="90" fill="#e9e0cc" transform="rotate(-6 55 75)"/><rect x="104" y="40" width="76" height="60" fill="#d7ccb2" transform="rotate(4 140 70)"/><rect x="40" y="140" width="60" height="80" fill="#efe6d2" transform="rotate(3 70 180)"/><path d="M50 60L140 70L70 180L150 190" stroke="#d32f2f" stroke-width="1.5" fill="none"/><g fill="#d32f2f"><circle cx="50" cy="60" r="3"/><circle cx="140" cy="70" r="3"/><circle cx="70" cy="180" r="3"/><circle cx="150" cy="190" r="3"/></g><circle cx="130" cy="170" r="34" fill="#9fd3ff" fill-opacity=".18" stroke="#111" stroke-width="7"/><path d="M154 194l26 28" stroke="#111" stroke-width="10" stroke-linecap="round"/>`,
   musical:()=>sky("mu","#08060c","#1a0f24","#2a1235")+`<path d="M80 0h40l50 266H30z" fill="#fff4cf" opacity=".22"/><ellipse cx="100" cy="246" rx="70" ry="10" fill="#fff4cf" opacity=".3"/><path d="M0 266v-16h200v16z" fill="#3a0f1a"/>`+fig(100,246,2.2,"sing")+`<g fill="#ffd56b"><circle cx="37" cy="90" r="4"/><circle cx="51" cy="84" r="4"/><circle cx="157" cy="72" r="4"/></g><path d="M41 90V64l14-4v24M161 72V50l8 4" stroke="#ffd56b" stroke-width="2" fill="none"/>`
 };
+/* ============ SHOT-TYPE DIAGRAMS ============ */
+let saN=0;
+const FIG_STAND='<circle cx="0" cy="-46" r="6"/><path d="M-8 -38Q0 -41 8 -38L10 -16 7 -16 6 0H1.5L0 -15-1.5 0H-6L-7 -16-10 -16Z"/>';
+const FIG_RUN='<circle cx="5" cy="-44" r="6"/><path d="M-1 -37 9 -35 7 -22 16 -12 20 -3 15 -1 9 -10 2 -17-3 -7-13 -5-13 -10-7 -11-4 -20-9 -26-14 -19-17 -21-10 -32Z"/>';
+const pers=(x,y,s,cls,run)=>`<g class="${cls||"f"}" transform="translate(${x} ${y}) scale(${s})">${run?FIG_RUN:FIG_STAND}</g>`;
+const camG=(x,y,r)=>`<g class="cg" transform="translate(${x} ${y}) rotate(${r})"><rect x="-8" y="-5" width="11" height="10" rx="1.5"/><path d="M3 -2.5l5 -3v11l-5 -3z"/></g>`;
+const GROUND='<path class="d" d="M0 76H160"/>';
+const SHOT_ART={
+  OPEN:GROUND+'<circle class="d" cx="32" cy="20" r="8"/><path class="d" d="M112 76V18H98"/><path class="lt" d="M98 20L80 76H118Z"/>',
+  ELS:'<path class="d" d="M0 60L28 46 50 56 78 36 104 54 126 44 160 58"/>'+GROUND+pers(80,76,.28),
+  WS:GROUND+pers(80,81,1.25),
+  MS:pers(80,166,3),
+  CU:pers(80,268,5),
+  ECU:'<g class="f"><path d="M30 47q18-16 36 0q-18 13-36 0z"/><path d="M94 47q18-16 36 0q-18 13-36 0z"/></g><g class="a"><circle cx="48" cy="46" r="5"/><circle cx="112" cy="46" r="5"/></g><path class="d" d="M28 31q20-9 40 0M92 31q20-9 40 0M80 52v14"/>',
+  LOW:GROUND+pers(96,82,1.35)+camG(26,80,-38)+'<path class="a dash" d="M34 72L78 30"/>',
+  HIGH:'<path class="d" d="M20 90L56 50H130L160 90"/>'+pers(98,80,.6)+camG(24,12,38)+'<path class="a dash" d="M32 18L90 62"/>',
+  OTS:pers(110,166,3)+'<g class="k"><circle cx="22" cy="34" r="24"/><path d="M-34 92Q-22 58 22 60Q62 62 66 92Z"/></g>',
+  PAN:'<path class="d" d="M0 60L34 48 66 58 98 42 160 56"/>'+GROUND+pers(122,80,.9)+'<path class="a" d="M26 16Q80 4 134 16M127 10l7 6-9 2"/>',
+  POV:'<path class="d" d="M0 0L60 30H100L160 0M0 90L60 60H100L160 90M60 30V60M100 30V60"/><rect class="f" x="72" y="34" width="16" height="26"/>',
+  TRK:GROUND+pers(84,80,1.15,"f",1)+'<path class="d" d="M30 40h18M24 52h20M32 64h14"/><path class="a" d="M44 86H118M110 82l8 4-8 4"/>',
+  "2S":pers(46,166,3)+pers(114,166,3),
+  INS:'<g class="f"><circle cx="54" cy="45" r="18"/><path d="M72 41H130V49H122V58H114V49H106V56H98V49H72Z"/></g><circle class="a" cx="54" cy="45" r="7"/>',
+  ACT:GROUND+pers(80,74,1.15,"f",1)+'<path class="a" d="M40 28l-10-7M38 44H24M42 60l-10 7M120 28l10-7M122 44h14M118 60l10 7"/>',
+  DOLLY:pers(80,268,5)+'<path class="a" d="M8 8l16 10M152 8l-16 10M8 82l16-10M152 82l-16-10"/>',
+  SIL:'<circle class="lt" cx="80" cy="46" r="32"/>'+GROUND+pers(80,82,1.15,"k"),
+  GLM:GROUND+'<rect class="d" x="60" y="12" width="40" height="64"/>'+pers(80,76,1,"k")
+};
+function shotArt(tag,mode){const id="sa"+(saN++);return `<svg class="sa ${mode||"thumb"}" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><clipPath id="${id}"><rect width="160" height="90"/></clipPath></defs><g clip-path="url(#${id})">${SHOT_ART[tag]||SHOT_ART.WS}</g></svg>`}
+
 const art=id=>`<svg class="art" viewBox="0 0 200 266" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${(ART[id]||ART.drama)()}</svg>`;
 
 /* ============ UI ============ */
@@ -975,7 +1028,7 @@ function renderShots(){
       li.innerHTML=`<div class="cth" style='${ff}'>${esc(txt)}</div><div class="dim" style="font-size:12.5px">${FIELD_LABEL[s.c]} <span class="mono" style="direction:ltr;display:inline-block">· ${sec(s.d)}</span></div><span class="edit">עריכה</span>`;
       li.onclick=()=>{cardKey=s.c;setTab("titles")};li.onkeydown=e=>{if(e.key==="Enter")li.onclick()}}
     else{const sh=s.shot;li.className="it";
-      li.innerHTML=`<div class="th">${sh.has&&sh.thumb?`<img alt="" src="${sh.thumb}">`:`<div class="empty">${ICON_CAM}</div>`}<span class="tag">${s.tag}</span><span class="num">${String(s.si+1).padStart(2,"0")}</span></div>
+      li.innerHTML=`<div class="th">${sh.has&&sh.thumb?`<img alt="" src="${sh.thumb}">`:`<div class="board">${shotArt(s.tag)}</div>`}<span class="tag">${s.tag}</span><span class="num">${String(s.si+1).padStart(2,"0")}</span></div>
       <div class="bd"><div class="tt"><b>${esc(s.label)}</b><span class="stype">${esc(s.type)}</span>${sh.has?'<span class="st ok">צולם</span>':'<span class="st no">חסר</span>'}</div>
       <div class="mono dim" style="font-size:11px;direction:ltr;text-align:end">${tc(s.t0)} · ${sec(s.d)}</div>
       <div class="hint">${esc(s.hint)}</div>
@@ -1081,7 +1134,7 @@ $("#saveBtn").onclick=async()=>{const msg=$("#doneMsg");if(!lastBlob)return;
 
 /* ============ CAMERA ============ */
 const Cam={si:0,stream:null,facing:"environment",rec:null,
-  async open(si){Player.stop();exitFs();this.si=si;const s=shotSeg(si);$("#camEyebrow").textContent=`SHOT ${String(si+1).padStart(2,"0")} / ${String(P.shots.length).padStart(2,"0")} · ${s.tag}`;$("#camTitle").textContent=`${s.label} · ${s.type}`;$("#camHint").innerHTML=`<b>${esc(s.label)}:</b> ${esc(s.hint)}`;
+  async open(si){Player.stop();exitFs();this.si=si;const s=shotSeg(si);$("#camEyebrow").textContent=`SHOT ${String(si+1).padStart(2,"0")} / ${String(P.shots.length).padStart(2,"0")} · ${s.tag}`;$("#camTitle").textContent=`${s.label} · ${s.type}`;$("#camHint").innerHTML=`<b>${esc(s.label)}:</b> ${esc(s.hint)}`;$("#camGuide").innerHTML=shotArt(s.tag,"guide");guideUI();
     $("#cam").hidden=false;$("#camErr").hidden=true;this.state("STBY");$("#camTc").textContent="00:00:00";$("#shutter").style.setProperty("--p",0);await this.start()},
   async start(){this.stopStream();
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return this.fail("הדפדפן לא מאפשר גישה למצלמה.");
@@ -1105,6 +1158,9 @@ const Cam={si:0,stream:null,facing:"environment",rec:null,
     mr.start(250);setTimeout(()=>{if(mr.state!=="inactive")mr.stop()},5050)}
 };
 $("#shutter").onclick=()=>Cam.record();
+let guideOn=true;try{guideOn=localStorage.getItem("trailerlab.guide")!=="off"}catch(e){}
+function guideUI(){$("#camGuide").hidden=!guideOn;const b=$("#camGuideBtn");b.classList.toggle("on",guideOn);b.setAttribute("aria-pressed",String(guideOn))}
+$("#camGuideBtn").onclick=()=>{guideOn=!guideOn;try{localStorage.setItem("trailerlab.guide",guideOn?"on":"off")}catch(e){}guideUI()};
 $("#camClose").onclick=()=>Cam.close();
 $("#camFlip").onclick=()=>{if(Cam.rec)return;Cam.facing=Cam.facing==="environment"?"user":"environment";Cam.start()};
 $("#camImport").onclick=$("#camGallery").onclick=()=>{if(Cam.rec)return;pickFile(Cam.si)};
@@ -1160,10 +1216,11 @@ $("#sheetNo").onclick=()=>{pendingGenre=null;$("#sheet").hidden=true};
 $("#sheetYes").onclick=async()=>{$("#sheet").hidden=true;Player.stop();await clearClips();P=null;try{localStorage.removeItem(LS)}catch(e){}const g=pendingGenre;pendingGenre=null;if(g){P=newProject(g);saveP();header();setTab("shots")}else renderHome()};
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="2.1";
+const VERSION="2.2";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["2.1","היום",["אייקון להתקנה במסך הבית","מסך פתיחה עם הלוגו","תפריט צד: בית, שיתוף, התקנה, מה חדש ואודות"]],
+  ["2.2","היום",["ציור סטוריבורד לכל סוג שוט ברשימת השוטים","קווי מסגור על המצלמה שמראים איפה להעמיד את הדמות, עם כפתור הדלקה וכיבוי","ההסבר על השוט עבר אל מתחת לפריים"]],
+  ["2.1","",["אייקון להתקנה במסך הבית","מסך פתיחה עם הלוגו","תפריט צד: בית, שיתוף, התקנה, מה חדש ואודות"]],
   ["2.0","",["טריילר אקשן של 55 שניות עם 17 שוטים שמכסים את כל סוגי הצילום","לוגו חברת הפקה, כרטיס ׳סרטם של׳ ו-6 כותרות","׳בקרוב׳ ובלוק קרדיטים של 8 אנשי צוות","8 פונטים לכותרות, 6 בעברית ו-2 באנגלית","ספריית מוזיקה וייבוא שיר מהמכשיר","תצוגה במסך מלא","18 ז׳אנרים עם איורים"]],
   ["1.0","",["אקשן ואימה","מצלמה, בחירת קטע לפי תנועה, כרטיסי כותרת, מוזיקה מקורית וייצוא MP4"]]
 ];
