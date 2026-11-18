@@ -612,7 +612,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
     <button data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg><span>בית<small>בחירת ז׳אנר והפרויקט שלך</small></span></button>
     <button data-go="shots"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg><span>הפרויקט שלי<small>רשימת שוטים וצילום</small></span></button>
     <button data-go="trailer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg><span>הטריילר<small>צפייה, מוזיקה וייצוא</small></span></button>
-    <button data-go="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg><span>שמירה ויציאה<small>שומרים את הטריילר בשם הקבוצה וממשיכים בפעם הבאה</small></span></button>
+    <button data-go="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg><span>שמירה ויציאה<small>שומרים את הטריילר בשם הצוות או הקולנוען וממשיכים בפעם הבאה</small></span></button>
     <button data-go="new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg><span>פרויקט חדש</span></button>
     <hr>
     <button data-go="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg><span>שיתוף האפליקציה<small>שלח קישור לחברים</small></span></button>
@@ -1513,7 +1513,7 @@ function renderHome(){show("home");header();document.querySelectorAll("#tabs but
   const sl=projList().filter(x=>!P||x.pid!==P.pid).sort((a,b)=>b.savedAt-a.savedAt),sw=$("#savedWrap");sw.hidden=!sl.length;$("#savedCount").textContent=sl.length?sl.length+" שמורים":"";
   const list=$("#savedList");list.innerHTML="";
   sl.forEach(x=>{const d=document.createElement("div");d.className="sv";const g=GENRES[x.genre]||{name:""};const dt=new Date(x.savedAt);
-    d.innerHTML=`<div class="ct" style="${x.thumb?`background-image:url(${x.thumb})`:""}"></div><div style="min-width:0"><b>${esc(x.owner&&x.owner.type==="solo"?x.owner.name:x.group)}</b><div class="note">${esc(x.owner&&x.owner.type!=="solo"?[x.owner.cls&&("כיתה "+x.owner.cls),x.owner.school].filter(Boolean).join(" · "):(x.owner?"יחיד":""))}</div><div class="note">${esc(x.title)} · ${g.name} · ${x.done}/${x.total} שוטים</div><div class="note mono" style="direction:ltr;text-align:right;font-size:11px">${dt.toLocaleDateString("he-IL")} ${dt.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}</div></div><div class="acts"><button class="btn sm pri" data-open>המשך</button><button class="ib sm" data-del aria-label="מחק פרויקט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button></div>`;
+    d.innerHTML=`<div class="ct" style="${x.thumb?`background-image:url(${x.thumb})`:""}"></div><div style="min-width:0"><b>${esc(x.owner&&x.owner.type==="solo"?x.owner.name:x.group)}</b><div class="note">${esc(x.owner&&x.owner.type!=="solo"?[x.owner.cls&&("כיתה "+x.owner.cls),x.owner.school].filter(Boolean).join(" · "):(x.owner?"קולנוען":""))}</div><div class="note">${esc(x.title)} · ${g.name} · ${x.done}/${x.total} שוטים</div><div class="note mono" style="direction:ltr;text-align:right;font-size:11px">${dt.toLocaleDateString("he-IL")} ${dt.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}</div></div><div class="acts"><button class="btn sm pri" data-open>המשך</button><button class="ib sm" data-del aria-label="מחק פרויקט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button></div>`;
     d.querySelector("[data-open]").onclick=()=>askSaveProject(()=>openProject(x.pid),"open");
     d.querySelector("[data-del]").onclick=()=>askDeleteProject(x);
     list.appendChild(d)});
@@ -1830,13 +1830,13 @@ function lastOwner(){try{return JSON.parse(localStorage.getItem(OWN)||"null")||{
 function askSaveProject(next,why){if(!P){next();return}if(!isDirty()){closeCurrent();next();return}
   const nextLabel=why==="exit"?"שמור וצא":"שמור והמשך";const o=Object.assign({type:"group"},lastOwner(),P.owner||{});
   info("לשמור את הטריילר?",`<p>שומרים את <b>${esc(P.titles.title)}</b> עם כל השוטים, הכותרות והמוזיקה. בפעם הבאה הוא יחכה במסך הבית, ותוכלו להמשיך לתקן.</p>
-    <div class="seg" id="ownType" style="grid-template-columns:1fr 1fr"><button data-t="group">קבוצה בבית ספר</button><button data-t="solo">יחיד</button></div>
+    <div class="seg" id="ownType" style="grid-template-columns:1fr 1fr"><button data-t="group">צוות צילום</button><button data-t="solo">קולנוען</button></div>
     <div id="ownGroup" style="display:flex;flex-direction:column;gap:10px">
-      <label class="field2" for="ownSchool"><span class="note">שם בית הספר</span><input id="ownSchool" maxlength="40" placeholder="למשל: בית ספר הרצל" value="${esc(o.school||"")}"></label>
-      <label class="field2" for="ownClass"><span class="note">כיתה</span><input id="ownClass" maxlength="12" placeholder="למשל: ו׳2" value="${esc(o.cls||"")}"></label>
-      <label class="field2" for="grpName"><span class="note">שם הקבוצה</span><input id="grpName" maxlength="40" placeholder="למשל: קבוצת הנשרים" value="${esc(P.owner&&P.owner.type==="group"?P.owner.group:"")}"></label>
+      <label class="field2" for="grpName"><span class="note">שם הצוות</span><input id="grpName" maxlength="40" placeholder="למשל: צוות הנשרים" value="${esc(P.owner&&P.owner.type==="group"?P.owner.group:"")}"></label>
+      <label class="field2" for="ownSchool"><span class="note">בית ספר (לא חובה)</span><input id="ownSchool" maxlength="40" placeholder="למשל: בית ספר הרצל" value="${esc(o.school||"")}"></label>
+      <label class="field2" for="ownClass"><span class="note">כיתה (לא חובה)</span><input id="ownClass" maxlength="12" placeholder="למשל: ו׳2" value="${esc(o.cls||"")}"></label>
     </div>
-    <div id="ownSolo"><label class="field2" for="soloName"><span class="note">השם שלך</span><input id="soloName" maxlength="40" placeholder="למשל: נועה" value="${esc(o.type==="solo"?(o.name||""):"")}"></label></div>
+    <div id="ownSolo"><label class="field2" for="soloName"><span class="note">שם הקולנוען</span><input id="soloName" maxlength="40" placeholder="למשל: נועה" value="${esc(o.type==="solo"?(o.name||""):"")}"></label></div>
     <span class="err" id="grpErr" hidden></span>
     <div class="row"><button class="btn pri grow" id="svYes">${nextLabel}</button><button class="btn grow" id="svNo">${why==="exit"?"צא בלי לשמור":"אל תשמור"}</button></div>`);
   let type=o.type==="solo"?"solo":"group";
@@ -1844,8 +1844,8 @@ function askSaveProject(next,why){if(!P){next();return}if(!isDirty()){closeCurre
   document.querySelectorAll("#ownType button").forEach(b=>b.onclick=()=>{type=b.dataset.t;ui();setTimeout(()=>{try{(type==="solo"?$("#soloName"):$("#grpName")).focus()}catch(e){}},50)});ui();
   ["#ownSchool","#ownClass","#grpName","#soloName"].forEach(id=>$(id).onkeydown=e=>{if(e.key==="Enter")$("#svYes").click()});
   $("#svYes").onclick=async()=>{let owner,label;
-    if(type==="group"){owner={type,school:$("#ownSchool").value.trim(),cls:$("#ownClass").value.trim(),group:$("#grpName").value.trim()};if(!owner.group){$("#grpErr").textContent="כתבו שם קבוצה כדי לשמור.";$("#grpErr").hidden=false;return}label=owner.group}
-    else{owner={type,name:$("#soloName").value.trim()};if(!owner.name){$("#grpErr").textContent="כתבו את השם שלכם כדי לשמור.";$("#grpErr").hidden=false;return}label=owner.name}
+    if(type==="group"){owner={type,school:$("#ownSchool").value.trim(),cls:$("#ownClass").value.trim(),group:$("#grpName").value.trim()};if(!owner.group){$("#grpErr").textContent="כתבו את שם הצוות כדי לשמור.";$("#grpErr").hidden=false;return}label=owner.group}
+    else{owner={type,name:$("#soloName").value.trim()};if(!owner.name){$("#grpErr").textContent="כתבו את שם הקולנוען כדי לשמור.";$("#grpErr").hidden=false;return}label=owner.name}
     try{localStorage.setItem(OWN,JSON.stringify(owner))}catch(e){}
     await storeProject(label,owner);$("#infoSheet").hidden=true;closeCurrent();toast("נשמר: "+label);next()};
   $("#svNo").onclick=async()=>{$("#infoSheet").hidden=true;await leaveProject();next()}}
@@ -1864,7 +1864,7 @@ const VERSION="3.1";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
   ["3.1","היום",["מסך הפתיחה: \"כל טלפון הוא מצלמת קולנוע\" מתחת ללוגו, ויותר זמן לקרוא","האפליקציה תמיד נפתחת במסך הבית. הפרויקט הפתוח זמין מהלשוניות למטה"]],
-  ["3.0","",["דף פוסטר: פוסטר 2:3 ותמונה ממוזערת 16:9 מהשוטים שצילמתם, עם שמירה לטלפון","שמירה כקבוצה בבית ספר (בית ספר, כיתה, קבוצה) או כיחיד","הפרויקטים השמורים מופיעים מתחת לז׳אנרים, מהחדש לישן"]],
+  ["3.0","",["דף פוסטר: פוסטר 2:3 ותמונה ממוזערת 16:9 מהשוטים שצילמתם, עם שמירה לטלפון","שמירה כצוות צילום (עם בית ספר וכיתה, לא חובה) או כקולנוען","הפרויקטים השמורים מופיעים מתחת לז׳אנרים, מהחדש לישן"]],
   ["2.9","",["לחיצה על שם הטריילר או הז׳אנר בבר העליון מחזירה לרשימת השוטים","המנגינות המסונתזות הוסרו. לכל ז׳אנר 3 מקומות לקטעי מוזיקה שיעלו לספרייה","ייבוא מהמכשיר ואלבום המעבדה נשארו","אפשרות לטריילר בלי מוזיקה, רק עם וואשים"]],
   ["2.8","",["9 ז׳אנרים חדשים פתוחים: מרדף, מותחן, הרפתקה, מדע בדיוני, פנטזיה, מערבון, קומדיה, דרמה וספורט","לכל ז׳אנר רשימת שוטים, כותרות, צבע ופלטת כותרות משלו","5 פסקולים חדשים: פיציקטו מצחיק, מערבון, דרמה, המנון ספורט וחלל"]],
   ["2.7","",["שמירה ויציאה: שומרים את הטריילר בשם הקבוצה וממשיכים בפעם הבאה","רשימת פרויקטים שמורים במסך הבית","כשמתחילים פרויקט חדש, האפליקציה שואלת אם לשמור את הנוכחי"]],
