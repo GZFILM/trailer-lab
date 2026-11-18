@@ -6,7 +6,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="G.Z Motion Lab">
 <meta property="og:title" content="Trailer Lab · by G.Z Motion Lab">
-<meta property="og:description" content="Try Trailer Lab by G.Z Motion Lab. Shoot a cinematic movie trailer on your phone.">
+<meta property="og:description" content="Try Trailer Lab by G.Z Motion Lab. צלמו. ערכו. תהיו הבמאים: טריילר קולנועי מהטלפון.">
 <meta property="og:url" content="https://gzfilm.github.io/trailer-lab/">
 <meta property="og:image" content="https://gzfilm.github.io/trailer-lab/share.jpg">
 <meta property="og:image:secure_url" content="https://gzfilm.github.io/trailer-lab/share.jpg">
@@ -16,10 +16,10 @@
 <meta property="og:image:alt" content="Trailer Lab · by G.Z Motion Lab">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Trailer Lab · by G.Z Motion Lab">
-<meta name="twitter:description" content="Try Trailer Lab by G.Z Motion Lab. Shoot a cinematic movie trailer on your phone.">
+<meta name="twitter:description" content="Try Trailer Lab by G.Z Motion Lab. צלמו. ערכו. תהיו הבמאים: טריילר קולנועי מהטלפון.">
 <meta name="twitter:image" content="https://gzfilm.github.io/trailer-lab/share.jpg">
 <meta name="theme-color" content="#0b0c0e">
-<meta name="description" content="צילום טריילרים קולנועיים בטלפון ובטאבלט">
+<meta name="description" content="האפליקציה שהופכת כל ילד ונער לבמאי: מצלמים בטלפון לפי רשימת שוטים מקצועית, ומקבלים טריילר קולנועי עם כותרות, מוזיקה וקרדיטים.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/favicon-48.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -399,7 +399,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
       <div class="hero">
         <span class="eyebrow">פרויקט חדש</span>
         <h1 class="h1">איזה טריילר מצלמים היום?</h1>
-        <p class="dim" style="margin:0">כל ז׳אנר מגיע עם רשימת שוטים, כרטיסי כותרת, גרפיקה ומוזיקה מקורית. מצלמים כל שוט 5 שניות, והאפליקציה עורכת.</p>
+        <p class="dim" style="margin:0">צלמו. ערכו. תהיו הבמאים. בוחרים ז׳אנר, מצלמים כל שוט 5 שניות לפי רשימת שוטים של במאי, והאפליקציה עורכת טריילר עם כותרות, מוזיקה וקרדיטים.</p>
       </div>
       <button class="panel cont" id="contCard" hidden></button>
       <div class="genres" id="genres"></div>
@@ -1898,7 +1898,8 @@ $("#drawer nav").addEventListener("click",async e=>{const b=e.target.closest("bu
     info("הוספה למסך הבית",`<p>ככה מוסיפים את האייקון של Trailer Lab למסך הבית:</p><ul><li>פתח את <b>${APP_URL.replace("https://","")}</b> ב-Chrome.</li><li>לחץ על <b>⋮</b> בפינה העליונה.</li><li>בחר <b>הוספה למסך הבית</b> או <b>התקנת אפליקציה</b>.</li><li>אשר. האייקון יופיע ליד שאר האפליקציות.</li></ul><p>באייפד: בספארי לוחצים על כפתור השיתוף ואז <b>הוספה למסך הבית</b>.</p>`);return}
   if(go==="updates"){info("מה חדש",UPDATES.map(([v,d,l])=>`<div class="ver"><b>גרסה ${v}<span>${d}</span></b><ul>${l.map(x=>`<li>${x}</li>`).join("")}</ul></div>`).join(""));return}
   if(go==="about"){info("אודות",`<div style="font-family:var(--brand);font-size:40px;letter-spacing:.06em;direction:ltr;text-align:center;line-height:1">TRAILER<b style="font-weight:400;color:var(--accent)">LAB</b></div>
-    <p>Trailer Lab הופכת את הטלפון למצלמת טריילרים. בוחרים ז׳אנר, מצלמים כל שוט 5 שניות לפי רשימת שוטים של במאי, והאפליקציה בוחרת את הרגע הכי חזק בכל שוט, מוסיפה כותרות, מוזיקה וקרדיטים, ומייצאת טריילר מוכן.</p>
+    <p><b>צלמו. ערכו. תהיו הבמאים.</b></p>
+    <p>Trailer Lab הופכת את הטלפון למצלמת טריילרים, לילדים ולנוער שאוהבים לצלם. בוחרים ז׳אנר, מצלמים כל שוט 5 שניות לפי רשימת שוטים של במאי, והאפליקציה בוחרת את הרגע הכי חזק בכל שוט, מוסיפה כותרות, מוזיקה וקרדיטים, ומייצאת טריילר מוכן.</p>
     <p>הקליפים נשמרים רק במכשיר שלך. שום דבר לא עולה לשרת.</p>
     <p>פיתוח ועיצוב: GZFILM · גל זיו</p>
     <p style="color:var(--faint)">גרסה ${VERSION}<br>© כל הזכויות שמורות · <span style="direction:ltr;display:inline-block">G.Z MOTION LAB</span></p>`);return}
