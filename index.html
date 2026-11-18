@@ -162,9 +162,9 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .tcbig span{color:var(--faint)}
 .tcbig{white-space:nowrap;min-width:0}
 @media(max-width:480px){.tcbig{font-size:13.5px}#fsBtn .lbl{display:none}#fsBtn{padding:0 10px}}
-.tl{direction:ltr;position:relative;padding:8px 0 10px;user-select:none;touch-action:none;cursor:pointer}
+.tl{direction:rtl;position:relative;padding:8px 0 10px;user-select:none;touch-action:none;cursor:pointer}
 .ruler{position:relative;height:18px;margin-inline-start:30px;border-bottom:1px solid var(--line)}
-.ruler span{position:absolute;bottom:2px;font-family:var(--mono);font-size:9px;color:var(--faint);transform:translateX(-50%)}
+.ruler span{position:absolute;bottom:2px;font-family:var(--mono);font-size:9px;color:var(--faint);transform:translateX(50%);direction:ltr}
 .ruler i{position:absolute;bottom:0;width:1px;height:5px;background:var(--line2)}
 .track{display:flex;align-items:stretch;height:46px;margin-top:6px}
 .track .lab{width:30px;flex:none;font-family:var(--mono);font-size:10px;color:var(--faint);display:grid;place-items:center}
@@ -175,9 +175,9 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .blk.sel{box-shadow:inset 0 0 0 2px #fff}
 .blk em{position:absolute;inset:auto 3px 2px 3px;font-style:normal;font-size:9px;font-family:var(--mono);color:#fff;text-shadow:0 1px 2px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .track.a .lane{background:rgba(58,168,148,.14);border:1px solid rgba(58,168,148,.55);border-radius:3px;position:relative;overflow:hidden}
-.track.a canvas{width:100%;height:100%;display:block}
-.track.a .cue{position:absolute;top:2px;left:4px;font-family:var(--mono);font-size:9px;color:#bff0e5;text-shadow:0 1px 2px #000;pointer-events:none;white-space:nowrap}
-.head{position:absolute;top:4px;bottom:4px;width:2px;background:var(--rec);pointer-events:none;left:30px}
+.track.a canvas{width:100%;height:100%;display:block;transform:scaleX(-1)}
+.track.a .cue{position:absolute;top:2px;right:4px;direction:ltr;font-family:var(--mono);font-size:9px;color:#bff0e5;text-shadow:0 1px 2px #000;pointer-events:none;white-space:nowrap}
+.head{position:absolute;top:4px;bottom:4px;width:2px;background:var(--rec);pointer-events:none;right:30px}
 .head::before{content:"";position:absolute;top:-2px;left:-5px;border:6px solid transparent;border-top:8px solid var(--rec)}
 .tlhint{font-size:11.5px;color:var(--faint);padding:0 12px 10px}
 .spec{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;padding:12px;font-size:13px;margin:0}
@@ -248,13 +248,13 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:3px;gap:3px}
 .seg button{border:0;background:none;border-radius:6px;padding:8px 4px;font-size:12.5px;color:var(--dim);cursor:pointer}
 .seg button.on{background:var(--raise);color:var(--fg);box-shadow:inset 0 0 0 1px var(--line2)}
-.strip{direction:ltr;position:relative;height:96px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;touch-action:none;user-select:none}
+.strip{direction:ltr;transform:scaleX(-1);position:relative;height:96px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;touch-action:none;user-select:none}
 .strip canvas{position:absolute;left:8px;right:8px;top:8px;bottom:20px;width:calc(100% - 16px);height:calc(100% - 28px)}
 .strip .win{position:absolute;top:4px;bottom:16px;border:2px solid var(--accent);border-radius:5px;background:rgba(240,165,64,.12);cursor:grab}
 .strip .win::before,.strip .win::after{content:"";position:absolute;top:50%;width:6px;height:26px;margin-top:-13px;background:var(--accent);border-radius:2px}
 .strip .win::before{left:-4px}.strip .win::after{right:-4px}
 .strip .ph{position:absolute;top:4px;bottom:16px;width:2px;background:#fff;opacity:.85;pointer-events:none}
-.strip .ticks{position:absolute;left:8px;right:8px;bottom:3px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+.strip .ticks{position:absolute;left:8px;right:8px;bottom:3px;display:flex;justify-content:space-between;transform:scaleX(-1);direction:rtl;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
 .io{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .io div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
 .io b{font-family:var(--mono);font-size:15px;font-weight:500;direction:ltr;text-align:end}
@@ -386,11 +386,11 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
         <div class="panel" style="overflow:hidden">
           <div class="monitor" id="mon" style="border:0;border-radius:0">
             <canvas id="screen" width="1280" height="720"></canvas>
-            <div class="fsui"><button id="fsExit" aria-label="יציאה ממסך מלא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button id="fsPlay" aria-label="נגן"></button><button id="fsStart" aria-label="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="2.6" height="14" rx="1"/><path d="M19 5.5v13L9 12z"/></svg></button></div>
+            <div class="fsui"><button id="fsExit" aria-label="יציאה ממסך מלא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button id="fsPlay" aria-label="נגן"></button><button id="fsStart" aria-label="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="16.4" y="5" width="2.6" height="14" rx="1"/><path d="M5 5.5v13L15 12z"/></svg></button></div>
           </div>
           <div class="transport">
             <button class="play" id="playBtn" aria-label="נגן"></button>
-            <button class="btn sm" id="startBtn" aria-label="ניגון מההתחלה" title="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="2.6" height="14" rx="1"/><path d="M19 5.5v13L9 12z"/></svg>START</button>
+            <button class="btn sm" id="startBtn" aria-label="ניגון מההתחלה" title="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="16.4" y="5" width="2.6" height="14" rx="1"/><path d="M5 5.5v13L15 12z"/></svg>START</button>
             <div class="tcbig"><b id="tcCur">00:00:00</b> <span>/ <span id="tcTot">00:00:00</span></span></div>
             <button class="btn sm" id="fsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lbl">מסך מלא</span></button>
           </div>
@@ -1085,7 +1085,7 @@ function renderTrailer(){
     if(s.c){b.className="blk card";b.innerHTML=`<em>${esc(s.c==="credits"?"קרדיטים":cardText(s.c))}</em>`}
     else{b.className="blk"+(s.shot.has?"":" miss");if(s.shot.has&&s.shot.thumb)b.style.backgroundImage=`url(${s.shot.thumb})`;b.innerHTML=`<em>${String(s.si+1).padStart(2,"0")}</em>`}
     if(i===selBlk)b.classList.add("sel");lane.appendChild(b)});
-  const r=$("#ruler");r.innerHTML="";const step=T>40?10:5;for(let x=0;x<=T;x+=step){const p=x/T*100;r.insertAdjacentHTML("beforeend",`<i style="left:${p}%"></i>${x>0&&x<T-2?`<span style="left:${p}%">${x}s</span>`:""}`)}
+  const r=$("#ruler");r.innerHTML="";const step=T>40?10:5;for(let x=0;x<=T;x+=step){const p=x/T*100;r.insertAdjacentHTML("beforeend",`<i style="right:${p}%"></i>${x>0&&x<T-2?`<span style="right:${p}%">${x}s</span>`:""}`)}
   renderMusic();drawWave();
   const miss=P.shots.filter(s=>!s.has).length;const w=$("#missWarn");w.hidden=!miss;w.textContent=miss?`${miss} שוטים עדיין לא צולמו. הם יופיעו בטריילר כקלאפר.`:"";
   const m=pickMime(true);$("#fmtChip").textContent=m===null?"N/A":(m.includes("mp4")?"MP4":"WEBM");
@@ -1110,7 +1110,7 @@ function drawWave(){const c=$("#wave"),r=c.getBoundingClientRect(),dpr=Math.min(
   if(P.music.src==="file"&&musicBuf){const d=musicBuf.getChannelData(0),sr=musicBuf.sampleRate,off=(P.music.offset||0)*sr,span=T*sr/n;for(let i=0;i<n;i++){let mxv=0;const a=Math.floor(off+i*span),b=Math.min(d.length,a+span);for(let k=a;k<b;k+=64)mxv=Math.max(mxv,Math.abs(d[k]||0));const h=Math.max(1,mxv*c.height*.9);x.fillRect(i*3,(c.height-h)/2,2,h)}return}
   for(let i=0;i<n;i++){const t=i/n*T;let e=.25+.15*Math.sin(i*.7)*Math.sin(i*.13);S.forEach(s=>{if(s.c&&s.c!=="logo"&&s.c!=="filmby"){const d=t-s.t0;if(d>=0&&d<1.2)e+=.7*(1-d/1.2)}});e=clamp(e*(.6+.4*Math.abs(Math.sin(i*1.7))),.05,1);const h=e*c.height*.9;x.fillRect(i*3,(c.height-h)/2,2,h)}}
 let headT=0;
-function setHead(t){headT=t;const T=total(),tl=$("#tl"),lab=30,w=tl.clientWidth-lab;$("#head").style.left=(lab+clamp(t/T,0,1)*w)+"px";$("#tcCur").textContent=tc(t)}
+function setHead(t){headT=t;const T=total(),tl=$("#tl"),lab=30,w=tl.clientWidth-lab;$("#head").style.right=(lab+clamp(t/T,0,1)*w-1)+"px";$("#tcCur").textContent=tc(t)}
 const PLAY_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5l11 7-11 7z"/></svg>',STOP_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>';
 function setPlayIcon(on){[$("#playBtn"),$("#fsPlay")].forEach(b=>{b.innerHTML=on?STOP_SVG:PLAY_SVG;b.setAttribute("aria-label",on?"עצור":"נגן")})}
 async function togglePlay(from){if(playing){Player.stop();return}playing=true;setPlayIcon(true);await Player.play({from:typeof from==="number"?from:headT,onTime:t=>setHead(t)});playing=false;setPlayIcon(false)}
@@ -1120,7 +1120,7 @@ async function enterFs(){const m=$("#mon");m.classList.add("fs");try{if(m.reques
 function exitFs(){const m=$("#mon");if(!m.classList.contains("fs"))return;m.classList.remove("fs");try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}try{screen.orientation.unlock()}catch(e){}}
 $("#fsBtn").onclick=enterFs;$("#fsExit").onclick=()=>{Player.stop();exitFs()};
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement)$("#mon").classList.remove("fs")});
-(()=>{const tl=$("#tl");let down=null;const at=e=>{const r=tl.getBoundingClientRect(),lab=30;return clamp((e.clientX-r.left-lab)/(r.width-lab),0,1)*total()};
+(()=>{const tl=$("#tl");let down=null;const at=e=>{const r=tl.getBoundingClientRect(),lab=30;return clamp((r.right-lab-e.clientX)/(r.width-lab),0,1)*total()};
   tl.addEventListener("pointerdown",e=>{if(playing)Player.stop();down={x:e.clientX,moved:false};tl.setPointerCapture(e.pointerId);const t=at(e);setHead(t);Player.still(t)});
   tl.addEventListener("pointermove",e=>{if(!down)return;if(Math.abs(e.clientX-down.x)>6)down.moved=true;const t=at(e);setHead(t);Player.still(t)});
   tl.addEventListener("pointerup",e=>{if(!down)return;const moved=down.moved;down=null;if(moved)return;const S=segs(),i=Player.segAt(S,at(e)),s=S[i];
@@ -1214,11 +1214,11 @@ const Trim={si:0,len:2,D:5,drag:null,
   async ok(){const v=$("#trimVideo"),sh=this.shot();v.pause();sh.thumb=await makeThumb(v,sh.start+Math.min(.4,this.len/2));saveP();$("#trim").hidden=true;Player.vids.delete(sh.id);if(tab==="trailer")renderTrailer();else if(tab!=="shots")setTab("shots");else renderShots()}
 };
 $("#modeSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const sh=Trim.shot();sh.mode=b.dataset.m;if(sh.mode!=="manual")applyMode(sh,Trim.len);Trim.setStart(sh.start,false)});
-(()=>{const strip=$("#strip"),win=$("#win");const toT=x=>{const r=strip.getBoundingClientRect();return clamp((x-r.left-8)/(r.width-16),0,1)*Trim.D};
+(()=>{const strip=$("#strip"),win=$("#win");const toT=x=>{const r=strip.getBoundingClientRect();return clamp((r.right-8-x)/(r.width-16),0,1)*Trim.D};
   strip.addEventListener("pointerdown",e=>{strip.setPointerCapture(e.pointerId);const t=toT(e.clientX),sh=Trim.shot();if(e.target===win)Trim.drag={off:t-sh.start};else{Trim.drag={off:Trim.len/2};Trim.setStart(t-Trim.len/2,true)}});
   strip.addEventListener("pointermove",e=>{if(!Trim.drag)return;Trim.setStart(toT(e.clientX)-Trim.drag.off,true)});
   strip.addEventListener("pointerup",()=>Trim.drag=null);strip.addEventListener("pointercancel",()=>Trim.drag=null);
-  win.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){Trim.setStart(Trim.shot().start+(e.key==="ArrowRight"?.1:-.1),true);e.preventDefault()}})})();
+  win.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){Trim.setStart(Trim.shot().start+(e.key==="ArrowLeft"?.1:-.1),true);e.preventDefault()}})})();
 $("#trimPlay").onclick=()=>Trim.play();
 $("#trimOk").onclick=()=>Trim.ok();
 $("#trimClose").onclick=()=>Trim.ok();
@@ -1235,10 +1235,11 @@ $("#sheetNo").onclick=()=>{pendingGenre=null;$("#sheet").hidden=true};
 $("#sheetYes").onclick=async()=>{$("#sheet").hidden=true;Player.stop();await clearClips();P=null;try{localStorage.removeItem(LS)}catch(e){}const g=pendingGenre;pendingGenre=null;if(g){P=newProject(g);saveP();header();setTab("shots")}else renderHome()};
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="2.3";
+const VERSION="2.4";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["2.3","היום",["ציור מותאם לכל שוט: בית עם חלון מואר, יד על ידית, נדנדה, מכונית בלילה ועוד","Play ממשיך מאיפה שעצרת, וכפתור START מתחיל מההתחלה"]],
+  ["2.4","היום",["ציר הזמן ופס בחירת הקטע רצים מימין לשמאל"]],
+  ["2.3","",["ציור מותאם לכל שוט: בית עם חלון מואר, יד על ידית, נדנדה, מכונית בלילה ועוד","Play ממשיך מאיפה שעצרת, וכפתור START מתחיל מההתחלה"]],
   ["2.2","",["ציור סטוריבורד לכל סוג שוט ברשימת השוטים","קווי מסגור על המצלמה שמראים איפה להעמיד את הדמות, עם כפתור הדלקה וכיבוי","ההסבר על השוט עבר אל מתחת לפריים"]],
   ["2.1","",["אייקון להתקנה במסך הבית","מסך פתיחה עם הלוגו","תפריט צד: בית, שיתוף, התקנה, מה חדש ואודות"]],
   ["2.0","",["טריילר אקשן של 55 שניות עם 17 שוטים שמכסים את כל סוגי הצילום","לוגו חברת הפקה, כרטיס ׳סרטם של׳ ו-6 כותרות","׳בקרוב׳ ובלוק קרדיטים של 8 אנשי צוות","8 פונטים לכותרות, 6 בעברית ו-2 באנגלית","ספריית מוזיקה וייבוא שיר מהמכשיר","תצוגה במסך מלא","18 ז׳אנרים עם איורים"]],
