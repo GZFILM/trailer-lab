@@ -661,7 +661,7 @@ const GENRES={
       {s:1,tag:"TRK",type:"מעקב",label:"ריצה",hint:"רצים לצד הגיבור עם המצלמה, או שהוא רץ לעברה. כמה שיותר מהר.",d:1.3},
       {s:1,tag:"HIGH",type:"זווית גבוהה",label:"לכוד",hint:"מצלמה גבוהה מעל הגיבור, כאילו הוא מוקף ואין לו לאן לברוח.",d:1.3},
       {c:"t4",d:1.4},
-      {s:1,tag:"2S",type:"שוט שניים",label:"העימות",hint:"שתי דמויות בפריים אחד, פנים מול פנים. רגע לפני שזה מתפוצץ.",d:1.4},
+      {s:1,tag:"2S",type:"טו שוט",label:"העימות",hint:"שתי דמויות בפריים אחד, פנים מול פנים. רגע לפני שזה מתפוצץ.",d:1.4},
       {s:1,tag:"ACT",type:"אקשן",label:"רגע האקשן",hint:"קפיצה, דחיפה, דלת שנטרקת. הרגע הכי חזק ייבחר אוטומטית.",d:1.0},
       {c:"t5",d:1.2},
       {s:1,tag:"ECU",type:"תקריב קיצוני",label:"עיניים",hint:"רק העיניים בפריים. מבט שמחליט.",d:0.9},
@@ -723,7 +723,7 @@ const GENRES={
       {s:1,art:"under_table",tag:"HIGH",type:"זווית גבוהה",label:"מתחת לשולחן",hint:"מצלמה גבוהה: מישהו מסתתר מתחת לשולחן ומחזיק ברגל שלו.",d:1.4},
       {s:1,art:"crack",tag:"LOW",type:"זווית נמוכה",label:"הקירות נסדקים",hint:"מצלמה נמוכה אל קיר או תקרה. אפשר לזרוק קצת קמח כאילו זה אבק.",d:1.3,shake:1},
       {c:"t4",d:1.8},
-      {s:1,art:"helping_hand",tag:"2S",type:"שוט שניים",label:"יד מושטת",hint:"יד אחת מושיטה לשנייה ועוזרת לה לקום.",d:1.6},
+      {s:1,art:"helping_hand",tag:"2S",type:"טו שוט",label:"יד מושטת",hint:"יד אחת מושיטה לשנייה ועוזרת לה לקום.",d:1.6},
       {s:1,tag:"POV",type:"נקודת מבט",label:"בין ההריסות",hint:"המצלמה זזה לאט בין כיסאות הפוכים וחפצים על הרצפה.",d:1.6},
       {c:"t5",d:1.2},
       {s:1,tag:"ECU",type:"תקריב קיצוני",label:"עיניים",hint:"רק העיניים בפריים. אבק על הפנים, מבט שלא מוותר.",d:0.9},
@@ -737,7 +737,7 @@ const GENRES={
   }
 };
 /* ---- more genres: built with a small helper so every template has the same frame ---- */
-const TYPE={OPEN:"שוט פתיחה",INS:"אינסרט",ELS:"רחב מאוד",WS:"שוט רחב",LS:"לונג שוט",MS:"שוט בינוני",CU:"קלוז אפ",ECU:"תקריב קיצוני",LOW:"זווית נמוכה",HIGH:"זווית גבוהה",OTS:"מעבר לכתף",POV:"נקודת מבט",PAN:"פאן",TRK:"מעקב",DOLLY:"דולי אין","2S":"שוט שניים",ACT:"אקשן",SIL:"צללית",GLM:"הצצה",SHAKE:"מצלמה רועדת"};
+const TYPE={OPEN:"שוט פתיחה",INS:"אינסרט",ELS:"רחב מאוד",WS:"שוט רחב",LS:"לונג שוט",MS:"שוט בינוני",CU:"קלוז אפ",ECU:"תקריב קיצוני",LOW:"זווית נמוכה",HIGH:"זווית גבוהה",OTS:"מעבר לכתף",POV:"נקודת מבט",PAN:"פאן",TRK:"מעקב",DOLLY:"דולי אין","2S":"טו שוט",ACT:"אקשן",SIL:"צללית",GLM:"הצצה",SHAKE:"מצלמה רועדת"};
 const sh=(tag,label,hint,d,art)=>Object.assign({s:1,tag,type:TYPE[tag],label,hint,d},art?{art}:{});
 const BASE_T={logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",release:"בקרוב"};
 /* order: open, logo, clue, film-by, two shots, t1, two, t2, two, t3, two, t4, two, t5, ending, title, credits */
@@ -1501,8 +1501,12 @@ const art=id=>`<svg class="art" viewBox="0 0 200 266" preserveAspectRatio="xMidY
 /* ============ UI ============ */
 let tab="shots",cardKey="t1";
 function closeDone(){const d=$("#done");if(d&&!d.hidden){d.hidden=true;try{$("#doneVideo").pause()}catch(e){}}}
-function show(id){closeDone();["home","shots","titles","trailer","poster"].forEach(v=>$("#v-"+v).hidden=v!==id)}
-let awayAt=0;document.addEventListener("visibilitychange",()=>{if(document.hidden){awayAt=Date.now();try{$("#doneVideo").pause()}catch(e){}try{Player.stop()}catch(e){}}else if(awayAt&&Date.now()-awayAt>20000)closeDone()});
+let curView="home";
+function rememberSpot(){if(!P||curView==="home")return;P.spot={tab:curView,y:$("#main").scrollTop};try{localStorage.setItem(LS,JSON.stringify(P))}catch(e){}}
+function resumeSpot(){const sp=(P&&P.spot)||{tab:"shots",y:0};header();setTab(["shots","titles","trailer","poster"].includes(sp.tab)?sp.tab:"shots");const y=sp.y||0;if(y){requestAnimationFrame(()=>$("#main").scrollTop=y);setTimeout(()=>$("#main").scrollTop=y,400)}}
+async function autoSave(){if(P&&P.group&&isSaved(P.pid)){rememberSpot();await storeProject(P.group,P.owner)}}
+function show(id){closeDone();rememberSpot();curView=id;["home","shots","titles","trailer","poster"].forEach(v=>$("#v-"+v).hidden=v!==id)}
+let awayAt=0;document.addEventListener("visibilitychange",()=>{if(document.hidden){awayAt=Date.now();rememberSpot();autoSave();try{$("#doneVideo").pause()}catch(e){}try{Player.stop()}catch(e){}}else if(awayAt&&Date.now()-awayAt>20000)closeDone()});
 function setTab(t){Player.stop();exitFs();tab=t;show(t);document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));$("#main").scrollTop=0;
   if(t==="shots")renderShots();if(t==="titles")renderTitles();if(t==="trailer")renderTrailer();if(t==="poster")renderPoster()}
 function header(){const has=!!P;$("#tabs").hidden=!has;$("#newBtn").hidden=!has;$("#saveBtnTop").hidden=!has;$("#genreChip").hidden=!has;
@@ -1513,11 +1517,11 @@ function renderHome(){show("home");header();document.querySelectorAll("#tabs but
   Object.entries(GENRES).filter(([id,g])=>!g.soon).forEach(([id,g])=>{const n=g.seq.filter(x=>x.s).length,T=g.seq.reduce((a,x)=>a+x.d,0);
     const b=document.createElement("button");b.className="genre";b.innerHTML=`${art(id)}<span class="live">READY</span><div class="meta"><span class="gt${id==="action"?" f-action":""}">${g.name}</span><span class="gd">${g.desc}</span><span class="gs">${n} SHOTS · ${tc(T).slice(0,5)}</span></div>`;
     b.onclick=()=>startGenre(id);el.appendChild(b)});
-  const sl=projList().filter(x=>!P||x.pid!==P.pid).sort((a,b)=>b.savedAt-a.savedAt),sw=$("#savedWrap");sw.hidden=!sl.length;$("#savedCount").textContent=sl.length?sl.length+" שמורים":"";
+  const sl=projList().sort((a,b)=>b.savedAt-a.savedAt),sw=$("#savedWrap");sw.hidden=!sl.length;$("#savedCount").textContent=sl.length?sl.length+" שמורים":"";
   const list=$("#savedList");list.innerHTML="";
   sl.forEach(x=>{const d=document.createElement("div");d.className="sv";const g=GENRES[x.genre]||{name:""};const dt=new Date(x.savedAt);
     d.innerHTML=`<div class="ct" style="${x.thumb?`background-image:url(${x.thumb})`:""}"></div><div style="min-width:0"><b>${esc(x.owner&&x.owner.type==="solo"?x.owner.name:x.group)}</b><div class="note">${esc(x.owner&&x.owner.type!=="solo"?[x.owner.cls&&("כיתה "+x.owner.cls),x.owner.school].filter(Boolean).join(" · "):(x.owner?"קולנוען":""))}</div><div class="note">${esc(x.title)} · ${g.name} · ${x.done}/${x.total} שוטים</div><div class="note mono" style="direction:ltr;text-align:right;font-size:11px">${dt.toLocaleDateString("he-IL")} ${dt.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}</div></div><div class="acts"><button class="btn sm pri" data-open>המשך</button><button class="ib sm" data-del aria-label="מחק פרויקט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button></div>`;
-    d.querySelector("[data-open]").onclick=()=>askSaveProject(()=>openProject(x.pid),"open");
+    d.querySelector("[data-open]").onclick=async()=>{if(P&&x.pid===P.pid){resumeSpot();return}askSaveProject(()=>openProject(x.pid),"open")};
     d.querySelector("[data-del]").onclick=()=>askDeleteProject(x);
     list.appendChild(d)});
   const cc=$("#contCard");cc.hidden=true;if(false)
@@ -1825,12 +1829,12 @@ $("#backHome").onclick=()=>{Player.stop();renderHome();$("#main").scrollTop=0};
 function startGenre(id){askSaveProject(async()=>{P=newProject(id);saveP();header();setTab("shots")},"new")}
 async function openProject(pid){let data=null;try{data=await IDB.get("proj:"+pid)}catch(e){}if(!data){alertBox("לא הצלחנו לפתוח את הפרויקט.");return}
   P=data;if(!P.pid)P.pid=pid;for(const sh of P.shots){if(sh.has&&!(await getClip(sh.id))){sh.has=false;sh.thumb=null}}
-  try{localStorage.setItem(LS,JSON.stringify(P))}catch(e){}Player.vids.clear();musicBuf=null;header();setTab("shots")}
+  try{localStorage.setItem(LS,JSON.stringify(P))}catch(e){}Player.vids.clear();musicBuf=null;curView="home";resumeSpot()}
 /* ask whether to save the trailer, with the group's name, then continue */
-function closeCurrent(){Player.stop();P=null;Player.vids.clear();musicBuf=null;try{localStorage.removeItem(LS)}catch(e){}}
+function closeCurrent(){Player.stop();curView="home";P=null;Player.vids.clear();musicBuf=null;try{localStorage.removeItem(LS)}catch(e){}}
 const OWN="trailerlab.owner";
 function lastOwner(){try{return JSON.parse(localStorage.getItem(OWN)||"null")||{}}catch(e){return{}}}
-function askSaveProject(next,why){if(!P){next();return}if(!isDirty()){closeCurrent();next();return}
+function askSaveProject(next,why){if(!P){next();return}if(P.group&&isSaved(P.pid)){const lb=P.owner&&P.owner.type==="solo"?P.owner.name:P.group;const dirty=isDirty();autoSave().then(()=>{closeCurrent();if(dirty)toast("נשמר: "+lb);next()});return}if(!isDirty()){closeCurrent();next();return}
   const nextLabel=why==="exit"?"שמור וצא":"שמור והמשך";const o=Object.assign({type:"group"},lastOwner(),P.owner||{});
   info("לשמור את הטריילר?",`<p>שומרים את <b>${esc(P.titles.title)}</b> עם כל השוטים, הכותרות והמוזיקה. בפעם הבאה הוא יחכה במסך הבית, ותוכלו להמשיך לתקן.</p>
     <div class="seg" id="ownType" style="grid-template-columns:1fr 1fr"><button data-t="group">צוות צילום</button><button data-t="solo">קולנוען</button></div>
@@ -1863,10 +1867,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="3.3";
+const VERSION="3.4";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["3.3","היום",["חלון \"הטריילר מוכן\" נסגר לבד כשממשיכים לעבוד או חוזרים לאפליקציה, והטריילר לא ממשיך להתנגן ברקע"]],
+  ["3.4","היום",["\"המשך\" על פרויקט שמור פותח אותו בדיוק איפה שעצרתם: שוטים, כותרות, פוסטר, טריילר או מוזיקה","פרויקט שכבר נשמר נשמר לבד, בלי לשאול שוב","הפרויקט הפתוח מופיע גם הוא ברשימת השמורים","\"שוט שניים\" נקרא עכשיו \"טו שוט\""]],
+  ["3.3","",["חלון \"הטריילר מוכן\" נסגר לבד כשממשיכים לעבוד או חוזרים לאפליקציה, והטריילר לא ממשיך להתנגן ברקע"]],
   ["3.2","",["סוג שוט חדש: לונג שוט (LS), רואים את כל הגוף מהראש עד הרגליים","באקשן: לונג שוט ושוט בינוני (MS) בתחילת הטריילר","ציור חדש לשוט קשירת הנעליים, עם ידיים אמיתיות"]],
   ["3.1","",["מסך הפתיחה: \"כל טלפון הוא מצלמת קולנוע\" מתחת ללוגו, ויותר זמן לקרוא","האפליקציה תמיד נפתחת במסך הבית. הפרויקט הפתוח זמין מהלשוניות למטה"]],
   ["3.0","",["דף פוסטר: פוסטר 2:3 ותמונה ממוזערת 16:9 מהשוטים שצילמתם, עם שמירה לטלפון","שמירה כצוות צילום (עם בית ספר וכיתה, לא חובה) או כקולנוען","הפרויקטים השמורים מופיעים מתחת לז׳אנרים, מהחדש לישן"]],
