@@ -1,6 +1,11 @@
 {
   "action": [
     {
+      "file": "music/action/ad-percussion.mp3",
+      "name": "AD · Percussion",
+      "by": "Arik Deri"
+    },
+    {
       "file": "music/action/1.mp3",
       "name": "Exciting Trailer"
     },
@@ -126,6 +131,16 @@
     }
   ],
   "drama": [
+    {
+      "file": "music/drama/ad-sad-piano-mellow-theme.mp3",
+      "name": "AD · Sad Piano Mellow Theme",
+      "by": "Arik Deri"
+    },
+    {
+      "file": "music/drama/ad-piano-elegant-theme.mp3",
+      "name": "AD · Piano Elegant Theme",
+      "by": "Arik Deri"
+    },
     {
       "file": "music/drama/1.mp3",
       "name": "For the Fallen"

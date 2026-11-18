@@ -1,5 +1,12 @@
 # Music credits
 
+## Arik Deri (אריק דרעי), original music used with permission
+
+- drama: "Sad Piano Mellow Theme" by Arik Deri
+- drama: "Piano Elegant Theme" by Arik Deri
+- action: "Percussion" by Arik Deri
+
+
 All music by Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0.
 Each track is trimmed to the first 75 seconds with a 3-second fade-out.
 

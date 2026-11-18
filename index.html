@@ -1602,7 +1602,7 @@ function renderMusic(){const el=$("#mus"),m=P.music;el.innerHTML="";const src=re
   const grp=t=>el.insertAdjacentHTML("beforeend",`<div class="mgrp">${t}</div>`);
   grp("מוזיקה ל"+G().name);
   const lt=libTracks(P.genre);
-  for(let i=0;i<3;i++){const t=lt[i];if(t)opt("builtin:"+t.file,"♪ "+esc(t.name),"ספריית Trailer Lab");else opt("slot:"+i,`קטע ${i+1}`,"עוד לא הועלה",null,true)}
+  for(let i=0;i<Math.max(3,lt.length);i++){const t=lt[i];if(t)opt("builtin:"+t.file,"♪ "+esc(t.name),t.by==="Arik Deri"?"מוזיקה מקורית: אריק דרעי · Arik Deri":"ספריית Trailer Lab");else opt("slot:"+i,`קטע ${i+1}`,"עוד לא הועלה",null,true)}
   alb.filter(t=>(t.genres||[]).includes(P.genre)).forEach(t=>opt("track:"+t.id,"♪ "+esc(t.name),"מאלבום המעבדה"));
   if(P.projTrack&&!inAlbum(P.projTrack)){grp("מוזיקה לפרויקט הזה");opt("track:"+P.projTrack,"♪ "+esc(P.music.projName||"השיר שלי"),"לא שמור באלבום")}
   grp(`אלבום המעבדה <span class="mono" style="direction:ltr;display:inline-block">(${alb.length})</span>`);
@@ -1867,10 +1867,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="3.7";
+const VERSION="3.8";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["3.7","היום",["מוזיקה מובנית: 3 קטעים לכל ז׳אנר, של Kevin MacLeod, עם פייד אאוט בסוף","קרדיט למוזיקה בעמוד אודות"]],
+  ["3.8","היום",["מוזיקה מקורית של אריק דרעי (Arik Deri): שני קטעים בדרמה וקטע באקשן","בחלונית המוזיקה מופיעים כל הקטעים של הז׳אנר, עם שם היוצר"]],
+  ["3.7","",["מוזיקה מובנית: 3 קטעים לכל ז׳אנר, של Kevin MacLeod, עם פייד אאוט בסוף","קרדיט למוזיקה בעמוד אודות"]],
   ["3.6","",["פוסטר: בחירת המשפט עובדת, והמשפט עבר למטה, ממש מעל שם הסרט"]],
   ["3.5","",["המוזיקה נגמרת בפייד אאוט רך ואיטי בסוף הטריילר, וגם כשהשיר קצר מהטריילר"]],
   ["3.4","",["\"המשך\" על פרויקט שמור פותח אותו בדיוק איפה שעצרתם: שוטים, כותרות, פוסטר, טריילר או מוזיקה","פרויקט שכבר נשמר נשמר לבד, בלי לשאול שוב","הפרויקט הפתוח מופיע גם הוא ברשימת השמורים","\"שוט שניים\" נקרא עכשיו \"טו שוט\""]],
@@ -1917,6 +1918,7 @@ $("#drawer nav").addEventListener("click",async e=>{const b=e.target.closest("bu
     <p>Trailer Lab הופכת את הטלפון למצלמת טריילרים, לילדים ולנוער שאוהבים לצלם. בוחרים ז׳אנר, מצלמים כל שוט 5 שניות לפי רשימת שוטים של במאי, והאפליקציה בוחרת את הרגע הכי חזק בכל שוט, מוסיפה כותרות, מוזיקה וקרדיטים, ומייצאת טריילר מוכן.</p>
     <p>הקליפים נשמרים רק במכשיר שלך. שום דבר לא עולה לשרת.</p>
     <p>פיתוח ועיצוב: GZFILM · גל זיו</p>
+    <p style="font-size:13px">מוזיקה מקורית: אריק דרעי · <span style="direction:ltr;display:inline-block">Arik Deri</span></p>
     <p style="font-size:13px">מוזיקה: Kevin MacLeod (<span style="direction:ltr;display:inline-block">incompetech.com</span>)<br><span style="direction:ltr;display:inline-block">Licensed under Creative Commons: By Attribution 4.0</span><br><a href="music/CREDITS.md" target="_blank" rel="noopener" style="color:var(--accent)">רשימת כל הקטעים</a></p>
     <p style="color:var(--faint)">גרסה ${VERSION}<br>© כל הזכויות שמורות · <span style="direction:ltr;display:inline-block">G.Z MOTION LAB</span></p>`);return}
 });
