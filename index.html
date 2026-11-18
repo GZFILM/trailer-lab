@@ -673,7 +673,7 @@ const GENRES={
     ],
     look:{grade:"contrast(1.16) saturate(1.22) brightness(1.02)",tint:"rgba(255,140,40,.16)",vig:.55,grain:.05,flash:true,flicker:false}
   },
-  horror:{name:"אימה",en:"HORROR",font:"frank",cues:["musicbox","piano","heart","tension"],
+  horror:{name:"אימה",en:"HORROR",posterTags:["אף אחד לא הצליח לעלות לשם","מי שם צועק?","הם חשבו שהם לבד","משהו מתעורר"],font:"frank",cues:["musicbox","piano","heart","tension"],
     desc:"משהו מחכה בחושך. אל תפתחו את הדלת.",
     defaults:{logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",t1:"הם חשבו שהם לבד",t2:"הם טעו",t3:"הלילה",t4:"משהו מתעורר",title:"הקומה השלישית",release:"בקרוב"},
     seq:[
@@ -1669,14 +1669,14 @@ document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement
     selBlk=i;document.querySelectorAll("#laneV .blk").forEach(b=>b.classList.toggle("sel",+b.dataset.i===i))})})();
 
 /* ============ POSTER & THUMBNAIL ============ */
-function posterOpts(){const d={mode:"poster",bg:null,pos:50,tag:"t1",custom:"",credits:true};P.poster=P.poster||{};for(const k in d)if(!(k in P.poster))P.poster[k]=d[k];return P.poster}
+function posterOpts(){const d={mode:"poster",bg:null,pos:50,tag:G().posterTags?"p0":"t1",custom:"",credits:true};P.poster=P.poster||{};for(const k in d)if(!(k in P.poster))P.poster[k]=d[k];return P.poster}
 function svgImage(svg){return new Promise(res=>{const img=new Image();img.onload=()=>res(img);img.onerror=()=>res(null);img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '))})}
 function posterShot(){const o=posterOpts(),sh=P.shots;if(o.bg===-1)return -1;if(o.bg!=null&&sh[o.bg]&&sh[o.bg].has)return o.bg;return sh.findIndex(x=>x.has)}
 async function posterSource(){const si=posterShot();
   if(si>=0){const sh=P.shots[si];const v=await Player.prepShot(sh);if(v&&v.videoWidth){const sg=shotSeg(si);await seek(v,(sh.start||0)+Math.min(.6,sg.d/2));return{img:v,w:v.videoWidth,h:v.videoHeight,grade:true}}}
   const img=await svgImage(art(P.genre).replace('class="art"','width="600" height="798"'));return img?{img,w:600,h:798,grade:false}:null}
 function drawCover(ctx,src,CW,CH,pos){if(!src)return;const s=Math.max(CW/src.w,CH/src.h),dw=src.w*s,dh=src.h*s;const x=(CW-dw)*(1-pos/100),y=(CH-dh)/2;ctx.filter=src.grade?G().look.grade:"none";ctx.drawImage(src.img,x,y,dw,dh);ctx.filter="none"}
-function posterTagline(){const o=posterOpts();if(o.tag==="none")return"";if(o.tag==="custom")return o.custom||"";return P.titles[o.tag]||""}
+function posterTagline(){const o=posterOpts();if(o.tag==="none")return"";if(o.tag==="custom")return o.custom||"";if(/^p\d$/.test(o.tag))return(G().posterTags||[])[+o.tag.slice(1)]||"";return P.titles[o.tag]||""}
 async function drawPoster(cv){await fontsReady;const o=posterOpts(),thumb=o.mode==="thumb",CW=thumb?1280:1080,CH=thumb?720:1620;cv.width=CW;cv.height=CH;
   const ctx=cv.getContext("2d"),pl=PAL(),horror=isHorror(),accent=horror?"#d8473f":pl.accent,glow=horror?"rgba(200,20,20,.6)":pl.glow;
   ctx.save();ctx.fillStyle="#000";ctx.fillRect(0,0,CW,CH);const src=await posterSource();drawCover(ctx,src,CW,CH,o.pos);
@@ -1710,8 +1710,8 @@ function renderPoster(){const o=posterOpts();
   P.shots.forEach((x,i)=>{if(!x.has)return;const b=document.createElement("button");b.className=i===cur?"on":"";if(x.thumb)b.style.backgroundImage=`url(${x.thumb})`;b.innerHTML=`<span>${String(i+1).padStart(2,"0")}</span>`;b.setAttribute("aria-label","רקע משוט "+(i+1));b.onclick=()=>{o.bg=i;saveP();renderPoster()};bg.appendChild(b)});
   const ga=document.createElement("button");ga.className=cur===-1?"on":"";ga.setAttribute("aria-label","רקע מאיור הז׳אנר");ga.innerHTML=art(P.genre).replace('class="art"','style="position:absolute;inset:0;width:100%;height:100%"')+"<span>איור הז׳אנר</span>";ga.onclick=()=>{o.bg=-1;saveP();renderPoster()};bg.appendChild(ga);
   $("#pPos").value=o.pos;
-  const tg=$("#pTags");tg.innerHTML="";const keys=segs().filter(x=>x.c&&/^t\d$/.test(x.c)).map(x=>x.c);
-  keys.concat(["none"]).forEach(k=>{const b=document.createElement("button");b.className="gchip"+(o.tag===k?" on":"");b.textContent=k==="none"?"בלי משפט":(P.titles[k]||"");b.onclick=()=>{o.tag=k;saveP();renderPoster()};tg.appendChild(b)});
+  const tg=$("#pTags");tg.innerHTML="";const pt=G().posterTags,keys=pt?pt.map((_,i)=>"p"+i):segs().filter(x=>x.c&&/^t\d$/.test(x.c)).map(x=>x.c);
+  keys.concat(["none"]).forEach(k=>{const b=document.createElement("button");b.className="gchip"+(o.tag===k?" on":"");b.textContent=k==="none"?"בלי משפט":/^p\d$/.test(k)?pt[+k.slice(1)]:(P.titles[k]||"");b.onclick=()=>{o.tag=k;saveP();renderPoster()};tg.appendChild(b)});
   $("#pTagline").value=o.custom||"";$("#pCredits").checked=o.credits!==false;$("#posterMsg").textContent="";
   $("#pStage").style.maxWidth=o.mode==="thumb"?"none":"520px";$("#pStage").style.marginInline=o.mode==="thumb"?"0":"auto";
   redrawPoster()}
@@ -1867,10 +1867,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="3.8";
+const VERSION="3.9";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["3.8","היום",["מוזיקה מקורית של אריק דרעי (Arik Deri): שני קטעים בדרמה וקטע באקשן","בחלונית המוזיקה מופיעים כל הקטעים של הז׳אנר, עם שם היוצר"]],
+  ["3.9","היום",["פוסטר אימה: משפטים חדשים, \"אף אחד לא הצליח לעלות לשם\" ו\"מי שם צועק?\""]],
+  ["3.8","",["מוזיקה מקורית של אריק דרעי (Arik Deri): שני קטעים בדרמה וקטע באקשן","בחלונית המוזיקה מופיעים כל הקטעים של הז׳אנר, עם שם היוצר"]],
   ["3.7","",["מוזיקה מובנית: 3 קטעים לכל ז׳אנר, של Kevin MacLeod, עם פייד אאוט בסוף","קרדיט למוזיקה בעמוד אודות"]],
   ["3.6","",["פוסטר: בחירת המשפט עובדת, והמשפט עבר למטה, ממש מעל שם הסרט"]],
   ["3.5","",["המוזיקה נגמרת בפייד אאוט רך ואיטי בסוף הטריילר, וגם כשהשיר קצר מהטריילר"]],
