@@ -1,4 +1,156 @@
 {
-  "action": [], "horror": [], "chase": [], "thriller": [], "adventure": [], "scifi": [],
-  "fantasy": [], "western": [], "comedy": [], "drama": [], "sports": []
+  "action": [
+    {
+      "file": "music/action/1.mp3",
+      "name": "Exciting Trailer"
+    },
+    {
+      "file": "music/action/2.mp3",
+      "name": "Death and Axes"
+    },
+    {
+      "file": "music/action/3.mp3",
+      "name": "Volatile Reaction"
+    }
+  ],
+  "horror": [
+    {
+      "file": "music/horror/1.mp3",
+      "name": "Pop Goes the Weasel"
+    },
+    {
+      "file": "music/horror/2.mp3",
+      "name": "Welcome to HorrorLand"
+    },
+    {
+      "file": "music/horror/3.mp3",
+      "name": "Day of Chaos"
+    }
+  ],
+  "chase": [
+    {
+      "file": "music/chase/1.mp3",
+      "name": "Mistake the Getaway"
+    },
+    {
+      "file": "music/chase/2.mp3",
+      "name": "Movement Proposition"
+    },
+    {
+      "file": "music/chase/3.mp3",
+      "name": "Chase"
+    }
+  ],
+  "thriller": [
+    {
+      "file": "music/thriller/1.mp3",
+      "name": "The Escalation"
+    },
+    {
+      "file": "music/thriller/2.mp3",
+      "name": "Impending Boom"
+    },
+    {
+      "file": "music/thriller/3.mp3",
+      "name": "Constance"
+    }
+  ],
+  "adventure": [
+    {
+      "file": "music/adventure/1.mp3",
+      "name": "Call to Adventure"
+    },
+    {
+      "file": "music/adventure/2.mp3",
+      "name": "Noble Race"
+    },
+    {
+      "file": "music/adventure/3.mp3",
+      "name": "Heroic Age"
+    }
+  ],
+  "scifi": [
+    {
+      "file": "music/scifi/1.mp3",
+      "name": "Future Gladiator"
+    },
+    {
+      "file": "music/scifi/2.mp3",
+      "name": "Industrial Cinematic"
+    },
+    {
+      "file": "music/scifi/3.mp3",
+      "name": "Cortosis"
+    }
+  ],
+  "fantasy": [
+    {
+      "file": "music/fantasy/1.mp3",
+      "name": "Not As It Seems"
+    },
+    {
+      "file": "music/fantasy/2.mp3",
+      "name": "Magic Forest"
+    },
+    {
+      "file": "music/fantasy/3.mp3",
+      "name": "The Pyre"
+    }
+  ],
+  "western": [
+    {
+      "file": "music/western/1.mp3",
+      "name": "Robo-Western"
+    },
+    {
+      "file": "music/western/2.mp3",
+      "name": "Neo Western"
+    },
+    {
+      "file": "music/western/3.mp3",
+      "name": "Western Streets"
+    }
+  ],
+  "comedy": [
+    {
+      "file": "music/comedy/1.mp3",
+      "name": "Sergio's Magic Dustbin"
+    },
+    {
+      "file": "music/comedy/2.mp3",
+      "name": "Mischief Maker"
+    },
+    {
+      "file": "music/comedy/3.mp3",
+      "name": "Meatball Parade"
+    }
+  ],
+  "drama": [
+    {
+      "file": "music/drama/1.mp3",
+      "name": "For the Fallen"
+    },
+    {
+      "file": "music/drama/2.mp3",
+      "name": "Procession of the King"
+    },
+    {
+      "file": "music/drama/3.mp3",
+      "name": "Death of Kings"
+    }
+  ],
+  "sports": [
+    {
+      "file": "music/sports/1.mp3",
+      "name": "Eighties Action"
+    },
+    {
+      "file": "music/sports/2.mp3",
+      "name": "Super Power Cool Dude"
+    },
+    {
+      "file": "music/sports/3.mp3",
+      "name": "Motherlode"
+    }
+  ]
 }
