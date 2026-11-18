@@ -1669,7 +1669,7 @@ document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement
     selBlk=i;document.querySelectorAll("#laneV .blk").forEach(b=>b.classList.toggle("sel",+b.dataset.i===i))})})();
 
 /* ============ POSTER & THUMBNAIL ============ */
-function posterOpts(){P.poster=Object.assign({mode:"poster",bg:null,pos:50,tag:"t1",custom:"",credits:true},P.poster||{});return P.poster}
+function posterOpts(){const d={mode:"poster",bg:null,pos:50,tag:"t1",custom:"",credits:true};P.poster=P.poster||{};for(const k in d)if(!(k in P.poster))P.poster[k]=d[k];return P.poster}
 function svgImage(svg){return new Promise(res=>{const img=new Image();img.onload=()=>res(img);img.onerror=()=>res(null);img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '))})}
 function posterShot(){const o=posterOpts(),sh=P.shots;if(o.bg===-1)return -1;if(o.bg!=null&&sh[o.bg]&&sh[o.bg].has)return o.bg;return sh.findIndex(x=>x.has)}
 async function posterSource(){const si=posterShot();
@@ -1687,8 +1687,8 @@ async function drawPoster(cv){await fontsReady;const o=posterOpts(),thumb=o.mode
   if(!thumb){
     const g=ctx.createLinearGradient(0,0,0,CH);g.addColorStop(0,"rgba(0,0,0,.7)");g.addColorStop(.18,"rgba(0,0,0,0)");g.addColorStop(.5,"rgba(0,0,0,.05)");g.addColorStop(.72,"rgba(0,0,0,.82)");g.addColorStop(1,"rgba(0,0,0,.97)");ctx.fillStyle=g;ctx.fillRect(0,0,CW,CH);
     const by=(P.credits[0]&&P.credits[0].name)||"";ctx.font='500 34px Heebo';ctx.letterSpacing="8px";ctx.fillStyle="rgba(235,238,242,.9)";ctx.fillText(by+" מציגה",CW/2,110);ctx.letterSpacing="0px";
-    const tag=posterTagline();if(tag){ctx.font='400 42px Heebo';ctx.fillStyle="rgba(235,238,242,.85)";ctx.fillText(tag,CW/2,180)}
-    const ty=o.credits?1030:1150;const sz=fitT(P.titles.title,190,CW*.9);ctx.save();ctx.translate(CW/2,ty);ctx.shadowColor=glow;ctx.shadowBlur=50;ctx.fillStyle=titleFill(sz);ctx.fillText(P.titles.title,0,0);ctx.restore();
+    const ty=o.credits?1030:1150;
+    const tag=posterTagline();if(tag){ctx.font='400 46px Heebo';ctx.fillStyle="rgba(235,238,242,.9)";ctx.shadowColor="rgba(0,0,0,.8)";ctx.shadowBlur=18;ctx.fillText(tag,CW/2,ty-150);ctx.shadowBlur=0}const sz=fitT(P.titles.title,190,CW*.9);ctx.save();ctx.translate(CW/2,ty);ctx.shadowColor=glow;ctx.shadowBlur=50;ctx.fillStyle=titleFill(sz);ctx.fillText(P.titles.title,0,0);ctx.restore();
     ctx.font=`${f.w} ${Math.round(70*(f.big||1))}px ${f.fam}`;ctx.fillStyle=accent;ctx.shadowColor=glow;ctx.shadowBlur=24;ctx.fillText(P.titles.release||"",CW/2,ty+150);ctx.shadowBlur=0;
     if(o.credits){ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(CW*.15,ty+230);ctx.lineTo(CW*.85,ty+230);ctx.stroke();billing(ctx,ty+290,CW*.86,horror,1,CW/2,.95)}
     drawLogoMark(ctx,CW/2,CH-70,44,.5,horror);
@@ -1867,10 +1867,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="3.5";
+const VERSION="3.6";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["3.5","היום",["המוזיקה נגמרת בפייד אאוט רך ואיטי בסוף הטריילר, וגם כשהשיר קצר מהטריילר"]],
+  ["3.6","היום",["פוסטר: בחירת המשפט עובדת, והמשפט עבר למטה, ממש מעל שם הסרט"]],
+  ["3.5","",["המוזיקה נגמרת בפייד אאוט רך ואיטי בסוף הטריילר, וגם כשהשיר קצר מהטריילר"]],
   ["3.4","",["\"המשך\" על פרויקט שמור פותח אותו בדיוק איפה שעצרתם: שוטים, כותרות, פוסטר, טריילר או מוזיקה","פרויקט שכבר נשמר נשמר לבד, בלי לשאול שוב","הפרויקט הפתוח מופיע גם הוא ברשימת השמורים","\"שוט שניים\" נקרא עכשיו \"טו שוט\""]],
   ["3.3","",["חלון \"הטריילר מוכן\" נסגר לבד כשממשיכים לעבוד או חוזרים לאפליקציה, והטריילר לא ממשיך להתנגן ברקע"]],
   ["3.2","",["סוג שוט חדש: לונג שוט (LS), רואים את כל הגוף מהראש עד הרגליים","באקשן: לונג שוט ושוט בינוני (MS) בתחילת הטריילר","ציור חדש לשוט קשירת הנעליים, עם ידיים אמיתיות"]],
