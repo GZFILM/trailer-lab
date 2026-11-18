@@ -2,7 +2,7 @@
   "action": [
     {
       "file": "music/action/ad-percussion.mp3",
-      "name": "AD · Percussion",
+      "name": "Percussion",
       "by": "Arik Deri"
     },
     {
@@ -133,12 +133,12 @@
   "drama": [
     {
       "file": "music/drama/ad-sad-piano-mellow-theme.mp3",
-      "name": "AD · Sad Piano Mellow Theme",
+      "name": "Sad Piano Mellow Theme",
       "by": "Arik Deri"
     },
     {
       "file": "music/drama/ad-piano-elegant-theme.mp3",
-      "name": "AD · Piano Elegant Theme",
+      "name": "Piano Elegant Theme",
       "by": "Arik Deri"
     },
     {
