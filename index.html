@@ -1341,7 +1341,7 @@ const CUELIB={
 };
 function cueFile(X,A,at,buf){
   const src=X.ac.createBufferSource();src.buffer=buf;const g=X.ac.createGain();src.connect(g);g.connect(X.bus);
-  const off=clamp(P.music.offset||0,0,Math.max(0,buf.duration-1));g.gain.setValueAtTime(.0001,at(0));g.gain.exponentialRampToValueAtTime(.9,at(.5));g.gain.setValueAtTime(.9,at(A.T-1.6));g.gain.linearRampToValueAtTime(0,at(A.T));const st=Math.max(X.t0,X.ac.currentTime+.3);src.start(st,off+(st-X.t0));src.stop(at(A.T)+.05);
+  const off=clamp(P.music.offset||0,0,Math.max(0,buf.duration-1));g.gain.setValueAtTime(.0001,at(0));g.gain.exponentialRampToValueAtTime(.9,at(.5));const end=Math.min(A.T,buf.duration-off),fl=Math.min(3.5,Math.max(1.2,end*.08)),fs=Math.max(.6,end-fl);g.gain.setValueAtTime(.9,at(fs));g.gain.exponentialRampToValueAtTime(.12,at(fs+fl*.7));g.gain.linearRampToValueAtTime(0,at(end));const st=Math.max(X.t0,X.ac.currentTime+.3);src.start(st,off+(st-X.t0));src.stop(at(end)+.05);
   A.C.forEach(c=>boom(X,at(c.t0),.45));boom(X,at(A.tT),.8)
 }
 /* built-in library: 3 tracks per genre, listed in music/library.json next to the app */
@@ -1867,10 +1867,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="3.4";
+const VERSION="3.5";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["3.4","היום",["\"המשך\" על פרויקט שמור פותח אותו בדיוק איפה שעצרתם: שוטים, כותרות, פוסטר, טריילר או מוזיקה","פרויקט שכבר נשמר נשמר לבד, בלי לשאול שוב","הפרויקט הפתוח מופיע גם הוא ברשימת השמורים","\"שוט שניים\" נקרא עכשיו \"טו שוט\""]],
+  ["3.5","היום",["המוזיקה נגמרת בפייד אאוט רך ואיטי בסוף הטריילר, וגם כשהשיר קצר מהטריילר"]],
+  ["3.4","",["\"המשך\" על פרויקט שמור פותח אותו בדיוק איפה שעצרתם: שוטים, כותרות, פוסטר, טריילר או מוזיקה","פרויקט שכבר נשמר נשמר לבד, בלי לשאול שוב","הפרויקט הפתוח מופיע גם הוא ברשימת השמורים","\"שוט שניים\" נקרא עכשיו \"טו שוט\""]],
   ["3.3","",["חלון \"הטריילר מוכן\" נסגר לבד כשממשיכים לעבוד או חוזרים לאפליקציה, והטריילר לא ממשיך להתנגן ברקע"]],
   ["3.2","",["סוג שוט חדש: לונג שוט (LS), רואים את כל הגוף מהראש עד הרגליים","באקשן: לונג שוט ושוט בינוני (MS) בתחילת הטריילר","ציור חדש לשוט קשירת הנעליים, עם ידיים אמיתיות"]],
   ["3.1","",["מסך הפתיחה: \"כל טלפון הוא מצלמת קולנוע\" מתחת ללוגו, ויותר זמן לקרוא","האפליקציה תמיד נפתחת במסך הבית. הפרויקט הפתוח זמין מהלשוניות למטה"]],
