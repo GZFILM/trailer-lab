@@ -331,8 +331,9 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .splash::before{top:0;border-bottom:1px solid rgba(240,165,64,.4)}.splash::after{bottom:0;border-top:1px solid rgba(240,165,64,.4)}
 .splash .mark{font-family:var(--brand);font-size:clamp(56px,16vw,140px);letter-spacing:.06em;line-height:1;direction:ltr;color:#eef0f3;position:relative;text-shadow:0 0 34px rgba(240,165,64,.35);animation:rise 1s cubic-bezier(.2,.8,.2,1) both}
 .splash .mark b{font-weight:400;color:var(--accent)}
-.splash .tagline{font-size:clamp(20px,5.4vw,32px);font-weight:500;color:#e7e9ec;text-align:center;animation:fade .9s .6s both}
-.splash .soon{font-family:"Secular One",var(--ui);font-size:clamp(24px,6.4vw,40px);color:var(--accent);animation:fade .8s 1.2s both}
+.splash .tagline{font-size:clamp(20px,5.4vw,32px);font-weight:500;color:#e7e9ec;text-align:center;margin-top:18px;animation:fade .9s 1.4s both}
+.splash .lockup{display:flex;flex-direction:column;align-items:flex-end;direction:ltr}
+.splash .soon{font-family:"Secular One",var(--ui);font-size:clamp(22px,5.6vw,36px);line-height:1;color:var(--accent);margin-top:-.15em;margin-right:.1em;animation:fade .8s .9s both}
 .splash .copy{font-size:11.5px;color:var(--faint);letter-spacing:.04em;animation:fade .8s 1.5s both;text-align:center}
 .splash .copy span{direction:ltr;display:inline-block;font-family:var(--mono);letter-spacing:.12em}
 @keyframes rise{from{opacity:0;transform:scale(1.08)}to{opacity:1;transform:none}}
@@ -599,9 +600,8 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 </div>
 
 <div class="splash" id="splash" aria-label="Trailer Lab">
-  <div class="mark">TRAILER<b>LAB</b></div>
+  <div class="lockup"><div class="mark">TRAILER<b>LAB</b></div><div class="soon">בקרוב</div></div>
   <div class="tagline">כל טלפון הוא מצלמת קולנוע</div>
-  <div class="soon">בקרוב</div>
   <div class="copy">© כל הזכויות שמורות · <span>G.Z MOTION LAB</span></div>
 </div>
 
