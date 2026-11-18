@@ -89,7 +89,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .genre .meta{position:relative;padding:12px;display:flex;flex-direction:column;gap:3px;background:linear-gradient(to top,rgba(0,0,0,.95) 40%,rgba(0,0,0,0))}
 .genre .gt{font-size:28px;line-height:1.05;font-weight:800}
 .genre .gd{font-size:12px;line-height:1.35;color:#cfd3d9}
-.genre .gs{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#9aa1aa;margin-top:2px}
+.genre .gs{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#9aa1aa;margin-top:2px;direction:ltr;text-align:right}
 .genre.off{cursor:default}
 .genre.off svg.art{filter:saturate(.55) brightness(.75)}
 .genre .soon{position:absolute;top:10px;inset-inline-start:10px;font-size:11px;font-weight:500;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.3);border-radius:3px;padding:1px 7px;color:#e5e8ec}
@@ -102,7 +102,6 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .meter{height:4px;border-radius:2px;background:var(--line);overflow:hidden;grid-column:1/-1}
 .meter i{display:block;height:100%;background:var(--accent);width:0}
 .seq{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-@media(min-width:900px){.seq{grid-template-columns:1fr 1fr}}
 .it{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:10px;border-radius:10px;background:var(--panel);border:1px solid var(--line);align-items:start;min-width:0}
 .it .th{position:relative;width:132px;aspect-ratio:16/9;max-width:100%;border-radius:6px;overflow:hidden;background:#07080a;border:1px solid var(--line2);cursor:pointer}
 .it .th img{width:100%;height:100%;object-fit:cover;display:block}
@@ -141,6 +140,10 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .field.on input{border-color:rgba(240,165,64,.5)}
 .field .tc{font-family:var(--mono);font-size:10px;color:var(--faint);display:block;direction:ltr;text-align:end}
 .field.cr input.role{font-size:13px;color:var(--dim)}
+.field.cr.x{grid-template-columns:110px 1fr 36px}
+.field.cr.x .ib{width:36px;height:40px}
+.addcr{margin:10px 12px;align-self:flex-start}
+.mus .mgrp{font-size:11px;color:var(--faint);padding:10px 8px 2px;font-weight:500}
 @media(max-width:420px){.field{grid-template-columns:1fr;gap:6px}.field .tc{text-align:start}.field.cr{grid-template-columns:96px 1fr}}
 .fonts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .fonts button{background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:8px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
@@ -162,9 +165,9 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .tcbig span{color:var(--faint)}
 .tcbig{white-space:nowrap;min-width:0}
 @media(max-width:480px){.tcbig{font-size:13.5px}#fsBtn .lbl{display:none}#fsBtn{padding:0 10px}}
-.tl{direction:rtl;position:relative;padding:8px 0 10px;user-select:none;touch-action:none;cursor:pointer}
+.tl{direction:ltr;position:relative;padding:8px 0 10px;user-select:none;touch-action:none;cursor:pointer}
 .ruler{position:relative;height:18px;margin-inline-start:30px;border-bottom:1px solid var(--line)}
-.ruler span{position:absolute;bottom:2px;font-family:var(--mono);font-size:9px;color:var(--faint);transform:translateX(50%);direction:ltr}
+.ruler span{position:absolute;bottom:2px;font-family:var(--mono);font-size:9px;color:var(--faint);transform:translateX(-50%);direction:ltr}
 .ruler i{position:absolute;bottom:0;width:1px;height:5px;background:var(--line2)}
 .track{display:flex;align-items:stretch;height:46px;margin-top:6px}
 .track .lab{width:30px;flex:none;font-family:var(--mono);font-size:10px;color:var(--faint);display:grid;place-items:center}
@@ -175,9 +178,9 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .blk.sel{box-shadow:inset 0 0 0 2px #fff}
 .blk em{position:absolute;inset:auto 3px 2px 3px;font-style:normal;font-size:9px;font-family:var(--mono);color:#fff;text-shadow:0 1px 2px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .track.a .lane{background:rgba(58,168,148,.14);border:1px solid rgba(58,168,148,.55);border-radius:3px;position:relative;overflow:hidden}
-.track.a canvas{width:100%;height:100%;display:block;transform:scaleX(-1)}
-.track.a .cue{position:absolute;top:2px;right:4px;direction:ltr;font-family:var(--mono);font-size:9px;color:#bff0e5;text-shadow:0 1px 2px #000;pointer-events:none;white-space:nowrap}
-.head{position:absolute;top:4px;bottom:4px;width:2px;background:var(--rec);pointer-events:none;right:30px}
+.track.a canvas{width:100%;height:100%;display:block}
+.track.a .cue{position:absolute;top:2px;left:4px;direction:ltr;font-family:var(--mono);font-size:9px;color:#bff0e5;text-shadow:0 1px 2px #000;pointer-events:none;white-space:nowrap}
+.head{position:absolute;top:4px;bottom:4px;width:2px;background:var(--rec);pointer-events:none;left:30px}
 .head::before{content:"";position:absolute;top:-2px;left:-5px;border:6px solid transparent;border-top:8px solid var(--rec)}
 .tlhint{font-size:11.5px;color:var(--faint);padding:0 12px 10px}
 .spec{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;padding:12px;font-size:13px;margin:0}
@@ -248,13 +251,13 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:3px;gap:3px}
 .seg button{border:0;background:none;border-radius:6px;padding:8px 4px;font-size:12.5px;color:var(--dim);cursor:pointer}
 .seg button.on{background:var(--raise);color:var(--fg);box-shadow:inset 0 0 0 1px var(--line2)}
-.strip{direction:ltr;transform:scaleX(-1);position:relative;height:96px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;touch-action:none;user-select:none}
+.strip{direction:ltr;position:relative;height:96px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;touch-action:none;user-select:none}
 .strip canvas{position:absolute;left:8px;right:8px;top:8px;bottom:20px;width:calc(100% - 16px);height:calc(100% - 28px)}
 .strip .win{position:absolute;top:4px;bottom:16px;border:2px solid var(--accent);border-radius:5px;background:rgba(240,165,64,.12);cursor:grab}
 .strip .win::before,.strip .win::after{content:"";position:absolute;top:50%;width:6px;height:26px;margin-top:-13px;background:var(--accent);border-radius:2px}
 .strip .win::before{left:-4px}.strip .win::after{right:-4px}
 .strip .ph{position:absolute;top:4px;bottom:16px;width:2px;background:#fff;opacity:.85;pointer-events:none}
-.strip .ticks{position:absolute;left:8px;right:8px;bottom:3px;display:flex;justify-content:space-between;transform:scaleX(-1);direction:rtl;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+.strip .ticks{position:absolute;left:8px;right:8px;bottom:3px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
 .io{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .io div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
 .io b{font-family:var(--mono);font-size:15px;font-weight:500;direction:ltr;text-align:end}
@@ -364,7 +367,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
         <div class="meter"><i id="shotsMeter"></i></div>
       </div>
       <ul class="seq" id="seq"></ul>
-      <div class="row"><button class="btn pri grow" id="toTrailer">לצפייה בטריילר</button></div>
+      <div class="row"><button class="btn" id="backHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>חזרה</button><button class="btn pri grow" id="toTrailer">לצפייה בטריילר</button></div>
     </section>
 
     <section class="view gut" id="v-titles" hidden>
@@ -386,11 +389,11 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
         <div class="panel" style="overflow:hidden">
           <div class="monitor" id="mon" style="border:0;border-radius:0">
             <canvas id="screen" width="1280" height="720"></canvas>
-            <div class="fsui"><button id="fsExit" aria-label="יציאה ממסך מלא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button id="fsPlay" aria-label="נגן"></button><button id="fsStart" aria-label="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="16.4" y="5" width="2.6" height="14" rx="1"/><path d="M5 5.5v13L15 12z"/></svg></button></div>
+            <div class="fsui"><button id="fsExit" aria-label="יציאה ממסך מלא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button id="fsPlay" aria-label="נגן"></button><button id="fsStart" aria-label="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="2.6" height="14" rx="1"/><path d="M19 5.5v13L9 12z"/></svg></button></div>
           </div>
           <div class="transport">
             <button class="play" id="playBtn" aria-label="נגן"></button>
-            <button class="btn sm" id="startBtn" aria-label="ניגון מההתחלה" title="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="16.4" y="5" width="2.6" height="14" rx="1"/><path d="M5 5.5v13L15 12z"/></svg>START</button>
+            <button class="btn sm" id="startBtn" aria-label="ניגון מההתחלה" title="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="2.6" height="14" rx="1"/><path d="M19 5.5v13L9 12z"/></svg>START</button>
             <div class="tcbig"><b id="tcCur">00:00:00</b> <span>/ <span id="tcTot">00:00:00</span></span></div>
             <button class="btn sm" id="fsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lbl">מסך מלא</span></button>
           </div>
@@ -564,7 +567,7 @@ document.documentElement.dir="rtl";document.documentElement.lang="he";
 /* ============ TEMPLATES ============ */
 const CREDITS_DEFAULT=[["הפקה","GZFILM"],["בימוי","גל זיו"],["תסריט","נועה לוי"],["צילום","איתי כהן"],["עריכה","מאיה פרץ"],["שחקנים","יונתן מזרחי, שירה אברהם"],["איפור ותלבושות","תמר ביטון"],["אפקטים","עומר דהן"]];
 const GENRES={
-  action:{name:"אקשן",en:"ACTION",font:"secular",cue:"action",
+  action:{name:"אקשן",en:"ACTION",font:"secular",cues:["action","chase","epic","tension"],
     desc:"גיבור אחד, משימה אחת, ואין זמן לנשום.",
     defaults:{logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",t1:"הוא הגיע משום מקום",t2:"עם משימה אחת",t3:"ואין לו מה להפסיד",t4:"השנה",t5:"שום דבר",t6:"לא יעצור אותו",title:"מבצע לילה",release:"בקרוב"},
     seq:[
@@ -598,7 +601,7 @@ const GENRES={
     ],
     look:{grade:"contrast(1.16) saturate(1.22) brightness(1.02)",tint:"rgba(255,140,40,.16)",vig:.55,grain:.05,flash:true,flicker:false}
   },
-  horror:{name:"אימה",en:"HORROR",font:"frank",cue:"horror",
+  horror:{name:"אימה",en:"HORROR",font:"frank",cues:["musicbox","piano","heart","tension"],
     desc:"משהו מחכה בחושך. אל תפתחו את הדלת.",
     defaults:{logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",t1:"הם חשבו שהם לבד",t2:"הם טעו",t3:"הלילה",t4:"משהו מתעורר",title:"הקומה השלישית",release:"בקרוב"},
     seq:[
@@ -626,6 +629,39 @@ const GENRES={
       {c:"credits",d:6.0}
     ],
     look:{grade:"saturate(.35) contrast(1.28) brightness(.8)",tint:"rgba(40,80,110,.22)",vig:.85,grain:.09,flash:false,flicker:true}
+  },
+  disaster:{name:"אסונות",en:"DISASTER",font:"rubik",cues:["quake","strings","epic","tension"],
+    desc:"יום רגיל אחד, והאדמה מתחילה לרעוד.",
+    defaults:{logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",t1:"זה התחיל כמו כל יום",t2:"ואז...",t3:"האדמה זזה",t4:"הכול השתנה ברגע",t5:"כדי לשרוד",t6:"הם יצטרכו זה את זה",title:"הרעידה הגדולה",release:"בקרוב"},
+    seq:[
+      {s:1,art:"calm_morning",tag:"OPEN",type:"שוט פתיחה",label:"בוקר רגיל",hint:"שוט אווירה רגוע: כוס קפה על השולחן, ציפורים בחלון, רחוב שקט.",d:2.6},
+      {c:"logo",d:3.0},
+      {s:1,art:"glass_ripple",tag:"INS",type:"אינסרט",label:"המים רועדים",hint:"תקריב על כוס מים או נברשת. הקש קלות על השולחן כדי שהמים ירטטו.",d:2.0},
+      {c:"filmby",d:2.4},
+      {s:1,art:"city_els",tag:"ELS",type:"רחב מאוד",label:"העיר מלמעלה",hint:"שוט רחב מאוד מגבוה: גג, גבעה או חלון גבוה. העיר עוד שקטה.",d:2.6},
+      {s:1,art:"street_ws",tag:"WS",type:"שוט רחב",label:"חיים רגילים",hint:"אנשים ברחוב או בחצר, תנועה רגילה. אף אחד לא יודע מה עומד לקרות.",d:2.2},
+      {c:"t1",d:2.2},
+      {s:1,tag:"MS",type:"שוט בינוני",label:"משהו לא בסדר",hint:"הגיבור עוצר באמצע הדרך ומקשיב. מבט לאט למעלה.",d:1.8},
+      {s:1,tag:"CU",type:"קלוז אפ",label:"הפחד מתחיל",hint:"העיניים זזות לצדדים והנשימה מואצת.",d:1.8},
+      {c:"t2",d:1.6},
+      {s:1,art:"shake",tag:"SHAKE",type:"מצלמה רועדת",label:"האדמה זזה",hint:"נער את המצלמה בעדינות תוך כדי צילום. אנשים מתכופפים ונאחזים במשהו.",d:1.4,shake:1},
+      {s:1,art:"falling",tag:"INS",type:"אינסרט",label:"חפץ נופל",hint:"תמונה נופלת מהקיר, ספרים נופלים מהמדף, כרית נופלת מהספה.",d:1.2,shake:1},
+      {c:"t3",d:1.6,shake:1},
+      {s:1,tag:"TRK",type:"מעקב",label:"בורחים",hint:"רצים לצד הגיבור עם המצלמה, החוצה, אל השטח הפתוח.",d:1.3,shake:1},
+      {s:1,art:"under_table",tag:"HIGH",type:"זווית גבוהה",label:"מתחת לשולחן",hint:"מצלמה גבוהה: מישהו מסתתר מתחת לשולחן ומחזיק ברגל שלו.",d:1.4},
+      {s:1,art:"crack",tag:"LOW",type:"זווית נמוכה",label:"הקירות נסדקים",hint:"מצלמה נמוכה אל קיר או תקרה. אפשר לזרוק קצת קמח כאילו זה אבק.",d:1.3,shake:1},
+      {c:"t4",d:1.8},
+      {s:1,art:"helping_hand",tag:"2S",type:"שוט שניים",label:"יד מושטת",hint:"יד אחת מושיטה לשנייה ועוזרת לה לקום.",d:1.6},
+      {s:1,tag:"POV",type:"נקודת מבט",label:"בין ההריסות",hint:"המצלמה זזה לאט בין כיסאות הפוכים וחפצים על הרצפה.",d:1.6},
+      {c:"t5",d:1.2},
+      {s:1,tag:"ECU",type:"תקריב קיצוני",label:"עיניים",hint:"רק העיניים בפריים. אבק על הפנים, מבט שלא מוותר.",d:0.9},
+      {s:1,tag:"DOLLY",type:"דולי אין",label:"מבט קדימה",hint:"מתקרבים לאט אל הגיבור שמסתכל קדימה, אל מה שנשאר.",d:1.6},
+      {c:"t6",d:2.0},
+      {s:1,art:"group_sil",tag:"SIL",type:"צללית",label:"עומדים יחד",hint:"כמה דמויות עומדות זו ליד זו מול האור. החזק את המצלמה עד הסוף.",d:2.4},
+      {c:"title",d:4.0},
+      {c:"credits",d:5.8}
+    ],
+    look:{grade:"sepia(.3) saturate(.85) contrast(1.15) brightness(.95)",tint:"rgba(210,140,70,.2)",vig:.7,grain:.08,flash:false,flicker:false}
   }
 };
 const OLD_V1={action:["שוט רחב של המקום","הגיבור נכנס לפריים","קלוז אפ על הגיבור","ידיים בפעולה","ריצה","רגע האקשן","מבט אל המצלמה","שוט סיום"],horror:["הבית מבחוץ","לבד בחדר","מסדרון חשוך","עיניים מפוחדות","צל עובר","יד על הידית","צעקה","הדבר"]};
@@ -639,13 +675,15 @@ const SOON=[
   ["comedy","קומדיה","תוכנית מושלמת שמשתבשת בכל דרך אפשרית."],
   ["drama","דרמה","רגע אחד שמשנה חיים, ומבטים שאומרים הכול."],
   ["sports","ספורט","קבוצה שאף אחד לא האמין בה, ומשחק אחד שהכול תלוי בו."],
-  ["boys","סרט בנים","חבורה, אופניים וקיץ אחד שלא שוכחים."],
+  ["boys","סרט בנים","חבורה, בית על העץ וקיץ אחד שלא שוכחים."],
   ["girls","סרט בנות","חברות, סוד משותף ומסיבה שאסור לפספס."],
   ["reality","ריאליטי","מצלמות בכל פינה, ורק אחד יישאר."],
   ["promo","פרומו נוער","30 שניות של אנרגיה לתוכנית הבידור החדשה."],
   ["doc","תעודה","סיפור אמיתי, אנשים אמיתיים ומצלמה שמקשיבה."],
   ["investigation","תחקיר","מסמכים, עדויות ושאלה שאף אחד לא רוצה לענות עליה."],
-  ["musical","מחזמר","במה, זרקור ושיר אחד שמשנה הכול."]
+  ["musical","מחזמר","במה, זרקור ושיר אחד שמשנה הכול."],
+  ["fun","קליפ כיף","קליפ קצבי ושמח לחברים, ליום הולדת או סתם בשביל הכיף."],
+  ["holidays","קליפ חגים","ראש השנה, חנוכה, פורים, פסח ויום העצמאות."]
 ];
 const FONTS={
   secular:{name:"סקולר",fam:'"Secular One",Heebo,sans-serif',w:"400",he:1},
@@ -657,7 +695,6 @@ const FONTS={
   bebas:{name:"Bebas Neue",fam:'"Bebas Neue",Heebo,sans-serif',w:"400",he:0,big:1.3},
   anton:{name:"Anton",fam:'Anton,Heebo,sans-serif',w:"400",he:0}
 };
-const CUES={action:"אקשן · בראאם",horror:"אימה · דופק לב",tension:"מתח · שעון מתקתק",epic:"אפי · תופי טייקו"};
 const FIELD_LABEL={logo:"חברת הפקה",filmby:"סרטם של",t1:"כותרת 1",t2:"כותרת 2",t3:"כותרת 3",t4:"כותרת 4",t5:"כותרת 5",t6:"כותרת 6",title:"שם הסרט",release:"בקרוב",credits:"קרדיטים"};
 
 /* ============ UTIL ============ */
@@ -728,8 +765,8 @@ function drawSeg(ctx,seg,lt,video){
   ctx.restore();
 }
 function drawShot(ctx,v,p,lt,seg,g){
-  const vw=v.videoWidth,vh=v.videoHeight,s=Math.max(W/vw,H/vh)*(1.02+.04*p),dw=vw*s,dh=vh*s;
-  ctx.filter=g.look.grade;ctx.drawImage(v,(W-dw)/2,(H-dh)/2,dw,dh);ctx.filter="none";
+  const vw=v.videoWidth,vh=v.videoHeight,sk=seg.shake&&!STILL,s=Math.max(W/vw,H/vh)*(1.02+.04*p+(sk?.04:0)),dw=vw*s,dh=vh*s,jx=sk?(Math.random()-.5)*22:0,jy=sk?(Math.random()-.5)*14:0;
+  ctx.filter=g.look.grade;ctx.drawImage(v,(W-dw)/2+jx,(H-dh)/2+jy,dw,dh);ctx.filter="none";
   ctx.globalCompositeOperation="soft-light";ctx.fillStyle=g.look.tint;ctx.fillRect(0,0,W,H);ctx.globalCompositeOperation="source-over";
   vignette(ctx,g.look.vig);grainFx(ctx,g.look.grain);
   if(g.look.flicker&&!STILL&&Math.random()<.05){ctx.fillStyle="rgba(0,0,0,.4)";ctx.fillRect(0,0,W,H)}
@@ -745,6 +782,7 @@ function drawSlate(ctx,seg){
   letterbox(ctx);
 }
 function drawCard(ctx,seg,lt,p,g){
+  if(seg.shake&&!STILL)ctx.translate((Math.random()-.5)*18,(Math.random()-.5)*10);
   const a=STILL?1:clamp(Math.min(lt/.3,(seg.d-lt)/.25),0,1),horror=isHorror();
   if(seg.c==="logo")return logoCard(ctx,P.titles.logo||"",lt,p,a,horror);
   if(seg.c==="title")return titleCard(ctx,lt,seg,horror);
@@ -856,7 +894,7 @@ function brass(X,t,v=.18,dur=2,root=110){const f=filt(X,"lowpass",300,2);f.frequ
 function anchors(S,T){const C=S.filter(s=>s.c&&/^t\d$/.test(s.c)),title=S.find(s=>s.c==="title"),credits=S.find(s=>s.c==="credits"),filmby=S.find(s=>s.c==="filmby");
   const main=S.find(s=>s.s&&filmby&&s.t0>filmby.t0)||S.find(s=>s.s);const fast=S.filter(s=>s.s&&s.d<=1.2&&s.t0<title.t0);
   const sc=S.find(s=>s.k==="scream")||fast[fast.length-1]||S.filter(s=>s.s).slice(-1)[0];const gi=S.indexOf(sc)+1;const gl=S[gi]&&S[gi].s?S[gi]:null;
-  return{C,title,tT:title.t0,credits,main,fast,sc,gl,T}}
+  return{S,C,title,tT:title.t0,credits,main,fast,sc,gl,T}}
 function cueAction(X,A,at){
   drone(X,at(0),at(A.T),[55,55.25,82.4],.09,520);boom(X,at(.05),.4);
   for(let r=A.main.t0;r<A.tT-.45;r+=.5){const k=(r-A.main.t0)/(A.tT-A.main.t0);tick(X,at(r),.05+.15*k)}
@@ -869,11 +907,11 @@ function cueAction(X,A,at){
   if(A.credits)braam(X,at(A.credits.t0),.3,3);
 }
 function cueHorror(X,A,at){
-  const dv=.17,dg=drone(X,at(0),at(A.T),[36.7,38.9,55],dv,240,"triangle");
-  const stopAt=A.gl?A.gl.t0:A.tT;tone(X,at(4),at(stopAt),1244.5,.016);boom(X,at(.1),.4);
+  const dv=.07,dg=drone(X,at(0),at(A.T),[36.7,55],dv,200,"triangle");
+  boom(X,at(.1),.4);pad(X,at(2),Math.max(3,A.sc.t0-2),[38,45,50],.035,320,3);
   const c1=A.C[0]||A.main;let r=c1.t0;while(r<A.sc.t0-1.7){const k=(r-c1.t0)/(A.sc.t0-c1.t0);heartbeat(X,at(r),.45+.4*k);r+=1.05-.5*k}
   A.C.forEach((c,i)=>{swell(X,at(Math.max(0,c.t0-.9)),.9,.22+.04*i);boom(X,at(c.t0),.65+.1*i)});
-  screech(X,at(A.sc.t0-1.7),1.7,.045);boom(X,at(A.sc.t0),1);braam(X,at(A.sc.t0),.5,1.2);
+  lowRise(X,at(A.sc.t0-1.8),1.8,.06);boom(X,at(A.sc.t0),1);braam(X,at(A.sc.t0),.45,1.2);
   if(A.gl){dg.gain.setValueAtTime(dv,at(A.gl.t0-.03));dg.gain.linearRampToValueAtTime(.0001,at(A.gl.t0));dg.gain.setValueAtTime(.0001,at(A.tT));dg.gain.linearRampToValueAtTime(dv,at(A.tT+.4))}
   swell(X,at(A.tT-.8),.8,.35);boom(X,at(A.tT),1.1);if(A.credits)boom(X,at(A.credits.t0),.4);
 }
@@ -891,18 +929,104 @@ function cueEpic(X,A,at){
   A.C.forEach((c,j)=>brass(X,at(c.t0),.14+.04*j,1.9,j%2?98:110));
   riser(X,at(A.tT-2.4),2.1,.25);boom(X,at(A.tT),1);brass(X,at(A.tT),.3,3.6,110);if(A.credits)brass(X,at(A.credits.t0),.16,4,82.4);
 }
+
+/* ---- instruments for the library cues ---- */
+const MID=m=>440*Math.pow(2,(m-69)/12);
+function pad(X,t,dur,notes,v,cut,att){att=att||.8;dur=Math.max(dur,att+.2);const f=filt(X,"lowpass",cut||900,.8,false);const g=X.ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+att);g.gain.setValueAtTime(v,t+Math.max(att,dur-1));g.gain.linearRampToValueAtTime(.0001,t+dur+.6);f.connect(g);g.connect(X.bus);send(X,g,.45);notes.forEach(m=>{[-7,7].forEach(dt=>{const o=osc(X,"sawtooth",MID(m),t,dur+.7,f);o.detune.value=dt})})}
+function bell(X,t,m,v){const f=MID(m);const lp=filt(X,"lowpass",3800,.7);send(X,lp,.7);osc(X,"sine",f,t,2,env(X,t,v,.003,1.8,lp));osc(X,"sine",f*2.76,t,.9,env(X,t,v*.3,.002,.7,lp));osc(X,"sine",f*5.4,t,.4,env(X,t,v*.1,.002,.3,lp))}
+function piano(X,t,m,v,dec){dec=dec||2.4;const f=MID(m);const lp=filt(X,"lowpass",2000,.7);send(X,lp,.4);osc(X,"triangle",f,t,dec+.1,env(X,t,v,.004,dec,lp));osc(X,"sine",f*2,t,dec*.6+.1,env(X,t,v*.45,.003,dec*.6,lp))}
+function pluck(X,t,m,v,cut,dec){dec=dec||.18;cut=cut||1800;const f=filt(X,"lowpass",cut,2);f.frequency.setValueAtTime(cut,t);f.frequency.exponentialRampToValueAtTime(260,t+dec);osc(X,"sawtooth",MID(m),t,dec+.05,env(X,t,v,.003,dec,f))}
+function snare(X,t,v){const b=filt(X,"highpass",1400,.7);send(X,b,.3);noise(X,t,.2,env(X,t,v,.002,.16,b));osc(X,"triangle",190,t,.1,env(X,t,v*.5,.002,.08))}
+function choir(X,t,dur,notes,v){dur=Math.max(dur,1.6);const g=X.ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+1.2);g.gain.setValueAtTime(v,t+Math.max(1.2,dur-.8));g.gain.linearRampToValueAtTime(.0001,t+dur+.8);g.connect(X.bus);send(X,g,.8);const b1=filt(X,"bandpass",700,3,g),b2=filt(X,"bandpass",1150,4,g);notes.forEach(m=>{const o=osc(X,"sawtooth",MID(m),t,dur+.9,b1);o.connect(b2);const l=X.ac.createOscillator();l.frequency.value=4.6+Math.random();const lg=X.ac.createGain();lg.gain.value=5;l.connect(lg);lg.connect(o.detune);l.start(t);l.stop(t+dur+.9)})}
+function rumble(X,t,dur,v){const f=filt(X,"lowpass",120,1,false);const g=X.ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+dur*.35);g.gain.linearRampToValueAtTime(.0001,t+dur);f.connect(g);g.connect(X.bus);noise(X,t,dur,f);osc(X,"sine",33,t,dur,g)}
+function strDet(X,t,m,v,len){const f=filt(X,"lowpass",1700,1);osc(X,"sawtooth",MID(m),t,(len||.16)+.06,env(X,t,v,.012,len||.16,f))}
+function lowRise(X,t,dur,v){const f=filt(X,"lowpass",700,1,false);const g=X.ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+dur);g.gain.setValueAtTime(0,t+dur+.01);f.connect(g);g.connect(X.bus);send(X,g,.5);[110,110.6].forEach(fr=>{const o=osc(X,"sawtooth",fr,t,dur,f);o.frequency.exponentialRampToValueAtTime(fr*1.5,t+dur)})}
+const CH={Am:[57,60,64],F:[53,57,60],C:[55,60,64],G:[55,59,62],Dm:[50,53,57],Bb:[50,53,58],E:[52,56,59],Gm:[55,58,62]};
+
+/* ---- action: synth arpeggio chase ---- */
+function cueChase(X,A,at){const b=60/128,s16=b/4,bars=b*4,prog=[CH.Am,CH.F,CH.C,CH.G];
+  boom(X,at(.05),.35);pad(X,at(0),A.main.t0+.6,[45,52,57],.05,600,1.5);
+  const s0=A.main.t0,end=A.tT-.4;let i=0;
+  for(let r=s0;r<end;r+=s16,i++){const bar=Math.floor((r-s0)/bars)%4,ch=prog[bar],k=(r-s0)/(end-s0);pluck(X,at(r),ch[i%3]+12*((i>>2)%2),.06+.05*k,700+2600*k,.14)}
+  for(let r=s0;r<end;r+=b/2){const bar=Math.floor((r-s0)/bars)%4;pluck(X,at(r),prog[bar][0]-24,.16,500,.22)}
+  const c1=(A.C[1]||A.main).t0,c2=(A.C[2]||A.main).t0;
+  for(let r=c1;r<end;r+=b)kick(X,at(r),.75);
+  for(let r=c2+b;r<end;r+=2*b)snare(X,at(r),.32);
+  for(let r=c2;r<end;r+=b/2)tick(X,at(r),.05,8000);
+  A.C.forEach(c=>boom(X,at(c.t0),.45));
+  riser(X,at(A.tT-2.2),1.9,.22);braam(X,at(A.tT),.8,3.4);boom(X,at(A.tT),1);
+  if(A.credits)pad(X,at(A.credits.t0),A.T-A.credits.t0,[45,52,57,60],.06,700,1)}
+
+/* ---- horror: music box lullaby ---- */
+function cueMusicBox(X,A,at){const mel=[76,81,84,83,81,76,77,76,74,77,81,80,81,0,76,0,76,81,84,83,81,88,87,0,86,84,83,81,80,81,0,0];
+  pad(X,at(0),A.T,[33,40],.05,280,3);boom(X,at(.1),.35);
+  const s0=A.main.t0,end=A.sc.t0-.8;let i=0;
+  for(let r=s0;r<end;r+=.5,i++){const m=mel[i%mel.length];if(!m)continue;const k=(r-s0)/(end-s0);bell(X,at(r),m,.16);bell(X,at(r+.02),m+.18+.3*k,.06+.06*k)}
+  A.C.forEach((c,j)=>{swell(X,at(Math.max(0,c.t0-.8)),.8,.16);boom(X,at(c.t0),.5+.08*j)});
+  boom(X,at(A.sc.t0),.9);
+  boom(X,at(A.tT),1);
+  if(A.credits){[81,80,77,76].forEach((m,j)=>bell(X,at(A.credits.t0+.6+j*.9),m,.12))}}
+
+/* ---- horror: low piano in the dark ---- */
+function cuePiano(X,A,at){const ost=[50,53,57,58];
+  boom(X,at(.1),.35);
+  const s0=A.main.t0,end=A.sc.t0-.5;let i=0;
+  for(let r=s0;r<end;r+=.55,i++){const k=(r-s0)/(end-s0);piano(X,at(r),ost[i%4]-(i%8>3?12:0),.16+.1*k,1.8)}
+  for(let r=s0;r<end;r+=2.2)piano(X,at(r),38,.2,3);
+  const c0=(A.C[0]||A.main).t0;pad(X,at(c0),Math.max(2,A.sc.t0-c0),[38,45,50,53],.04,420,2);
+  const c1=(A.C[1]||A.main).t0;let r=c1;while(r<A.sc.t0-1.4){heartbeat(X,at(r),.35);r+=.9}
+  A.C.forEach(c=>{[50,51,52].forEach(m=>piano(X,at(c.t0),m-12,.2,2.6));boom(X,at(c.t0),.5)});
+  [49,50,51,52].forEach(m=>piano(X,at(A.sc.t0),m-12,.25,2.4));boom(X,at(A.sc.t0),.95);
+  boom(X,at(A.tT),1.05);[38,26].forEach(m=>piano(X,at(A.tT),m,.3,4));
+  if(A.credits){[62,60,58,57,53].forEach((m,j)=>piano(X,at(A.credits.t0+.5+j*.8),m,.14,2.2))}}
+
+/* ---- disaster: sub rumble, brass and choir ---- */
+function cueQuake(X,A,at){const c1=(A.C[1]||A.main),c2=(A.C[2]||A.main);
+  pad(X,at(0),c1.t0+.3,[53,57,60,65],.05,1400,1.5);
+  for(let r=A.main.t0,i=0;r<c1.t0-.3;r+=1.1,i++)pluck(X,at(r),[65,69,72,69][i%4],.05,2200,.4);
+  rumble(X,at(c1.t0-.3),3.2,.45);boom(X,at(c1.t0),.8);
+  A.S.filter(s=>s.shake).forEach(s=>rumble(X,at(s.t0),s.d+.8,.35));
+  const prog=[CH.Dm,CH.Bb,CH.F,CH.C];let j=0;for(let r=c2.t0;r<A.tT-.4;r+=2.4,j++)choir(X,at(r),2.3,prog[j%4].map(m=>m-12),.045+.01*Math.min(j,4));
+  const pat=[1,0,.5,0,.8,0,.5,.4];let i=0;for(let r=c2.t0;r<A.tT-.5;r+=.25,i++){const v=pat[i%8];if(v)taiko(X,at(r),v*.6)}
+  A.C.forEach((c,k)=>{brass(X,at(c.t0),.14+.03*k,1.8,k%2?49:55);boom(X,at(c.t0),.55)});
+  riser(X,at(A.tT-2.4),2.1,.22);boom(X,at(A.tT),1.1);rumble(X,at(A.tT),3,.4);choir(X,at(A.tT),3.4,[38,45,50,53,57],.07);brass(X,at(A.tT),.28,3.4,55);
+  if(A.credits)choir(X,at(A.credits.t0),A.T-A.credits.t0,[41,48,53,57],.045)}
+
+/* ---- disaster: string ostinato ---- */
+function cueStrings(X,A,at){const b=60/140,s16=b/4,prog=[CH.Dm,CH.Bb,CH.Gm,CH.Am],bars=b*4;
+  pad(X,at(0),A.main.t0+.5,[50,57,62],.04,900,1.5);boom(X,at(.05),.35);
+  const s0=A.main.t0,end=A.tT-.4;let i=0;
+  for(let r=s0;r<end;r+=s16,i++){const bar=Math.floor((r-s0)/bars)%4,ch=prog[bar],k=(r-s0)/(end-s0),pat=[0,1,2,1];strDet(X,at(r),ch[pat[i%4]]+(k>.5?12:0),.05+.04*k)}
+  for(let r=s0;r<end;r+=b){const bar=Math.floor((r-s0)/bars)%4;strDet(X,at(r),prog[bar][0]-24,.12,.32)}
+  const c3=(A.C[3]||A.main).t0;let j=0;for(let r=c3;r<end;r+=bars,j++)choir(X,at(r),bars,prog[j%4],.05);
+  const pat=[1,0,0,.6,0,.8,0,0];i=0;for(let r=c3;r<end;r+=.25,i++){const v=pat[i%8];if(v)taiko(X,at(r),v*.55)}
+  A.C.forEach(c=>boom(X,at(c.t0),.5));
+  riser(X,at(A.tT-2.2),1.9,.22);boom(X,at(A.tT),1);choir(X,at(A.tT),3.2,[38,45,50,57],.07);
+  if(A.credits)pad(X,at(A.credits.t0),A.T-A.credits.t0,[38,45,50,53],.045,700,1.2)}
+
+const CUELIB={
+  action:{name:"בראאם",fn:cueAction},
+  chase:{name:"מרדף · ארפג׳יו סינתי",fn:cueChase},
+  epic:{name:"אפי · תופי טייקו",fn:cueEpic},
+  tension:{name:"מתח · שעון מתקתק",fn:cueTension},
+  musicbox:{name:"תיבת נגינה",fn:cueMusicBox},
+  piano:{name:"פסנתר בחושך",fn:cuePiano},
+  heart:{name:"דופק לב",fn:cueHorror},
+  quake:{name:"רעידה · סאב, מקהלה ונשפנים",fn:cueQuake},
+  strings:{name:"גל ענק · כלי קשת",fn:cueStrings}
+};
 function cueFile(X,A,at,buf){
   const src=X.ac.createBufferSource();src.buffer=buf;const g=X.ac.createGain();src.connect(g);g.connect(X.bus);
   const off=clamp(P.music.offset||0,0,Math.max(0,buf.duration-1));g.gain.setValueAtTime(.0001,at(0));g.gain.exponentialRampToValueAtTime(.9,at(.5));g.gain.setValueAtTime(.9,at(A.T-1.6));g.gain.linearRampToValueAtTime(0,at(A.T));const st=Math.max(X.t0,X.ac.currentTime+.3);src.start(st,off+(st-X.t0));src.stop(at(A.T)+.05);
   if(P.music.hits){A.C.forEach(c=>boom(X,at(c.t0),.5));boom(X,at(A.tT),.8)}
 }
-function currentCue(){const m=P.music||{src:"auto"};if(m.src==="file"&&musicBuf)return"file";if(m.src&&m.src.startsWith("lib:"))return m.src.slice(4);return G().cue}
+function currentCue(){const m=P.music||{src:"auto"};if(m.src==="file"&&musicBuf)return"file";if(m.src&&m.src.startsWith("lib:")){let id=m.src.slice(4);if(id==="horror")id="heart";if(CUELIB[id])return id}return G().cues[0]}
 function buildScore(ac,out,S,t0,T){
   const comp=ac.createDynamicsCompressor();comp.threshold.value=-16;comp.knee.value=10;comp.ratio.value=5;comp.attack.value=.003;comp.release.value=.25;
-  const mg=ac.createGain();mg.gain.value=.95;comp.connect(mg);mg.connect(out);
+  const mg=ac.createGain();mg.gain.value=.85;comp.connect(mg);const lim=ac.createDynamicsCompressor();lim.threshold.value=-4;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.001;lim.release.value=.12;mg.connect(lim);lim.connect(out);
   const rev=ac.createConvolver();rev.buffer=impulse(ac,3);const rg=ac.createGain();rg.gain.value=.32;rev.connect(rg);rg.connect(comp);
   const X={ac,bus:comp,rev,nb:noiseBuf(ac),t0},at=r=>Math.max(0,t0+r),A=anchors(S,T),cue=currentCue();
-  if(cue==="file")cueFile(X,A,at,musicBuf);else ({action:cueAction,horror:cueHorror,tension:cueTension,epic:cueEpic}[cue]||cueAction)(X,A,at);
+  if(cue==="file")cueFile(X,A,at,musicBuf);else (CUELIB[cue]||CUELIB.action).fn(X,A,at);
 }
 async function loadMusicBuf(){if(musicBuf)return musicBuf;try{const b=await getClip("music");if(!b)return null;const ab=await b.arrayBuffer();musicBuf=await audioCtx().decodeAudioData(ab);return musicBuf}catch(e){return null}}
 
@@ -963,7 +1087,10 @@ const ART={
   comedy:()=>sky("co","#ffe27a","#ffc94a","#f29a2e")+`<g fill="#fff" opacity=".35"><circle cx="40" cy="60" r="18"/><circle cx="160" cy="40" r="12"/></g><path d="M0 266V220h200v46z" fill="#c45a1a"/><g transform="rotate(-38 100 200)">${fig(100,214,1.8,"run","#2a1708")}</g><path d="M60 218q10-10 22-2q-8 0-12 6-6-4-10-4z" fill="#ffe14d" stroke="#2a1708" stroke-width="1.2"/>`,
   drama:()=>sky("dr","#0e1520","#1f3045","#33465e")+`<g stroke="#9fb4cc" stroke-width="1" opacity=".35">`+Array.from({length:40},(_,i)=>`<path d="M${(i*37)%200} ${(i*53)%200}l-6 18"/>`).join("")+`</g><rect x="20" y="40" width="70" height="90" fill="#e8c88a" opacity=".25"/><path d="M0 266V224h200v42z" fill="#0a0f16"/>`+fig(60,224,1.6,"stand","#05080c")+fig(150,224,1.6,"stand","#05080c"),
   sports:()=>sky("sp","#071022","#0f2448","#1b4d2e")+`<g fill="#fff"><circle cx="30" cy="30" r="6"/><circle cx="50" cy="30" r="6"/><circle cx="150" cy="30" r="6"/><circle cx="170" cy="30" r="6"/></g><path d="M30 36l-20 200M170 36l20 200" stroke="#fff" opacity=".1" stroke-width="40"/><path d="M0 266V200h200v66z" fill="#14522a"/><path d="M0 230h200" stroke="#fff" opacity=".4"/>`+fig(90,224,2.1,"run")+`<circle cx="140" cy="214" r="10" fill="#fff"/><path d="M134 210l6 4 6-4M140 214v8" stroke="#111" stroke-width="1.5" fill="none"/>`,
-  boys:()=>sky("bo","#ffb36b","#e0663c","#4a2a52")+`<circle cx="150" cy="120" r="30" fill="#ffe0a6" opacity=".9"/><path d="M0 266V214h200v52z" fill="#1b1222"/>`+[45,110].map(x=>`<g fill="none" stroke="#000" stroke-width="3"><circle cx="${x}" cy="206" r="10"/><circle cx="${x+30}" cy="206" r="10"/><path d="M${x} 206l10-16h14l6 16M${x+10} 190l-2-6"/></g>`+fig(x+16,196,1.1,"stand")).join(""),
+  boys:()=>sky("bo","#ffcf7a","#e0784a","#3b2440")+`<rect x="122" y="118" width="16" height="148" fill="#1a0f12"/><circle cx="130" cy="92" r="46" fill="#1f2a1a"/><circle cx="96" cy="116" r="28" fill="#1f2a1a"/><circle cx="164" cy="118" r="30" fill="#1f2a1a"/><path d="M100 150h58v-26l-29-18-29 18z" fill="#3a2414"/><rect x="120" y="130" width="14" height="18" fill="#ffd27a"/><path d="M151 106v-22l14 6-14 6" fill="#e0452f" stroke="#2a1a10"/><path d="M104 150 90 266M114 150 100 266M101 172h11M98 197h11M95 222h11M92 247h11" stroke="#2a1a10" stroke-width="2.5"/><path d="M0 266v-18h200v18z" fill="#140b10"/>`+fig(40,250,1.45,"stand")+fig(66,250,1.3,"run"),
+  disaster:()=>sky("di","#2a1a10","#7a4520","#d08a48")+`<g fill="#e8c9a0" opacity=".18"><circle cx="40" cy="120" r="30"/><circle cx="150" cy="100" r="40"/><circle cx="100" cy="150" r="26"/></g><g fill="#120b07"><path d="M0 266V176h22v-30h16v30h12v-56h20v66h10v-30h18v44h16v-70l16 4v62h18v-28h24v102z"/><path d="M60 266l14-90 22 6-8 84z" transform="rotate(8 80 220)"/></g><path d="M0 232h200v34H0z" fill="#1d120b"/><path d="M84 232l12 9-9 8 15 9-7 8" stroke="#f0a540" stroke-width="2.2" fill="none"/>`+fig(150,246,1.2,"run","#0a0604"),
+  fun:()=>sky("fn","#2d0b5a","#d81b60","#ffb300")+[[20,40,"#ffd56b"],[60,20,"#00e5ff"],[150,30,"#ff8fb3"],[180,70,"#b2ff59"],[30,110,"#00e5ff"],[170,130,"#ffd56b"],[100,60,"#fff"],[130,90,"#b2ff59"],[70,90,"#ff8fb3"]].map(([x,y,c],i)=>`<rect x="${x}" y="${y}" width="7" height="12" rx="1" fill="${c}" transform="rotate(${i*37} ${x} ${y})"/>`).join("")+`<path d="M0 266v-30h200v30z" fill="#1b0633"/>`+fig(64,238,1.6,"sing")+fig(100,238,1.8,"run")+fig(140,238,1.6,"sing")+`<g fill="#fff"><circle cx="40" cy="160" r="4"/><circle cx="160" cy="150" r="4"/></g><path d="M44 160v-20l8 4M164 150v-20l8 4" stroke="#fff" stroke-width="2" fill="none"/>`,
+  holidays:()=>sky("hd","#06102a","#13265a","#24407e")+stars(26,5)+`<rect x="40" y="196" width="120" height="8" rx="2" fill="#c9a24a"/><rect x="96" y="204" width="8" height="40" fill="#c9a24a"/><rect x="74" y="242" width="52" height="8" rx="3" fill="#c9a24a"/>`+[0,1,2,3,4,5,6,7,8].map(i=>{const x=44+i*14,h=i===4?40:28;return `<rect x="${x-2}" y="${196-h}" width="4" height="${h}" fill="#e9e4d8"/><path d="M${x} ${190-h}q5 7 0 11q-5-4 0-11z" fill="#ffb300"/>`}).join("")+`<circle cx="160" cy="60" r="16" fill="#f3e9c9" opacity=".9"/><circle cx="166" cy="56" r="14" fill="#13265a"/>`,
   girls:()=>sky("gi","#1e1036","#5a2a6a","#d46a8a")+stars(12,11)+`<path d="M10 70Q100 110 190 70" stroke="#fff" opacity=".4" fill="none"/>`+[30,55,80,105,130,155,175].map((x,i)=>`<circle cx="${x}" cy="${(78+Math.sin(i/6*Math.PI)*16).toFixed(1)}" r="3" fill="${["#ffd56b","#ff8fb3","#9fe3ff"][i%3]}"/>`).join("")+`<path d="M0 266V200h200v66z" fill="#140a1e"/>`+fig(70,200,1.5,"stand")+fig(100,200,1.65,"sing")+fig(130,200,1.5,"stand"),
   reality:()=>sky("re","#0b0b0f","#1a1a22","#24242e")+`<rect x="20" y="40" width="160" height="186" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/><path d="M20 60v-20h20M180 60v-20h-20M20 206v20h20M180 206v20h-20" stroke="#fff" stroke-width="3" fill="none"/><circle cx="40" cy="56" r="5" fill="#ff3b30"/><text x="50" y="60" fill="#fff" font-family="IBM Plex Mono,monospace" font-size="11">REC</text><rect x="70" y="160" width="60" height="8" fill="#5a3b8a"/>`+fig(100,206,1.7,"sit"),
   promo:()=>sky("pr","#2b0a5a","#c2185b","#ff8a00")+`<rect x="40" y="78" width="120" height="96" rx="12" fill="#111"/><rect x="50" y="88" width="100" height="70" rx="6" fill="#00e5ff"/><path d="M50 158l30-30 20 18 24-28 26 40z" fill="#ff2e88"/><path d="M80 78l-16-22M120 78l16-22" stroke="#111" stroke-width="4"/><path d="M100 196l6 14 15 2-11 10 3 15-13-7-13 7 3-15-11-10 15-2z" fill="#ffe14d"/>`,
@@ -1006,6 +1133,14 @@ const SHOT_ART={
   car_night:GROUND+'<circle class="d" cx="22" cy="18" r="6"/><path class="d" d="M128 76V16H112"/><path class="lt" d="M112 18L96 76H136Z"/><path class="f" d="M28 70q2-14 16-16l10-10h28l12 10q14 2 16 16v4H28z"/><circle class="k" cx="48" cy="74" r="6"/><circle class="k" cx="94" cy="74" r="6"/>',
   city_els:'<path class="d" d="M0 56h14V40h12v16h10V30h16v26h12V44h14v12h16V34h14v22h14V46h10v10h18"/><path class="d" d="M8 46h2M42 38h2M90 42h2M118 52h2"/><path class="f" d="M0 76H160V92H0Z"/>'+pers(118,76,.3),
   street_ws:'<path class="d" d="M0 18H32V76M0 38h32M0 58h32M128 76V24h32M128 44h32M128 62h32M32 76L58 52H102L128 76"/>'+GROUND+pers(80,72,.8),
+  calm_morning:'<rect class="d" x="16" y="10" width="58" height="44"/><path class="d" d="M45 10V54M16 32H74M0 72H160"/><path class="f" d="M92 44h34v18q0 10-10 10h-14q-10 0-10-10z"/><path class="f" d="M126 48q10 0 10 7t-10 7"/><path class="a" d="M102 38q-4-6 0-12t0-12M114 38q-4-6 0-12t0-12"/>',
+  glass_ripple:'<path class="d" d="M0 78H160"/><path class="f" d="M60 18H100L94 78H66Z"/><path class="a" d="M64 40q8-4 16 0t16 0M65 48q7-3 15 0t15 0"/><path class="d" d="M48 30l-8-4M46 46H34M48 62l-8 4M112 30l8-4M114 46h12M112 62l8 4"/>',
+  shake:'<rect class="d" x="18" y="8" width="124" height="74" transform="rotate(-3 80 45)"/>'+GROUND+pers(80,80,1.2)+'<path class="a" d="M4 10l6 4-6 4 6 4-6 4M156 10l-6 4 6 4-6 4 6 4M4 58l6 4-6 4 6 4-6 4M156 58l-6 4 6 4-6 4 6 4"/>',
+  falling:'<path class="d" d="M0 80H160"/><g transform="rotate(-18 80 40)"><rect class="f" x="58" y="18" width="44" height="34"/><path class="d" d="M62 46l12-12 10 8 8-6 6 10"/></g><path class="a" d="M60 4v10M80 0v10M100 4v10"/><path class="d" d="M62 76l6-4 4 4 6-6 6 6"/>',
+  under_table:GROUND+'<path class="f" d="M22 34H138V40H22Z"/><path class="d" d="M28 40V76M132 40V76"/>'+pers(80,76,.55)+camG(18,10,35)+'<path class="a dash" d="M26 16L60 46"/>',
+  crack:'<path class="d" d="M0 90L30 8H130L160 90"/><path class="a" d="M80 8l-6 14 8 10-10 12 6 10-8 14M82 32l14 6 6 12"/><g class="d"><circle cx="60" cy="58" r="1.5"/><circle cx="98" cy="68" r="1.5"/><circle cx="72" cy="78" r="1.5"/><circle cx="90" cy="52" r="1.5"/></g>'+camG(80,84,-90),
+  helping_hand:'<g transform="translate(-14 14)"><path class="f" d="M-2 52L42 46Q54 44 64 40L86 38Q93 38 93 42Q93 45 87 45L72 46 89 47Q95 48 94 52Q93 55 87 54L72 53 85 56Q90 57 89 61Q87 64 82 63L67 60Q59 66 43 66L-2 70Z"/></g><g transform="translate(172 -16) scale(-1 1)"><path class="f" d="M-2 52L42 46Q54 44 64 40L86 38Q93 38 93 42Q93 45 87 45L72 46 89 47Q95 48 94 52Q93 55 87 54L72 53 85 56Q90 57 89 61Q87 64 82 63L67 60Q59 66 43 66L-2 70Z"/></g><path class="a" d="M74 44l4-4M84 48l4-4"/>',
+  group_sil:'<circle class="lt" cx="80" cy="40" r="34"/><path class="d" d="M0 62h12V46h10l4 16h14V38l12 6v18h70V48h12v14h26"/>'+GROUND+pers(56,80,.9,"k")+pers(80,80,1,"k")+pers(104,80,.85,"k"),
   hands_shoe:'<path class="f" d="M28 72q0-18 18-22l26-4q8 0 12 8l8 10q30 2 40 8v6H28z"/><path class="d" d="M58 54l10 8M64 50l10 8M70 48l10 8"/><path class="f" d="M48 32q10-8 22-4l6 14-14 4z"/><path class="f" d="M98 30q-10-6-20 0l-2 14 14 2z"/>'
 };
 function shotArt(tag,mode){const id="sa"+(saN++);return `<svg class="sa ${mode||"thumb"}" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><clipPath id="${id}"><rect width="160" height="90"/></clipPath></defs><g clip-path="url(#${id})">${SHOT_ART[tag]||SHOT_ART.WS}</g></svg>`}
@@ -1066,10 +1201,13 @@ function renderTitles(){
     const inp=d.querySelector("input");inp.addEventListener("focus",()=>focusField(k,d));inp.addEventListener("input",()=>{P.titles[k]=inp.value;saveP();header();drawCardPreview()});f.appendChild(d)};
   f.insertAdjacentHTML("beforeend",'<div class="fgroup">כרטיסים לפי הסדר בטריילר</div>');
   keys.forEach(k=>{const seg=S.find(s=>s.c===k)||S.find(s=>s.c==="credits");addField(k,FIELD_LABEL[k],seg.t0)});
-  f.insertAdjacentHTML("beforeend",'<div class="fgroup">קרדיטים · 8 אנשי צוות</div>');
+  f.insertAdjacentHTML("beforeend",'<div class="fgroup">קרדיטים · אנשי הצוות</div>');
   P.credits.forEach((c,i)=>{const d=document.createElement("div");d.className="field cr"+(cardKey==="credits"&&i===0?" on":"");d.dataset.k="credits";
     d.innerHTML=`<input class="role" id="cr-r-${i}" aria-label="תפקיד" maxlength="24" value="${esc(c.role)}"><input id="cr-n-${i}" aria-label="שם" maxlength="40" value="${esc(c.name)}">`;
-    const [r,n]=d.querySelectorAll("input");[r,n].forEach(inp=>{inp.addEventListener("focus",()=>focusField("credits",d));inp.addEventListener("input",()=>{c.role=r.value;c.name=n.value;saveP();drawCardPreview()})});f.appendChild(d)});
+    const [r,n]=d.querySelectorAll("input");[r,n].forEach(inp=>{inp.addEventListener("focus",()=>focusField("credits",d));inp.addEventListener("input",()=>{c.role=r.value;c.name=n.value;saveP();drawCardPreview()})});
+    if(i>=8){d.classList.add("x");const x=document.createElement("button");x.className="ib";x.setAttribute("aria-label","הסר קרדיט");x.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>';x.onclick=()=>{P.credits.splice(i,1);saveP();cardKey="credits";renderTitles()};d.appendChild(x)}
+    f.appendChild(d)});
+  if(P.credits.length<11){const add=document.createElement("button");add.className="btn sm addcr";add.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>הוסף קרדיט <span class="mono dim" style="direction:ltr">(${11-P.credits.length})</span>`;add.onclick=()=>{P.credits.push({role:"תפקיד",name:"שם"});saveP();cardKey="credits";renderTitles();setTimeout(()=>{const i=document.getElementById("cr-r-"+(P.credits.length-1));if(i){i.focus();i.select()}},120)};f.appendChild(add)}
   drawCardPreview();
   const on=f.querySelector(`.field[data-k="${cardKey}"]`);if(on&&tab==="titles")setTimeout(()=>{on.scrollIntoView({block:"center",behavior:"smooth"});const i=on.querySelector("input:not(.role)")||on.querySelector("input");try{i.focus({preventScroll:true})}catch(e){}},60);
 }
@@ -1085,22 +1223,26 @@ function renderTrailer(){
     if(s.c){b.className="blk card";b.innerHTML=`<em>${esc(s.c==="credits"?"קרדיטים":cardText(s.c))}</em>`}
     else{b.className="blk"+(s.shot.has?"":" miss");if(s.shot.has&&s.shot.thumb)b.style.backgroundImage=`url(${s.shot.thumb})`;b.innerHTML=`<em>${String(s.si+1).padStart(2,"0")}</em>`}
     if(i===selBlk)b.classList.add("sel");lane.appendChild(b)});
-  const r=$("#ruler");r.innerHTML="";const step=T>40?10:5;for(let x=0;x<=T;x+=step){const p=x/T*100;r.insertAdjacentHTML("beforeend",`<i style="right:${p}%"></i>${x>0&&x<T-2?`<span style="right:${p}%">${x}s</span>`:""}`)}
+  const r=$("#ruler");r.innerHTML="";const step=T>40?10:5;for(let x=0;x<=T;x+=step){const p=x/T*100;r.insertAdjacentHTML("beforeend",`<i style="left:${p}%"></i>${x>0&&x<T-2?`<span style="left:${p}%">${x}s</span>`:""}`)}
   renderMusic();drawWave();
   const miss=P.shots.filter(s=>!s.has).length;const w=$("#missWarn");w.hidden=!miss;w.textContent=miss?`${miss} שוטים עדיין לא צולמו. הם יופיעו בטריילר כקלאפר.`:"";
   const m=pickMime(true);$("#fmtChip").textContent=m===null?"N/A":(m.includes("mp4")?"MP4":"WEBM");
   setPlayIcon(false);
   setHead(0);Player.still(0);
 }
-function renderMusic(){const el=$("#mus"),m=P.music;el.innerHTML="";
-  const opt=(val,label,sub)=>{const b=document.createElement("button");b.className="opt"+(m.src===val?" on":"");b.innerHTML=`<i></i><span>${label}${sub?`<small>${sub}</small>`:""}</span>`;b.onclick=()=>{if(val==="file"&&!m.name){$("#musicFile").click();return}m.src=val;saveP();renderMusic();drawWave()};el.appendChild(b)};
-  opt("auto","מקורית לז׳אנר",CUES[G().cue]);
-  Object.entries(CUES).forEach(([k,v])=>{if(k!==G().cue)opt("lib:"+k,v,"ספריית Trailer Lab")});
-  opt("file",m.name?esc(m.name):"ייבוא מהמכשיר",m.name?"קובץ מהמכשיר":"MP3, M4A או WAV מהטלפון או מהטאבלט");
+function renderMusic(){const el=$("#mus"),m=P.music;el.innerHTML="";const cur=m.src==="file"?"file":currentCue();
+  const opt=(val,label,sub,on)=>{const b=document.createElement("button");b.className="opt"+(on?" on":"");b.innerHTML=`<i></i><span>${label}${sub?`<small>${sub}</small>`:""}</span>`;b.onclick=()=>{if(val==="file"&&!m.name){$("#musicFile").click();return}m.src=val;saveP();renderMusic();drawWave()};el.appendChild(b)};
+  const grp=t=>el.insertAdjacentHTML("beforeend",`<div class="mgrp">${t}</div>`);
+  grp("פסקולים ל"+G().name);
+  G().cues.forEach((id,i)=>opt("lib:"+id,CUELIB[id].name,i===0?"ברירת המחדל":"",cur===id));
+  grp("עוד מהספרייה");
+  Object.keys(CUELIB).filter(id=>!G().cues.includes(id)).forEach(id=>opt("lib:"+id,CUELIB[id].name,"",cur===id));
+  grp("מוזיקה משלך");
+  opt("file",m.name?esc(m.name):"ייבוא מהמכשיר",m.name?"קובץ מהמכשיר":"MP3, M4A או WAV מהטלפון או מהטאבלט",m.src==="file");
   if(m.src==="file"&&m.name){const box=document.createElement("div");box.className="fileopts";const dur=musicBuf?musicBuf.duration:0;
     box.innerHTML=`<label class="note" for="mOff">מתחיל מ־<b class="mono" id="mOffV" style="direction:ltr;display:inline-block">${tc(m.offset||0).slice(0,5)}</b></label><input type="range" id="mOff" min="0" max="${Math.max(1,Math.floor(dur-5))}" step="1" value="${Math.floor(m.offset||0)}"><label class="chk"><input type="checkbox" id="mHits" ${m.hits?"checked":""}>בומים של טריילר על הכותרות</label><button class="btn sm ghost" id="mRepl">החלפת קובץ</button>`;
     el.appendChild(box);$("#mOff").oninput=e=>{m.offset=+e.target.value;$("#mOffV").textContent=tc(m.offset).slice(0,5);saveP();drawWave()};$("#mHits").onchange=e=>{m.hits=e.target.checked;saveP()};$("#mRepl").onclick=()=>$("#musicFile").click()}
-  $("#cueName").textContent=m.src==="file"&&m.name?"♪ "+m.name:"♪ "+(CUES[currentCue()]||"");
+  $("#cueName").textContent=m.src==="file"&&m.name?"♪ "+m.name:"♪ "+CUELIB[currentCue()].name;
 }
 $("#musicFile").onchange=async e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(!file)return;busy(true,{eyebrow:"מוזיקה",title:"טוען את הקובץ",note:file.name});
   try{const ab=await file.arrayBuffer();const buf=await audioCtx().decodeAudioData(ab.slice(0));await putClip("music",file);musicBuf=buf;P.music={src:"file",name:file.name.replace(/\.[^.]+$/,""),offset:0,hits:true};saveP();busy(false);renderMusic();drawWave()}
@@ -1110,7 +1252,7 @@ function drawWave(){const c=$("#wave"),r=c.getBoundingClientRect(),dpr=Math.min(
   if(P.music.src==="file"&&musicBuf){const d=musicBuf.getChannelData(0),sr=musicBuf.sampleRate,off=(P.music.offset||0)*sr,span=T*sr/n;for(let i=0;i<n;i++){let mxv=0;const a=Math.floor(off+i*span),b=Math.min(d.length,a+span);for(let k=a;k<b;k+=64)mxv=Math.max(mxv,Math.abs(d[k]||0));const h=Math.max(1,mxv*c.height*.9);x.fillRect(i*3,(c.height-h)/2,2,h)}return}
   for(let i=0;i<n;i++){const t=i/n*T;let e=.25+.15*Math.sin(i*.7)*Math.sin(i*.13);S.forEach(s=>{if(s.c&&s.c!=="logo"&&s.c!=="filmby"){const d=t-s.t0;if(d>=0&&d<1.2)e+=.7*(1-d/1.2)}});e=clamp(e*(.6+.4*Math.abs(Math.sin(i*1.7))),.05,1);const h=e*c.height*.9;x.fillRect(i*3,(c.height-h)/2,2,h)}}
 let headT=0;
-function setHead(t){headT=t;const T=total(),tl=$("#tl"),lab=30,w=tl.clientWidth-lab;$("#head").style.right=(lab+clamp(t/T,0,1)*w-1)+"px";$("#tcCur").textContent=tc(t)}
+function setHead(t){headT=t;const T=total(),tl=$("#tl"),lab=30,w=tl.clientWidth-lab;$("#head").style.left=(lab+clamp(t/T,0,1)*w)+"px";$("#tcCur").textContent=tc(t)}
 const PLAY_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5l11 7-11 7z"/></svg>',STOP_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>';
 function setPlayIcon(on){[$("#playBtn"),$("#fsPlay")].forEach(b=>{b.innerHTML=on?STOP_SVG:PLAY_SVG;b.setAttribute("aria-label",on?"עצור":"נגן")})}
 async function togglePlay(from){if(playing){Player.stop();return}playing=true;setPlayIcon(true);await Player.play({from:typeof from==="number"?from:headT,onTime:t=>setHead(t)});playing=false;setPlayIcon(false)}
@@ -1120,7 +1262,7 @@ async function enterFs(){const m=$("#mon");m.classList.add("fs");try{if(m.reques
 function exitFs(){const m=$("#mon");if(!m.classList.contains("fs"))return;m.classList.remove("fs");try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}try{screen.orientation.unlock()}catch(e){}}
 $("#fsBtn").onclick=enterFs;$("#fsExit").onclick=()=>{Player.stop();exitFs()};
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement)$("#mon").classList.remove("fs")});
-(()=>{const tl=$("#tl");let down=null;const at=e=>{const r=tl.getBoundingClientRect(),lab=30;return clamp((r.right-lab-e.clientX)/(r.width-lab),0,1)*total()};
+(()=>{const tl=$("#tl");let down=null;const at=e=>{const r=tl.getBoundingClientRect(),lab=30;return clamp((e.clientX-r.left-lab)/(r.width-lab),0,1)*total()};
   tl.addEventListener("pointerdown",e=>{if(playing)Player.stop();down={x:e.clientX,moved:false};tl.setPointerCapture(e.pointerId);const t=at(e);setHead(t);Player.still(t)});
   tl.addEventListener("pointermove",e=>{if(!down)return;if(Math.abs(e.clientX-down.x)>6)down.moved=true;const t=at(e);setHead(t);Player.still(t)});
   tl.addEventListener("pointerup",e=>{if(!down)return;const moved=down.moved;down=null;if(moved)return;const S=segs(),i=Player.segAt(S,at(e)),s=S[i];
@@ -1214,11 +1356,11 @@ const Trim={si:0,len:2,D:5,drag:null,
   async ok(){const v=$("#trimVideo"),sh=this.shot();v.pause();sh.thumb=await makeThumb(v,sh.start+Math.min(.4,this.len/2));saveP();$("#trim").hidden=true;Player.vids.delete(sh.id);if(tab==="trailer")renderTrailer();else if(tab!=="shots")setTab("shots");else renderShots()}
 };
 $("#modeSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const sh=Trim.shot();sh.mode=b.dataset.m;if(sh.mode!=="manual")applyMode(sh,Trim.len);Trim.setStart(sh.start,false)});
-(()=>{const strip=$("#strip"),win=$("#win");const toT=x=>{const r=strip.getBoundingClientRect();return clamp((r.right-8-x)/(r.width-16),0,1)*Trim.D};
+(()=>{const strip=$("#strip"),win=$("#win");const toT=x=>{const r=strip.getBoundingClientRect();return clamp((x-r.left-8)/(r.width-16),0,1)*Trim.D};
   strip.addEventListener("pointerdown",e=>{strip.setPointerCapture(e.pointerId);const t=toT(e.clientX),sh=Trim.shot();if(e.target===win)Trim.drag={off:t-sh.start};else{Trim.drag={off:Trim.len/2};Trim.setStart(t-Trim.len/2,true)}});
   strip.addEventListener("pointermove",e=>{if(!Trim.drag)return;Trim.setStart(toT(e.clientX)-Trim.drag.off,true)});
   strip.addEventListener("pointerup",()=>Trim.drag=null);strip.addEventListener("pointercancel",()=>Trim.drag=null);
-  win.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){Trim.setStart(Trim.shot().start+(e.key==="ArrowLeft"?.1:-.1),true);e.preventDefault()}})})();
+  win.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){Trim.setStart(Trim.shot().start+(e.key==="ArrowRight"?.1:-.1),true);e.preventDefault()}})})();
 $("#trimPlay").onclick=()=>Trim.play();
 $("#trimOk").onclick=()=>Trim.ok();
 $("#trimClose").onclick=()=>Trim.ok();
@@ -1228,6 +1370,7 @@ addEventListener("resize",()=>{if(!$("#trim").hidden)Trim.draw();if(P&&tab==="tr
 /* ============ BOOT ============ */
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 $("#toTrailer").onclick=()=>setTab("trailer");
+$("#backHome").onclick=()=>{Player.stop();renderHome();$("#main").scrollTop=0};
 let pendingGenre=null;
 function startGenre(id){if(P){pendingGenre=id;$("#sheet").hidden=false;return}P=newProject(id);saveP();header();setTab("shots")}
 $("#newBtn").onclick=()=>{pendingGenre=null;$("#sheet").hidden=false};
@@ -1235,10 +1378,11 @@ $("#sheetNo").onclick=()=>{pendingGenre=null;$("#sheet").hidden=true};
 $("#sheetYes").onclick=async()=>{$("#sheet").hidden=true;Player.stop();await clearClips();P=null;try{localStorage.removeItem(LS)}catch(e){}const g=pendingGenre;pendingGenre=null;if(g){P=newProject(g);saveP();header();setTab("shots")}else renderHome()};
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="2.4";
+const VERSION="2.5";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["2.4","היום",["ציר הזמן ופס בחירת הקטע רצים מימין לשמאל"]],
+  ["2.5","היום",["ז׳אנר חדש: סרט אסונות על רעידת אדמה, עם 16 שוטים","9 פסקולים שונים, 4 לכל ז׳אנר: תיבת נגינה, פסנתר בחושך, ארפג׳יו סינתי, מקהלה, כלי קשת ועוד","פסקול האימה הישן בלי הצריחות","עד 3 קרדיטים נוספים עם כפתור +","רשימת השוטים בעמודה אחת וכפתור חזרה","ציר הזמן חזר משמאל לימין, כמו בתוכנות עריכה","איורים חדשים: סרט בנים, קליפ כיף וקליפ חגים"]],
+  ["2.4","",["ציר הזמן ופס בחירת הקטע רצים מימין לשמאל"]],
   ["2.3","",["ציור מותאם לכל שוט: בית עם חלון מואר, יד על ידית, נדנדה, מכונית בלילה ועוד","Play ממשיך מאיפה שעצרת, וכפתור START מתחיל מההתחלה"]],
   ["2.2","",["ציור סטוריבורד לכל סוג שוט ברשימת השוטים","קווי מסגור על המצלמה שמראים איפה להעמיד את הדמות, עם כפתור הדלקה וכיבוי","ההסבר על השוט עבר אל מתחת לפריים"]],
   ["2.1","",["אייקון להתקנה במסך הבית","מסך פתיחה עם הלוגו","תפריט צד: בית, שיתוף, התקנה, מה חדש ואודות"]],
