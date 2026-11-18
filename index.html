@@ -331,6 +331,17 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .drawer .df span{direction:ltr;display:inline-block}
 .copyfoot{text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px;line-height:1.6}
 .copyfoot span{direction:ltr;display:inline-block}
+.saved{display:grid;gap:8px;margin-top:8px}
+@media(min-width:700px){.saved{grid-template-columns:1fr 1fr}}
+.sv{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.sv .ct{width:84px;aspect-ratio:16/9;max-width:100%;border-radius:6px;background:#000 center/cover;border:1px solid var(--line2)}
+.sv b{font-size:16px;display:block}
+.sv .acts{display:flex;gap:6px;align-items:center}
+.ghead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px}
+.field2{display:flex;flex-direction:column;gap:6px}
+.field2 input{background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:11px 12px;color:var(--fg);font:inherit;font-size:16px}
+.field2 input:focus{border-color:var(--accent);outline:none}
+.err{color:#ff9d96;font-size:12.5px}
 .cont{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;cursor:pointer;text-align:start;width:100%}
 .cont .ct{width:84px;aspect-ratio:16/9;max-width:100%;border-radius:6px;background:#000;border:1px solid var(--line2);background-size:cover;background-position:center}
 .info{max-height:min(80vh,640px);overflow-y:auto}
@@ -341,6 +352,8 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .info .ver:last-child{border-bottom:0}
 .info .ver b{display:flex;justify-content:space-between;gap:8px}
 .info .ver b span{font-family:var(--mono);font-size:11px;color:var(--faint);font-weight:400;direction:ltr}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:150;background:var(--raise);border:1px solid var(--accent);color:var(--fg);border-radius:99px;padding:8px 16px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
 .linkbox{display:flex;gap:8px;align-items:center;background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;font-family:var(--mono);font-size:12px;direction:ltr;user-select:all;overflow-x:auto}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -352,6 +365,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
     <div class="row" style="gap:8px;flex-wrap:nowrap;flex:none"><span class="logo">TRAILER<b>LAB</b></span><span class="by">GZFILM</span></div>
     <div class="proj" id="projName"></div>
     <span class="chip" id="genreChip" hidden></span>
+    <button class="ib" id="saveBtnTop" title="שמירה ויציאה" aria-label="שמירה ויציאה" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg></button>
     <button class="ib" id="newBtn" title="פרויקט חדש" aria-label="פרויקט חדש" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
   </header>
 
@@ -363,6 +377,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
         <p class="dim" style="margin:0">כל ז׳אנר מגיע עם רשימת שוטים, כרטיסי כותרת, גרפיקה ומוזיקה מקורית. מצלמים כל שוט 5 שניות, והאפליקציה עורכת.</p>
       </div>
       <button class="panel cont" id="contCard" hidden></button>
+      <div id="savedWrap" hidden><div class="ghead"><span class="eyebrow">פרויקטים שמורים</span><span class="note" id="savedCount"></span></div><div class="saved" id="savedList"></div></div>
       <div class="genres" id="genres"></div>
       <div class="copyfoot">© כל הזכויות שמורות · <span>G.Z MOTION LAB</span></div>
     </section>
@@ -548,6 +563,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
     <button data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg><span>בית<small>בחירת ז׳אנר והפרויקט שלך</small></span></button>
     <button data-go="shots"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg><span>הפרויקט שלי<small>רשימת שוטים וצילום</small></span></button>
     <button data-go="trailer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg><span>הטריילר<small>צפייה, מוזיקה וייצוא</small></span></button>
+    <button data-go="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg><span>שמירה ויציאה<small>שומרים את הטריילר בשם הקבוצה וממשיכים בפעם הבאה</small></span></button>
     <button data-go="new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg><span>פרויקט חדש</span></button>
     <hr>
     <button data-go="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg><span>שיתוף האפליקציה<small>שלח קישור לחברים</small></span></button>
@@ -671,17 +687,170 @@ const GENRES={
     look:{grade:"sepia(.3) saturate(.85) contrast(1.15) brightness(.95)",tint:"rgba(210,140,70,.2)",vig:.7,grain:.08,flash:false,flicker:false}
   }
 };
+/* ---- more genres: built with a small helper so every template has the same frame ---- */
+const TYPE={OPEN:"שוט פתיחה",INS:"אינסרט",ELS:"רחב מאוד",WS:"שוט רחב",MS:"שוט בינוני",CU:"קלוז אפ",ECU:"תקריב קיצוני",LOW:"זווית נמוכה",HIGH:"זווית גבוהה",OTS:"מעבר לכתף",POV:"נקודת מבט",PAN:"פאן",TRK:"מעקב",DOLLY:"דולי אין","2S":"שוט שניים",ACT:"אקשן",SIL:"צללית",GLM:"הצצה",SHAKE:"מצלמה רועדת"};
+const sh=(tag,label,hint,d,art)=>Object.assign({s:1,tag,type:TYPE[tag],label,hint,d},art?{art}:{});
+const BASE_T={logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",release:"בקרוב"};
+/* order: open, logo, clue, film-by, two shots, t1, two, t2, two, t3, two, t4, two, t5, ending, title, credits */
+function frame(sh13,cards){const [a,b,c,d,e,f,g,h,i,j,k,l,m]=sh13;const D=cards||[2.2,2.0,2.0,1.6,1.8];
+  return [a,{c:"logo",d:3.0},b,{c:"filmby",d:2.4},c,d,{c:"t1",d:D[0]},e,f,{c:"t2",d:D[1]},g,h,{c:"t3",d:D[2]},i,j,{c:"t4",d:D[3]},k,l,{c:"t5",d:D[4]},m,{c:"title",d:4.0},{c:"credits",d:5.6}]}
+Object.assign(GENRES,{
+  chase:{name:"מרדף",en:"CHASE",font:"rubik",cues:["chase","action","tension","epic"],desc:"מכוניות, אופניים או רגליים. מי שעוצר, מפסיד.",
+    defaults:{...BASE_T,t1:"יש לו עשר דקות",t2:"ועיר שלמה לחצות",t3:"הם כבר בדרך",t4:"אל תעצור",t5:"אל תסתכל אחורה",title:"מרוץ נגד הזמן"},
+    seq:frame([
+      sh("OPEN","השעון מתקתק","תקריב על שעון, טיימר בטלפון או ספירה לאחור.",2.4,"clock"),
+      sh("INS","המפתחות","יד חוטפת מפתחות, קסדה או אופניים מהקיר.",1.8),
+      sh("ELS","הדרך הארוכה","שוט רחב מאוד של כביש, שביל או רחוב ארוך.",2.4,"road"),
+      sh("WS","הזינוק","הגיבור מזנק לריצה או על האופניים ויוצא מהפריים.",1.8),
+      sh("TRK","מעקב צמוד","רצים לצד הגיבור עם המצלמה, באותה מהירות.",1.4),
+      sh("LOW","ממש ליד העדשה","מצלמה על הקרקע, נעליים או גלגלים חולפים צמוד לעדשה.",1.2),
+      sh("OTS","מי רודף","מעבר לכתף של הרודף, הגיבור קטן ברקע.",1.6),
+      sh("PAN","חלף על פניו","פאן מהיר שעוקב אחרי מישהו שעובר מצד לצד.",1.2),
+      sh("POV","בורח","המצלמה רצה קדימה בגובה העיניים.",1.2),
+      sh("CU","מתנשף","קלוז אפ: זיעה, נשימה כבדה, מבט אחורה.",1.4),
+      sh("HIGH","מבוי סתום","מצלמה גבוהה: הגיבור נעצר מול קיר או גדר.",1.4),
+      sh("ACT","הקפיצה","קפיצה מעל מכשול, ספסל או מדרגות.",1.0),
+      sh("SIL","בדיוק בזמן","הגיבור עוצר מול האור ומרים ידיים.",2.2)],[2.0,2.0,1.8,1.4,1.6]),
+    look:{grade:"contrast(1.18) saturate(1.2)",tint:"rgba(40,160,200,.14)",vig:.55,grain:.05,flash:true,flicker:false}},
+  thriller:{name:"מותחן",en:"THRILLER",font:"secular",cues:["tension","piano","heart","chase"],desc:"סוד, חשד ושעון שמתקתק אחורה.",
+    defaults:{...BASE_T,t1:"כולם שומרים סוד",t2:"מישהו יודע את האמת",t3:"ומישהו לא רוצה שהיא תצא",t4:"למי אפשר להאמין?",t5:"אף אחד לא מה שהוא נראה",title:"הסוד שבמגירה"},
+    seq:frame([
+      sh("OPEN","מכתב בלי שם","מעטפה מונחת מול הדלת. אף אחד לא ראה מי השאיר אותה.",2.6,"envelope"),
+      sh("INS","המגירה נפתחת","יד פותחת לאט מגירה ומוצאת משהו.",2.0),
+      sh("ELS","הבית בלילה","שוט רחב של בית או בניין בחושך, חלון אחד מואר.",2.6,"house"),
+      sh("MS","מקשיבה בדלת","הדמות צמודה לדלת ומקשיבה, לא זזה.",2.0),
+      sh("OTS","מישהו עוקב","מעבר לכתף של מישהו שמסתכל על הגיבורה מרחוק.",1.8),
+      sh("CU","מבט חשדני","קלוז אפ: מבט צדדי, בלי להזיז את הראש.",1.6),
+      sh("INS","הודעה חדשה","תקריב על טלפון: הודעה ממספר לא ידוע.",1.6,"phone"),
+      sh("POV","מאחורי הווילון","המצלמה מציצה החוצה מאחורי וילון.",1.6),
+      sh("2S","חילופי מבטים","שתי דמויות מסתכלות זו על זו בלי לדבר.",1.6),
+      sh("DOLLY","ההבנה","מתקרבים לאט אל פנים שמבינות פתאום משהו.",1.6),
+      sh("HIGH","לבד במדרגות","מצלמה גבוהה על הדמות בחדר מדרגות.",1.4),
+      sh("ECU","עיניים","רק העיניים בפריים. מבט שמחליט.",1.0),
+      sh("SIL","צללית בפתח","דמות עומדת בפתח מול האור. לא רואים מי זו.",2.4,"GLM")],[2.2,2.2,2.4,2.0,2.2]),
+    look:{grade:"saturate(.7) contrast(1.22) brightness(.9)",tint:"rgba(60,110,150,.22)",vig:.75,grain:.07,flash:false,flicker:false,pal:{bg:"#141c24",fill:"#dfe6ee",glow:"rgba(90,150,200,.45)",accent:"#7fb3e0"}}},
+  adventure:{name:"הרפתקה",en:"ADVENTURE",font:"suez",cues:["epic","strings","drama","chase"],desc:"מפה ישנה, גשר חבלים ואוצר שמחכה בסוף.",
+    defaults:{...BASE_T,t1:"מפה ישנה אחת",t2:"שביל שאף אחד לא הלך בו",t3:"ואוצר שמחכה בסוף",t4:"האם הם יעזו?",t5:"ההרפתקה מתחילה",title:"המפה האבודה"},
+    seq:frame([
+      sh("OPEN","המפה נפרשת","ידיים פורשות מפה על שולחן. אצבע מצביעה על איקס.",2.6,"map"),
+      sh("INS","המצפן","תקריב על מצפן, שעון או פנס.",1.8,"clock"),
+      sh("ELS","הנוף הגדול","שוט רחב מאוד של שטח פתוח, גבעה או חוף.",2.6),
+      sh("WS","יוצאים לדרך","החבורה הולכת בשורה עם תיקים על הגב.",2.0),
+      sh("LOW","על הסלע","מצלמה נמוכה, הגיבור עומד על סלע או ספסל ומסתכל קדימה.",1.8),
+      sh("TRK","צועדים ביער","מעקב לצד הדמויות שהולכות בין עצים ושיחים.",1.6),
+      sh("POV","מבעד לעלים","המצלמה מזיזה ענפים ומגלה משהו.",1.6),
+      sh("CU","מבט מופתע","קלוז אפ: עיניים נפתחות, חיוך קטן.",1.4),
+      sh("OTS","התגלית","מעבר לכתף אל מה שגילו: מערה, דלת או תיבה.",1.8),
+      sh("INS","התיבה נפתחת","יד פותחת תיבה או קופסה. אור יוצא מבפנים.",1.6,"chest"),
+      sh("ACT","הקפיצה","קפיצה מעל נחל, שלולית או בור.",1.0),
+      sh("HIGH","גשר החבלים","מצלמה גבוהה על מישהו שעובר בזהירות על קורה או גשר.",1.6,"rope_bridge"),
+      sh("SIL","בשקיעה","החבורה עומדת מול השקיעה.",2.4,"group_sil")]),
+    look:{grade:"saturate(1.15) contrast(1.08) sepia(.15)",tint:"rgba(255,190,90,.18)",vig:.55,grain:.05,flash:false,flicker:false,pal:{bg:"#2a1f10",fill:"#f3dfb2",glow:"rgba(240,180,80,.5)",accent:"#f0b54a"}}},
+  scifi:{name:"מדע בדיוני",en:"SCI-FI",font:"rubik",cues:["space","chase","tension","epic"],desc:"הם הגיעו מהשמיים, והעולם כבר לא יהיה אותו דבר.",
+    defaults:{...BASE_T,t1:"הם שלחו אות",t2:"ואנחנו ענינו",t3:"עכשיו הם כאן",t4:"העתיד מתחיל",t5:"הלילה",title:"אות מהחלל"},
+    seq:frame([
+      sh("OPEN","שמי הלילה","שמיים, ירח או פנס רחוב. משהו מהבהב למעלה.",2.6,"night_sky"),
+      sh("INS","האות","מסך מחשב או טלפון עם קו מוזר, נורה מהבהבת.",2.0,"screen_signal"),
+      sh("ELS","העיר נרדמת","שוט רחב מאוד מגבוה על העיר בלילה.",2.4,"city_els"),
+      sh("MS","משהו נדלק","הגיבור מרים את הראש, האור על הפנים משתנה.",1.8),
+      sh("CU","אור כחול","פנס או טלפון מאירים את הפנים מלמטה.",1.6),
+      sh("LOW","מסתכלים למעלה","מצלמה נמוכה, כולם מביטים לשמיים.",1.6),
+      sh("POV","אל תוך האור","המצלמה מתקרבת לאט לאור חזק.",1.6),
+      sh("OTS","הם נוחתים","מעבר לכתף אל אור גדול בשמיים או מעבר לגבעה.",1.8,"ufo"),
+      sh("DOLLY","הפנים משתנות","מתקרבים לאט אל פנים נדהמות.",1.6),
+      sh("TRK","בורחים מהאור","רצים לצד הגיבור, האור מאחוריו.",1.2),
+      sh("2S","מגע ראשון","שתי ידיים מתקרבות זו לזו.",1.8,"helping_hand"),
+      sh("ECU","עיניים מאירות","רק העיניים, עם השתקפות של אור.",1.0),
+      sh("SIL","מול הספינה","דמות עומדת מול אור גדול.",2.4)]),
+    look:{grade:"saturate(.9) contrast(1.15)",tint:"rgba(40,180,220,.2)",vig:.65,grain:.05,flash:false,flicker:false,pal:{bg:"#0a1a24",fill:"#d8f6ff",glow:"rgba(60,210,255,.55)",accent:"#4fd8ff"}}},
+  fantasy:{name:"פנטזיה",en:"FANTASY",font:"frank",cues:["strings","musicbox","epic","drama"],desc:"קסם, דרקונים וממלכה שצריכה גיבור.",
+    defaults:{...BASE_T,t1:"בממלכה רחוקה",t2:"קסם עתיק התעורר",t3:"רק אחת יכולה לעצור אותו",t4:"האומץ הוא הקסם האמיתי",t5:"האגדה מתחילה",title:"שומרת הממלכה"},
+    seq:frame([
+      sh("OPEN","הספר נפתח","ספר ישן נפתח, עמודים מתהפכים ברוח.",2.6,"book"),
+      sh("INS","החפץ הקסום","תקריב על שרשרת, טבעת או אבן נוצצת.",1.8),
+      sh("ELS","הממלכה","שוט רחב מאוד של נוף בשקיעה, עם הרבה שמיים.",2.6,"castle"),
+      sh("WS","בשער","הגיבורה עומדת מול שער, גדר או דלת גדולה.",2.0),
+      sh("LOW","הגיבורה","מצלמה נמוכה, גלימה או שמיכה על הכתפיים, רוח בשיער.",1.8),
+      sh("CU","מבט אמיץ","קלוז אפ: מבט ישר קדימה.",1.6),
+      sh("PAN","יער קסום","פאן איטי בין עצים עם אור שמש בין העלים.",1.8),
+      sh("OTS","הדרקון","מעבר לכתף אל צל גדול על קיר או בשמיים.",1.8,"dragon"),
+      sh("INS","הלהבה","נר, פנס או אש קטנה קרובה לעדשה.",1.4),
+      sh("ACT","הקסם משתחרר","תנועה חזקה עם הידיים, כאילו יוצא קסם.",1.2),
+      sh("HIGH","מוקפת","מצלמה גבוהה, הגיבורה קטנה באמצע.",1.4),
+      sh("DOLLY","ההחלטה","מתקרבים לאט לפנים שמחליטות להילחם.",1.6),
+      sh("SIL","על ראש הגבעה","צללית מול השמיים, הגלימה ברוח.",2.4)]),
+    look:{grade:"saturate(1.2) contrast(1.05)",tint:"rgba(160,90,220,.18)",vig:.6,grain:.05,flash:false,flicker:false,pal:{bg:"#1d1230",fill:"#f1e4c4",glow:"rgba(190,120,255,.5)",accent:"#c9a0ff"}}},
+  western:{name:"מערבון",en:"WESTERN",font:"suez",cues:["western","tension","epic","drama"],desc:"עיר מאובקת, שמש לוהטת ודו-קרב בצהריים.",
+    defaults:{...BASE_T,t1:"עיר קטנה",t2:"שריף אחד",t3:"ובצהריים, מישהו יגיע",t4:"רק אחד יישאר",t5:"השעה שתים עשרה",title:"דו-קרב בצהריים"},
+    seq:frame([
+      sh("OPEN","רוח במדבר","אבק, עלים או שקית שהרוח מעיפה על הכביש.",2.6,"tumbleweed"),
+      sh("INS","המגפיים","תקריב על נעליים שצועדות לאט על חול או אבנים.",1.8),
+      sh("ELS","העיר המאובקת","שוט רחב מאוד של רחוב ריק בשמש.",2.6,"street_ws"),
+      sh("WS","השריף מגיע","הדמות הולכת לאט לעבר המצלמה, כובע על הראש.",2.0),
+      sh("LOW","מתחת לכובע","מצלמה נמוכה, השמש מאחורי הכובע.",1.6),
+      sh("ECU","עיניים מצומצמות","רק העיניים, מכווצות מול השמש.",1.2),
+      sh("INS","השעון","שעון מראה כמעט שתים עשרה.",1.6,"clock"),
+      sh("OTS","היריב","מעבר לכתף של השריף, היריב רחוק בקצה הרחוב.",1.8),
+      sh("PAN","הרחוב מתרוקן","פאן איטי: חלונות נסגרים, אנשים נעלמים.",1.8),
+      sh("2S","פנים מול פנים","שתי דמויות עומדות זו מול זו, רחוק.",1.8),
+      sh("CU","היד מוכנה","יד מוכנה ליד החגורה, האצבעות זזות.",1.2),
+      sh("ACT","הרגע","תנועה מהירה אחת. מי היה מהיר יותר?",1.0),
+      sh("SIL","אל השקיעה","השריף מתרחק אל השקיעה.",2.6)],[2.0,2.0,2.2,2.0,1.8]),
+    look:{grade:"sepia(.45) saturate(1.1) contrast(1.15)",tint:"rgba(230,140,60,.22)",vig:.7,grain:.08,flash:false,flicker:false,pal:{bg:"#2a170a",fill:"#f0d2a0",glow:"rgba(230,130,50,.5)",accent:"#e8924a"}}},
+  comedy:{name:"קומדיה",en:"COMEDY",font:"rubik",cues:["comedy","chase","musicbox","sports"],desc:"תוכנית מושלמת שמשתבשת בכל דרך אפשרית.",
+    defaults:{...BASE_T,t1:"הייתה להם תוכנית",t2:"תוכנית מושלמת",t3:"מה כבר יכול להשתבש?",t4:"הכול.",t5:"בערך הכול",title:"התוכנית המושלמת"},
+    seq:frame([
+      sh("OPEN","בוקר רגיל לגמרי","הגיבור מתעורר, מתמתח ומחייך לשמש.",2.4,"calm_morning"),
+      sh("INS","התוכנית","דף עם ציור של התוכנית, חצים ואיקסים.",2.0,"plan"),
+      sh("WS","החבורה","כל החבורה בשורה, עם פרצופים רציניים מדי.",2.0),
+      sh("MS","נאום מוטיבציה","אחד מהם מסביר בהתלהבות, ידיים באוויר.",2.0),
+      sh("CU","מבט מבולבל","קלוז אפ על מישהו שלא הבין כלום.",1.6),
+      sh("ACT","הנפילה","מישהו מחליק ונופל על ספה או מזרן.",1.2),
+      sh("POV","אופס","המצלמה מגלה בלגן גדול.",1.4),
+      sh("2S","שתיקה מביכה","שתי דמויות מסתכלות אחת על השנייה ולא אומרות כלום.",1.8),
+      sh("DOLLY","הבנה איטית","מתקרבים לאט לפנים שמבינות שהכול השתבש.",1.6),
+      sh("TRK","בורחים","כולם רצים ומתנגשים זה בזה.",1.2),
+      sh("INS","הקמח","קמח, מים או נוצות עפים לכיוון המצלמה.",1.0),
+      sh("HIGH","מתגלגלים מצחוק","מצלמה גבוהה על כולם שוכבים על הרצפה וצוחקים.",1.6),
+      sh("WS","תמונה קבוצתית","כולם בשורה, מלוכלכים ומחייכים למצלמה.",2.4)],[2.0,1.8,2.2,1.4,1.6]),
+    look:{grade:"saturate(1.3) brightness(1.06)",tint:"rgba(255,220,80,.12)",vig:.3,grain:.02,flash:false,flicker:false,pal:{bg:"#2a1446",fill:"#ffe14d",glow:"rgba(255,90,170,.5)",accent:"#ff7ab8",bounce:1}}},
+  drama:{name:"דרמה",en:"DRAMA",font:"bellefair",cues:["drama","piano","strings","musicbox"],desc:"רגע אחד שמשנה חיים, ומבטים שאומרים הכול.",
+    defaults:{...BASE_T,t1:"יש רגעים",t2:"שמשנים הכול",t3:"חברות אחת",t4:"החלטה אחת",t5:"ולב אחד שצריך לבחור",title:"הקיץ ההוא"},
+    seq:frame([
+      sh("OPEN","אור בחלון","אור רך נכנס דרך חלון. אבק באוויר.",2.8,"calm_morning"),
+      sh("INS","תמונה ישנה","יד מחזיקה תמונה ישנה.",2.2,"photo"),
+      sh("ELS","לבד בשדה","דמות קטנה בשדה, בחוף או במגרש ריק.",2.6),
+      sh("WS","הבית","שוט רחב של בית או חצר בשעת ערב.",2.2,"house"),
+      sh("MS","על המדרגות","הדמות יושבת לבד על מדרגות ומחבקת את הברכיים.",2.0),
+      sh("CU","דמעה","קלוז אפ: עיניים נוצצות, בלי לבכות עד הסוף.",2.0),
+      sh("OTS","השיחה","מעבר לכתף, שיחה שקטה בין שתי דמויות.",2.0),
+      sh("2S","חיבוק","שתי דמויות מתחבקות.",2.0),
+      sh("POV","מתרחקת","המצלמה מתרחקת מהדמות שנשארת מאחור.",1.8),
+      sh("PAN","מהחלון","פאן איטי על הנוף מחלון.",1.8),
+      sh("DOLLY","ההחלטה","מתקרבים לאט אל פנים שמחליטות.",1.8),
+      sh("ECU","ידיים","רק הידיים: אוחזות, ואז משחררות.",1.6),
+      sh("SIL","בשקיעה","דמות מול השקיעה, הולכת לאט.",2.8)],[2.4,2.4,2.2,2.2,2.6]),
+    look:{grade:"saturate(.85) contrast(1.05)",tint:"rgba(120,150,190,.15)",vig:.55,grain:.05,flash:false,flicker:false,pal:{bg:"#141a26",fill:"#eef1f6",glow:"rgba(160,180,220,.35)",accent:"#b8c7e6"}}},
+  sports:{name:"ספורט",en:"SPORTS",font:"karantina",cues:["sports","epic","chase","action"],desc:"קבוצה שאף אחד לא האמין בה, ומשחק אחד שהכול תלוי בו.",
+    defaults:{...BASE_T,t1:"אף אחד לא האמין בהם",t2:"הם הפסידו בכל משחק",t3:"עד היום",t4:"משחק אחד",t5:"הכול על המגרש",title:"המשחק של החיים"},
+    seq:frame([
+      sh("OPEN","המגרש הריק","מגרש או חצר ריקה בבוקר, כדור לבד באמצע.",2.6,"ball_field"),
+      sh("INS","שרוכים","תקריב על קשירת נעלי ספורט.",1.8,"hands_shoe"),
+      sh("ELS","האצטדיון","שוט רחב מאוד של המגרש מגבוה.",2.4),
+      sh("WS","הקבוצה","כל הקבוצה בשורה, ידיים על הכתפיים.",2.0),
+      sh("LOW","המאמן","מצלמה נמוכה על המאמן שמדבר בתקיפות.",1.8),
+      sh("CU","ריכוז","קלוז אפ: מבט ממוקד, זיעה על המצח.",1.4),
+      sh("TRK","עם הכדור","רצים לצד השחקן עם הכדור.",1.4),
+      sh("HIGH","נפל","מצלמה גבוהה על שחקן ששוכב על הדשא.",1.4),
+      sh("2S","יד לקום","שחקן מושיט יד לחבר ועוזר לו לקום.",1.6,"helping_hand"),
+      sh("PAN","הקהל","פאן על אנשים שמריעים ומוחאים כפיים.",1.4),
+      sh("ACT","הבעיטה","בעיטה, זריקה או קפיצה לסל. הרגע החזק ייבחר אוטומטית.",1.0),
+      sh("DOLLY","השנייה האחרונה","מתקרבים לאט אל פנים שמחכות לתוצאה.",1.6),
+      sh("SIL","ניצחון","הקבוצה מרימה ידיים מול האור.",2.4,"group_sil")]),
+    look:{grade:"saturate(1.25) contrast(1.15)",tint:"rgba(80,200,120,.12)",vig:.5,grain:.04,flash:true,flicker:false,pal:{bg:"#0f2018",fill:"#ffffff",glow:"rgba(80,220,120,.5)",accent:"#5fe08a"}}}
+});
 const OLD_V1={action:["שוט רחב של המקום","הגיבור נכנס לפריים","קלוז אפ על הגיבור","ידיים בפעולה","ריצה","רגע האקשן","מבט אל המצלמה","שוט סיום"],horror:["הבית מבחוץ","לבד בחדר","מסדרון חשוך","עיניים מפוחדות","צל עובר","יד על הידית","צעקה","הדבר"]};
 const SOON=[
-  ["chase","מרדף","מכוניות, אופניים או רגליים. מי שעוצר, מפסיד."],
-  ["thriller","מותחן","סוד, חשד ושעון שמתקתק אחורה."],
-  ["adventure","הרפתקה","מפה ישנה, גשר חבלים ואוצר שמחכה בסוף."],
-  ["scifi","מדע בדיוני","הם הגיעו מהשמיים, והעולם כבר לא יהיה אותו דבר."],
-  ["fantasy","פנטזיה","קסם, דרקונים וממלכה שצריכה גיבור."],
-  ["western","מערבון","עיר מאובקת, שמש לוהטת ודו-קרב בצהריים."],
-  ["comedy","קומדיה","תוכנית מושלמת שמשתבשת בכל דרך אפשרית."],
-  ["drama","דרמה","רגע אחד שמשנה חיים, ומבטים שאומרים הכול."],
-  ["sports","ספורט","קבוצה שאף אחד לא האמין בה, ומשחק אחד שהכול תלוי בו."],
   ["boys","סרט בנים","חבורה, בית על העץ וקיץ אחד שלא שוכחים."],
   ["girls","סרט בנות","חברות, סוד משותף ומסיבה שאסור לפספס."],
   ["reality","ריאליטי","מצלמות בכל פינה, ורק אחד יישאר."],
@@ -722,7 +891,20 @@ const LS="trailerlab.project.v1";
 let P=null;
 const G=()=>GENRES[P.genre];
 const F=()=>FONTS[P.font]||FONTS[G().font];
-function saveP(){try{localStorage.setItem(LS,JSON.stringify(P))}catch(e){}}
+function saveP(){if(!P)return;P.mod=Date.now();try{localStorage.setItem(LS,JSON.stringify(P))}catch(e){}}
+/* saved projects: the list lives in localStorage, each project in IndexedDB */
+const PLS="trailerlab.projects";
+function projList(){try{return JSON.parse(localStorage.getItem(PLS)||"[]")}catch(e){return[]}}
+function saveProjList(l){try{localStorage.setItem(PLS,JSON.stringify(l))}catch(e){}}
+const isSaved=pid=>projList().some(x=>x.pid===pid);
+const isDirty=()=>P&&(!P.savedAt||(P.mod||0)>P.savedAt);
+async function storeProject(group){P.group=group;P.savedAt=Date.now()+1;try{localStorage.setItem(LS,JSON.stringify(P))}catch(e){}
+  try{await IDB.put("proj:"+P.pid,JSON.parse(JSON.stringify(P)))}catch(e){}
+  const l=projList().filter(x=>x.pid!==P.pid);const th=(P.shots.find(x=>x.has&&x.thumb)||{}).thumb||null;
+  l.unshift({pid:P.pid,group,title:P.titles.title,genre:P.genre,savedAt:P.savedAt,done:P.shots.filter(x=>x.has).length,total:P.shots.length,thumb:th});saveProjList(l)}
+async function deleteProjectFiles(pr){if(!pr)return;for(const sh of pr.shots||[])await delClip(sh.id);if(pr.projTrack&&!inAlbum(pr.projTrack))await delClip("track:"+pr.projTrack)}
+/* leave the current project: files stay only if the project is saved */
+async function leaveProject(){Player.stop();if(P&&!isSaved(P.pid))await deleteProjectFiles(P);P=null;Player.vids.clear();musicBuf=null;try{localStorage.removeItem(LS)}catch(e){}}
 function loadP(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j&&GENRES[j.genre]&&Array.isArray(j.shots))return j}catch(e){}return null}
 const IDB={db:null,
   open(){if(this.db)return Promise.resolve(this.db);return new Promise((res,rej)=>{const r=indexedDB.open("trailerlab",1);r.onupgradeneeded=()=>r.result.createObjectStore("clips");r.onsuccess=()=>{this.db=r.result;res(r.result)};r.onerror=()=>rej(r.error)})},
@@ -745,7 +927,7 @@ async function clearClips(){const keep=new Set(album().map(t=>"track:"+t.id));
   try{const ks=await IDB.keys();for(const k of ks)if(!keep.has(k))await IDB.del(k)}catch(e){}}
 
 function blankShot(gid,i,stamp){return{id:gid+"-"+i+"-"+stamp,has:false,dur:5,start:0,mode:"motion",motion:[],thumb:null,flat:false}}
-function newProject(gid){const g=GENRES[gid];const stamp=Date.now().toString(36);return{v:2,genre:gid,font:g.font,titles:{...g.defaults},credits:CREDITS_DEFAULT.map(([r,n])=>({role:r,name:n})),music:{src:"auto",offset:0,hits:true,name:""},shots:g.seq.filter(x=>x.s).map((x,i)=>blankShot(gid,i,stamp))}}
+function newProject(gid){const g=GENRES[gid];const stamp=Date.now().toString(36);return{v:2,pid:"p"+stamp,genre:gid,font:g.font,titles:{...g.defaults},credits:CREDITS_DEFAULT.map(([r,n])=>({role:r,name:n})),music:{src:"auto",offset:0,hits:true,name:""},shots:g.seq.filter(x=>x.s).map((x,i)=>blankShot(gid,i,stamp))}}
 function migrate(old){if(old.v===2)return old;const np=newProject(old.genre);const labels=OLD_V1[old.genre]||[];const newLabels=GENRES[old.genre].seq.filter(x=>x.s).map(x=>x.label);
   labels.forEach((lab,oi)=>{const ni=newLabels.indexOf(lab);if(ni>=0&&old.shots[oi])np.shots[ni]=old.shots[oi]});
   if(old.titles&&old.titles.title)np.titles.title=old.titles.title;return np}
@@ -808,12 +990,16 @@ function drawCard(ctx,seg,lt,p,g){
   if(seg.c==="filmby")return smallCard(ctx,P.titles.filmby||"",lt,a,horror);
   (horror?horrorCard:actionCard)(ctx,P.titles[seg.c]||"",lt,p,a);
 }
-function actionBg(ctx,p){const bg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.62);bg.addColorStop(0,"#1c2129");bg.addColorStop(1,"#000");ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);const sx=W*1.3-p*W*1.6,lg=ctx.createLinearGradient(sx-260,0,sx+260,0);lg.addColorStop(0,"rgba(240,165,64,0)");lg.addColorStop(.5,"rgba(240,165,64,.13)");lg.addColorStop(1,"rgba(240,165,64,0)");ctx.fillStyle=lg;ctx.fillRect(0,0,W,H)}
+/* each genre's title-card palette; action keeps the brushed-metal letters */
+function PAL(){return Object.assign({bg:"#1c2129",fill:"metal",glow:"rgba(240,165,64,.5)",accent:"#f0a540"},G().look.pal||{})}
+function rgba(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
+function cardFill(ctx,hp){const pl=PAL();return pl.fill==="metal"?metal(ctx,hp):pl.fill}
+function actionBg(ctx,p){const pl=PAL();const bg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.62);bg.addColorStop(0,pl.bg);bg.addColorStop(1,"#000");ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);const sx=W*1.3-p*W*1.6,lg=ctx.createLinearGradient(sx-260,0,sx+260,0);lg.addColorStop(0,rgba(pl.accent,0));lg.addColorStop(.5,rgba(pl.accent,.13));lg.addColorStop(1,rgba(pl.accent,0));ctx.fillStyle=lg;ctx.fillRect(0,0,W,H)}
 function metal(ctx,hp){const span=W*.42,tg=ctx.createLinearGradient(-span,0,span,0);hp=clamp(hp,.14,.86);tg.addColorStop(0,"#878d96");tg.addColorStop(hp-.13,"#c5cad1");tg.addColorStop(hp,"#ffffff");tg.addColorStop(hp+.13,"#c5cad1");tg.addColorStop(1,"#878d96");return tg}
 function bigText(ctx,text,max,maxW){const f=F();return fit(ctx,text,f.fam,f.w,Math.round(max*(f.big||1)),maxW)}
 function actionCard(ctx,text,lt,p,a){
-  actionBg(ctx,p);ctx.globalAlpha=a;ctx.translate(W/2,H/2);const sc=1+.07*p;ctx.scale(sc,sc);
-  bigText(ctx,text,124,W*.78);ctx.shadowColor="rgba(240,165,64,.5)";ctx.shadowBlur=42;ctx.fillStyle=metal(ctx,1-p);ctx.fillText(text,0,4);
+  const pl=PAL();actionBg(ctx,p);ctx.globalAlpha=a;ctx.translate(W/2,H/2);let sc=1+.07*p;if(pl.bounce&&!STILL){const q=clamp(lt/.45,0,1);sc*=q<1?.6+.4*(1+2.2*Math.pow(q-1,3)+1.2*Math.pow(q-1,2)):1}ctx.scale(sc,sc);
+  bigText(ctx,text,124,W*.78);ctx.shadowColor=pl.glow;ctx.shadowBlur=42;ctx.fillStyle=cardFill(ctx,1-p);ctx.fillText(text,0,4);
   ctx.setTransform(1,0,0,1,0,0);ctx.shadowBlur=0;ctx.globalAlpha=1;grainFx(ctx,.04);letterbox(ctx);
 }
 function horrorCard(ctx,text,lt,p,a){
@@ -826,7 +1012,7 @@ function horrorCard(ctx,text,lt,p,a){
 function smallCard(ctx,text,lt,a,horror){
   ctx.fillStyle="#000";ctx.fillRect(0,0,W,H);ctx.globalAlpha=a;
   fit(ctx,text,"Heebo","500",40,W*.7);ctx.letterSpacing="6px";const w=ctx.measureText(text).width;ctx.fillStyle=horror?"#bdb4a6":"#d3d8df";ctx.fillText(text,W/2,H/2);
-  ctx.letterSpacing="0px";const grow=STILL?1:clamp(lt/1.2,0,1),L=90*grow;ctx.strokeStyle=horror?"rgba(160,20,20,.8)":"rgba(240,165,64,.85)";ctx.lineWidth=2;
+  ctx.letterSpacing="0px";const grow=STILL?1:clamp(lt/1.2,0,1),L=90*grow;ctx.strokeStyle=horror?"rgba(160,20,20,.8)":rgba(PAL().accent,.85);ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(W/2+w/2+28,H/2);ctx.lineTo(W/2+w/2+28+L,H/2);ctx.moveTo(W/2-w/2-28,H/2);ctx.lineTo(W/2-w/2-28-L,H/2);ctx.stroke();
   ctx.globalAlpha=1;grainFx(ctx,horror?.08:.03);letterbox(ctx);
 }
@@ -853,7 +1039,7 @@ function titleCard(ctx,lt,seg,horror){
   const ease=STILL?1:1-Math.pow(1-clamp(lt/.7,0,1),3);
   ctx.save();ctx.globalAlpha=out;ctx.translate(W/2,H/2);
   if(horror){let al=out;if(!STILL&&lt<1.1&&Math.random()<.4)al*=.15;ctx.globalAlpha=al;const sc=1.1-.1*ease;ctx.scale(sc,sc);bigText(ctx,T.title,160,W*.86);ctx.shadowColor="rgba(200,14,14,.65)";ctx.shadowBlur=40;ctx.fillStyle="#ece5d8";ctx.fillText(T.title,0,0)}
-  else{const sc=1.14-.14*ease;ctx.scale(sc,sc);bigText(ctx,T.title,166,W*.86);ctx.shadowColor="rgba(240,165,64,.55)";ctx.shadowBlur=50;ctx.fillStyle=metal(ctx,.5);ctx.fillText(T.title,0,0)}
+  else{const sc=1.14-.14*ease;ctx.scale(sc,sc);bigText(ctx,T.title,166,W*.86);ctx.shadowColor=PAL().glow;ctx.shadowBlur=50;ctx.fillStyle=cardFill(ctx,.5);ctx.fillText(T.title,0,0)}
   ctx.restore();ctx.globalAlpha=1;
   if(!horror&&!STILL&&lt<.12){ctx.fillStyle=`rgba(255,250,240,${.7*(1-lt/.12)})`;ctx.fillRect(0,0,W,H)}
   grainFx(ctx,horror?.1:.04);if(horror)vignette(ctx,.6);letterbox(ctx);
@@ -866,7 +1052,7 @@ function billing(ctx,y,maxW,horror,alpha){
   const push=(arr,force)=>{const w=arr.reduce((a,k)=>a+k.w+(k.g||0),0);if(force||(lw+w>maxW&&lines[lines.length-1].length)){lines.push([]);lw=0}lines[lines.length-1].push(...arr);lw+=w};
   ctx.save();ctx.direction="rtl";ctx.textAlign="right";ctx.textBaseline="alphabetic";ctx.letterSpacing="0px";
   const mk=(t,f,c,g)=>{ctx.font=f;return{t,f,c,g:g||0,w:ctx.measureText(t).width}};
-  push([mk(C[0].name,nameF,"#e3e6ea",10),mk("מציגה",roleF,"#8d949e",10),mk(P.titles.title,nameF,horror?"#d8473f":"#f0a540")]);
+  push([mk(C[0].name,nameF,"#e3e6ea",10),mk("מציגה",roleF,"#8d949e",10),mk(P.titles.title,nameF,horror?"#d8473f":PAL().accent)]);
   let first=true;C.slice(1).forEach(x=>{push([mk(x.role,roleF,"#8d949e",8),mk(x.name,nameF,"#e3e6ea",gap)],first);first=false});
   ctx.globalAlpha=alpha;
   lines.filter(l=>l.length).forEach((l,li)=>{const last=l[l.length-1];const tw=l.reduce((a,k)=>a+k.w+(k.g||0),0)-(last.g||0);let x=W/2+tw/2;const yy=y+li*44;l.forEach(k=>{ctx.font=k.f;ctx.fillStyle=k.c;ctx.fillText(k.t,x,yy);x-=k.w+(k.g||0)})});
@@ -876,7 +1062,7 @@ function creditsCard(ctx,lt,seg,horror){
   const a=STILL?1:clamp(Math.min(lt/.5,(seg.d-lt)/.6),0,1);
   ctx.fillStyle="#000";ctx.fillRect(0,0,W,H);
   const glow=ctx.createRadialGradient(W/2,H*.32,0,W/2,H*.32,W*.5);glow.addColorStop(0,horror?"rgba(110,10,10,.22)":"rgba(240,165,64,.1)");glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
-  ctx.globalAlpha=a;const rel=P.titles.release||"";bigText(ctx,rel,96,W*.7);ctx.fillStyle=horror?"#d8473f":"#f0a540";ctx.shadowColor=horror?"rgba(200,20,20,.5)":"rgba(240,165,64,.45)";ctx.shadowBlur=30;ctx.fillText(rel,W/2,BAR+118);ctx.shadowBlur=0;
+  ctx.globalAlpha=a;const rel=P.titles.release||"";bigText(ctx,rel,96,W*.7);ctx.fillStyle=horror?"#d8473f":PAL().accent;ctx.shadowColor=horror?"rgba(200,20,20,.5)":PAL().glow;ctx.shadowBlur=30;ctx.fillText(rel,W/2,BAR+118);ctx.shadowBlur=0;
   ctx.direction="ltr";ctx.letterSpacing="12px";ctx.font='500 15px "IBM Plex Mono",monospace';ctx.fillStyle="#6c737d";ctx.fillText("COMING SOON",W/2,BAR+186);ctx.letterSpacing="0px";ctx.direction="rtl";
   ctx.strokeStyle="rgba(255,255,255,.14)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(W*.2,BAR+216);ctx.lineTo(W*.8,BAR+216);ctx.stroke();ctx.globalAlpha=1;
   const b=STILL?1:clamp((lt-.5)/.6,0,1)*a;billing(ctx,BAR+268,W*.78,horror,b);
@@ -1023,6 +1209,71 @@ function cueStrings(X,A,at){const b=60/140,s16=b/4,prog=[CH.Dm,CH.Bb,CH.Gm,CH.Am
   riser(X,at(A.tT-2.2),1.9,.22);boom(X,at(A.tT),1);choir(X,at(A.tT),3.2,[38,45,50,57],.07);
   if(A.credits)pad(X,at(A.credits.t0),A.T-A.credits.t0,[38,45,50,53],.045,700,1.2)}
 
+
+/* ---- more instruments ---- */
+function whistle(X,t,m,dur,v){const g=X.ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+.08);g.gain.setValueAtTime(v,t+Math.max(.1,dur-.15));g.gain.linearRampToValueAtTime(.0001,t+dur);g.connect(X.bus);send(X,g,.6);const o=osc(X,"sine",MID(m),t,dur,g);const l=X.ac.createOscillator();l.frequency.value=5.5;const lg=X.ac.createGain();lg.gain.value=MID(m)*.012;l.connect(lg);lg.connect(o.frequency);l.start(t);l.stop(t+dur+.05)}
+function clap(X,t,v){const b=filt(X,"bandpass",1500,.9);send(X,b,.35);[0,.012,.024].forEach(o=>noise(X,t+o,.12,env(X,t+o,v,.001,.09,b)))}
+function wood(X,t,v){osc(X,"sine",1250,t,.06,env(X,t,v,.001,.05));osc(X,"sine",880,t,.05,env(X,t,v*.5,.001,.04))}
+function boing(X,t,v){if(X.nofx)return;const g=env(X,t,v,.005,.45);const o=osc(X,"sine",180,t,.5,g);o.frequency.exponentialRampToValueAtTime(620,t+.12);o.frequency.exponentialRampToValueAtTime(260,t+.45)}
+function slide(X,t,dur,v){if(X.nofx)return;const g=X.ac.createGain();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+.05);g.gain.linearRampToValueAtTime(.0001,t+dur);g.connect(X.bus);const o=osc(X,"sine",1400,t,dur,g);o.frequency.exponentialRampToValueAtTime(220,t+dur)}
+function crash(X,t,v){if(X.nofx)return;const b=filt(X,"highpass",3000,.5);send(X,b,.5);noise(X,t,1.6,env(X,t,v,.002,1.4,b))}
+const CMAJ={C:[60,64,67],F:[60,65,69],G:[59,62,67],Am:[57,60,64],Em:[52,55,59]};
+
+/* ---- comedy: pizzicato oom-pah, woodblock and a slide whistle ---- */
+function cueComedy(X,A,at){const b=60/112,prog=[CMAJ.C,CMAJ.F,CMAJ.G,CMAJ.C],bar=b*4,s0=.3,end=A.tT-.3;
+  for(let r=s0,j=0;r<end;r+=bar,j++)pad(X,at(r),bar,prog[j%4],.035,1600,.4);
+  for(let r=s0,i=0;r<end;r+=b,i++){const ch=prog[Math.floor((r-s0)/bar)%4];if(i%2===0)pluck(X,at(r),ch[0]-24,.34,800,.24);else ch.forEach(m=>pluck(X,at(r),m-12,.13,1800,.13))}
+  const c1=(A.C[0]||A.main).t0,mot=[72,74,76,79,76,74,72,0,74,76,77,81,79,77,76,0];
+  for(let r=c1,i=0;r<end;r+=b/2,i++){const m=mot[i%16];if(m)pluck(X,at(r),m,.14,3400,.11)}
+  for(let r=(A.C[1]||A.main).t0;r<end;r+=b)wood(X,at(r+b/2),.2);
+  A.C.forEach((c,k)=>{if(k===3){slide(X,at(c.t0-.9),.9,.12);crash(X,at(c.t0),.25)}else boing(X,at(c.t0),.22)});
+  for(let r=A.tT-1;r<A.tT-.1;r+=.0625)snare(X,at(r),.12+.15*(r-(A.tT-1)));
+  brass(X,at(A.tT),.26,2.6,130.8);crash(X,at(A.tT),.3);[60,64,67,72].forEach(m=>pluck(X,at(A.tT),m,.12,3000,.6));
+  if(A.credits)for(let r=A.credits.t0,i=0;r<A.T-.4;r+=b,i++){const ch=prog[i%4];pluck(X,at(r),i%2?ch[1]-12:ch[0]-24,.1,900,.2)}}
+
+/* ---- western: twangy guitar, a whistle melody and the noon bell ---- */
+function cueWestern(X,A,at){const b=60/88,arp=[40,47,52,55,59,55,52,47],s0=A.main.t0,end=A.tT-.4;
+  pad(X,at(0),A.T,[28,35],.04,260,3);
+  for(let r=s0,i=0;r<end;r+=b/2,i++){if(i%16>11)continue;const g=env(X,at(r),.12,.003,.6,filt(X,"lowpass",2400,1));const o=osc(X,"triangle",MID(arp[i%8]),at(r),.65,g);o.frequency.setValueAtTime(MID(arp[i%8])*1.015,at(r));o.frequency.exponentialRampToValueAtTime(MID(arp[i%8]),at(r)+.06)}
+  const c1=(A.C[1]||A.main).t0,mel=[[64,1],[67,.5],[71,1.5],[69,1],[67,.5],[64,1.5],[62,1],[64,2]];let r=c1;
+  for(let k=0;r<end-1;k++){const [m,d]=mel[k%mel.length];whistle(X,at(r),m+12,d*b*1.6-.05,.05);r+=d*b*1.6}
+  for(let q=(A.C[2]||A.main).t0;q<end;q+=b*2)kick(X,at(q),.5,90,40,.5);
+  const c3=(A.C[3]||A.main).t0;for(let q=c3;q<end;q+=b/2)tick(X,at(q),.08,4000);
+  const c4=A.C[4];if(c4)[0,.9,1.8].forEach(o=>bell(X,at(c4.t0+o),69,.2));
+  boom(X,at(A.tT),1);brass(X,at(A.tT),.22,3,82.4);
+  if(A.credits)whistle(X,at(A.credits.t0+.4),76,2.4,.05)}
+
+/* ---- drama: broken piano chords and a string swell ---- */
+function cueDrama(X,A,at){const b=60/70,prog=[CMAJ.Am,CMAJ.F,CMAJ.C,CMAJ.G],bar=b*4,s0=.4,end=A.tT-.2;
+  for(let r=s0,i=0;r<end;r+=b/2,i++){const ch=prog[Math.floor((r-s0)/bar)%4],k=(r-s0)/(end-s0),pat=[ch[0]-12,ch[2]-12,ch[1],ch[2]];piano(X,at(r),pat[i%4],.12+.08*k,2)}
+  for(let r=s0;r<end;r+=bar){const ch=prog[Math.floor((r-s0)/bar)%4];piano(X,at(r),ch[0]-24,.16,3.4)}
+  const c1=(A.C[1]||A.main).t0;for(let r=c1,j=0;r<end;r+=bar,j++){const k=(r-c1)/(end-c1);pad(X,at(r),bar,prog[j%4].map(m=>m),.03+.04*k,900+900*k,1.2)}
+  const c3=(A.C[3]||A.main).t0;for(let r=c3,j=0;r<end;r+=bar,j++)strDet(X,at(r),prog[j%4][0]-12,.08,bar-.2);
+  pad(X,at(A.tT),A.T-A.tT,[57,60,64,69],.06,1200,1);[45,57,64,69].forEach(m=>piano(X,at(A.tT),m,.16,4));
+  if(A.credits)[76,74,72,71,69].forEach((m,j)=>piano(X,at(A.credits.t0+.6+j*.8),m,.12,2.4))}
+
+/* ---- sports: stomp-stomp-clap anthem, brass stabs and a drum roll ---- */
+function cueSports(X,A,at){const b=60/100,s0=A.main.t0,end=A.tT-1.1;
+  pad(X,at(0),s0+.5,[48,55,60],.04,800,1.2);
+  for(let r=s0;r<end;r+=b*2){const k=(r-s0)/(end-s0);kick(X,at(r),.6+.3*k,110,45,.4);kick(X,at(r+b/2),.55+.3*k,110,45,.4);clap(X,at(r+b),.3+.2*k)}
+  const c1=(A.C[1]||A.main).t0,roots=[130.8,116.5,103.8,98];for(let r=c1,j=0;r<end;r+=b*4,j++)brass(X,at(r),.16,b*1.5,roots[j%4]);
+  const c2=(A.C[2]||A.main).t0;for(let r=c2;r<end;r+=b/2)tick(X,at(r),.06,7000);
+  const c3=(A.C[3]||A.main).t0;choir(X,at(c3),Math.max(2,end-c3),[48,55,60,64],.05);
+  A.C.forEach(c=>boom(X,at(c.t0),.4));
+  for(let r=end;r<A.tT-.05;r+=.08)snare(X,at(r),.1+.25*(r-end));
+  boom(X,at(A.tT),1);crash(X,at(A.tT),.35);brass(X,at(A.tT),.3,3.2,130.8);choir(X,at(A.tT),3,[48,55,60,64,67],.07);
+  if(A.credits)for(let r=A.credits.t0;r<A.T-.6;r+=b*2){kick(X,at(r),.35,110,45,.4);kick(X,at(r+b/2),.3,110,45,.4);clap(X,at(r+b),.2)}}
+
+/* ---- space: echoing sine arpeggio, sonar pings and a deep pad ---- */
+function cueSpace(X,A,at){const b=60/100,s0=A.main.t0,end=A.tT-.4,notes=[62,65,69,72,76,72,69,65];
+  const dl=X.ac.createDelay(1);dl.delayTime.value=b*.75;const fb=X.ac.createGain();fb.gain.value=.38;dl.connect(fb);fb.connect(dl);dl.connect(X.bus);
+  pad(X,at(0),A.T,[38,45,50,57],.035,600,3);
+  for(let r=s0,i=0;r<end;r+=b/2,i++){const k=(r-s0)/(end-s0);const g=env(X,at(r),.07+.05*k,.004,.3);g.connect(dl);osc(X,"sine",MID(notes[i%8]+(i%16>7?12:0)),at(r),.35,g)}
+  for(let r=s0;r<end;r+=4){const g=env(X,at(r),.1,.002,1.2);send(X,g,.9);osc(X,"sine",1180,at(r),1.3,g)}
+  const c2=(A.C[2]||A.main).t0;for(let r=c2,i=0;r<end;r+=b/2,i++)pluck(X,at(r),[38,38,41,43][Math.floor(i/4)%4],.13,600,.2);
+  const c3=(A.C[3]||A.main).t0;for(let r=c3;r<end;r+=b)kick(X,at(r),.6);
+  A.C.forEach(c=>{swell(X,at(Math.max(0,c.t0-.7)),.7,.18);boom(X,at(c.t0),.5)});
+  riser(X,at(A.tT-2.4),2.1,.22);boom(X,at(A.tT),1.05);pad(X,at(A.tT),A.T-A.tT,[38,45,50,57,62],.06,1500,.6)}
 const CUELIB={
   action:{name:"בראאם",fn:cueAction},
   chase:{name:"מרדף · ארפג׳יו סינתי",fn:cueChase},
@@ -1032,7 +1283,12 @@ const CUELIB={
   piano:{name:"פסנתר בחושך",fn:cuePiano},
   heart:{name:"דופק לב",fn:cueHorror},
   quake:{name:"רעידה · סאב, מקהלה ונשפנים",fn:cueQuake},
-  strings:{name:"גל ענק · כלי קשת",fn:cueStrings}
+  strings:{name:"גל ענק · כלי קשת ומקהלה",fn:cueStrings},
+  comedy:{name:"פיציקטו מצחיק",fn:cueComedy},
+  western:{name:"גיטרה ושריקה במדבר",fn:cueWestern},
+  drama:{name:"פסנתר וכלי קשת רגשי",fn:cueDrama},
+  sports:{name:"המנון · רקיעות ומחיאות כפיים",fn:cueSports},
+  space:{name:"חלל · ארפג׳יו מהדהד",fn:cueSpace}
 };
 function cueFile(X,A,at,buf){
   const src=X.ac.createBufferSource();src.buffer=buf;const g=X.ac.createGain();src.connect(g);g.connect(X.bus);
@@ -1155,6 +1411,23 @@ const SHOT_ART={
   car_night:GROUND+'<circle class="d" cx="22" cy="18" r="6"/><path class="d" d="M128 76V16H112"/><path class="lt" d="M112 18L96 76H136Z"/><path class="f" d="M28 70q2-14 16-16l10-10h28l12 10q14 2 16 16v4H28z"/><circle class="k" cx="48" cy="74" r="6"/><circle class="k" cx="94" cy="74" r="6"/>',
   city_els:'<path class="d" d="M0 56h14V40h12v16h10V30h16v26h12V44h14v12h16V34h14v22h14V46h10v10h18"/><path class="d" d="M8 46h2M42 38h2M90 42h2M118 52h2"/><path class="f" d="M0 76H160V92H0Z"/>'+pers(118,76,.3),
   street_ws:'<path class="d" d="M0 18H32V76M0 38h32M0 58h32M128 76V24h32M128 44h32M128 62h32M32 76L58 52H102L128 76"/>'+GROUND+pers(80,72,.8),
+  clock:'<circle class="f" cx="80" cy="45" r="30"/><path class="a" d="M80 45V24M80 45l14 8"/><path class="d" d="M80 17v5M80 68v5M52 45h5M103 45h5M118 20l8-6M120 30h10M42 20l-8-6M40 30H30"/>',
+  road:'<path class="d" d="M0 40l30-10 30 4 40-12 60 10"/><path class="d" d="M62 30h36l62 60H0z"/><path class="a" d="M80 36v6M80 50v10M80 70v16"/>'+pers(80,33,.14),
+  envelope:'<path class="d" d="M0 80H160"/><rect class="d" x="104" y="4" width="44" height="76"/><circle class="d" cx="110" cy="44" r="2"/><path class="f" d="M44 60h48v20H44z"/><path class="a" d="M44 60l24 12 24-12"/>',
+  phone:'<rect class="f" x="62" y="10" width="36" height="70" rx="6"/><rect class="d" x="67" y="18" width="26" height="40"/><path class="a" d="M70 28h20M70 34h14M52 30q-6 15 0 30M108 30q6 15 0 30M44 24q-10 21 0 42M116 24q10 21 0 42"/>',
+  map:'<path class="f" d="M24 18l36-8 40 8 36-8v62l-36 8-40-8-36 8z"/><path class="d" d="M60 10v62M100 18v62"/><path class="a dash" d="M36 60q20-30 50-14t40-20"/><path class="a" d="M116 22l8 8M124 22l-8 8"/>',
+  chest:'<path class="d" d="M0 80H160"/><path class="lt" d="M52 30L36 4h88l-16 26z"/><path class="f" d="M44 48h72v30H44z"/><path class="f" d="M44 48l6-18h60l6 18"/><rect class="a" x="74" y="52" width="12" height="10"/>',
+  rope_bridge:'<path class="d" d="M0 90V40l22-4 6 54zM160 90V36l-22 4-4 50z"/><path class="a" d="M22 46Q80 76 138 44M22 36Q80 64 138 34"/><path class="d" d="M40 53v-9M56 59v-9M72 62v-9M88 62v-9M104 59v-9M120 53v-9"/>'+pers(84,64,.42,"f",1),
+  night_sky:'<g class="d"><circle cx="20" cy="14" r="1"/><circle cx="50" cy="28" r="1"/><circle cx="130" cy="10" r="1"/><circle cx="148" cy="34" r="1"/><circle cx="96" cy="18" r="1"/><circle cx="70" cy="8" r="1"/></g><circle class="d" cx="38" cy="22" r="9"/><circle class="lt" cx="112" cy="26" r="9"/><path class="a" d="M112 14v-6M112 38v6M100 26h-6M124 26h6"/>'+GROUND+'<path class="d" d="M30 76V40H18"/>',
+  screen_signal:'<rect class="f" x="30" y="10" width="100" height="58" rx="3"/><path class="a" d="M38 40l8-10 6 18 8-26 8 30 6-14 8 6 8-12 8 14 8-8 10 4"/><path class="d" d="M70 68l-6 12h32l-6-12"/>',
+  ufo:'<path class="d" d="M0 64L34 50 60 58 92 44 160 60"/>'+GROUND+'<path class="lt" d="M70 30L50 76h60L90 30z"/><ellipse class="f" cx="80" cy="28" rx="32" ry="8"/><path class="f" d="M66 24q14-18 28 0z"/>'+pers(80,76,.35,"k"),
+  book:'<path class="f" d="M80 32q-24-10-50-4v48q26-6 50 4zM80 32q24-10 50-4v48q-26-6-50 4z"/><path class="d" d="M80 32v48M40 42h28M40 50h28M40 58h22M92 42h28M92 50h28M92 58h22"/><path class="a" d="M60 20l4-8M80 16V6M100 20l-4-8"/>',
+  castle:'<circle class="d" cx="132" cy="18" r="7"/><path class="f" d="M30 76V42h10v-8h8v8h10V30h8v-8h8v8h8v12h10V34h8v8h10v34z"/><path class="d" d="M0 76H160M74 76V62a6 6 0 0 1 12 0v14"/>',
+  dragon:'<path class="f" d="M34 44q20-4 34-18l10 10 14-16-2 18 22-4-16 14q8 6 20 6-16 6-28 0-12 10-40 10z"/>'+GROUND+pers(122,80,.8),
+  tumbleweed:GROUND+'<circle class="d" cx="128" cy="22" r="12"/><circle class="f" cx="70" cy="62" r="14"/><path class="d" d="M60 54l20 16M62 70l16-18M56 62h28"/><path class="a" d="M30 60h16M24 68h18M36 52h10"/>',
+  plan:'<rect class="f" x="24" y="10" width="112" height="70"/><path class="a dash" d="M40 62q20-40 40-10t40-26"/><path class="a" d="M114 20l8 8M122 20l-8 8"/><circle class="d" cx="60" cy="30" r="6"/><path class="d" d="M86 68h30M34 20h20"/>',
+  photo:'<g transform="rotate(-6 80 45)"><rect class="f" x="42" y="12" width="76" height="60"/><rect class="d" x="48" y="18" width="64" height="40"/>'+pers(70,58,.5)+pers(92,58,.5)+'</g>',
+  ball_field:GROUND+'<path class="d" d="M18 76L48 48H112L142 76M80 48v28"/><path class="d" d="M126 48V22h22v26"/><circle class="f" cx="80" cy="66" r="8"/><path class="d" d="M74 62l6 4 6-4M80 66v6"/>',
   calm_morning:'<rect class="d" x="16" y="10" width="58" height="44"/><path class="d" d="M45 10V54M16 32H74M0 72H160"/><path class="f" d="M92 44h34v18q0 10-10 10h-14q-10 0-10-10z"/><path class="f" d="M126 48q10 0 10 7t-10 7"/><path class="a" d="M102 38q-4-6 0-12t0-12M114 38q-4-6 0-12t0-12"/>',
   glass_ripple:'<path class="d" d="M0 78H160"/><path class="f" d="M60 18H100L94 78H66Z"/><path class="a" d="M64 40q8-4 16 0t16 0M65 48q7-3 15 0t15 0"/><path class="d" d="M48 30l-8-4M46 46H34M48 62l-8 4M112 30l8-4M114 46h12M112 62l8 4"/>',
   shake:'<rect class="d" x="18" y="8" width="124" height="74" transform="rotate(-3 80 45)"/>'+GROUND+pers(80,80,1.2)+'<path class="a" d="M4 10l6 4-6 4 6 4-6 4M156 10l-6 4 6 4-6 4 6 4M4 58l6 4-6 4 6 4-6 4M156 58l-6 4 6 4-6 4 6 4"/>',
@@ -1174,7 +1447,7 @@ let tab="shots",cardKey="t1";
 function show(id){["home","shots","titles","trailer"].forEach(v=>$("#v-"+v).hidden=v!==id)}
 function setTab(t){Player.stop();exitFs();tab=t;show(t);document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));$("#main").scrollTop=0;
   if(t==="shots")renderShots();if(t==="titles")renderTitles();if(t==="trailer")renderTrailer()}
-function header(){const has=!!P;$("#tabs").hidden=!has;$("#newBtn").hidden=!has;$("#genreChip").hidden=!has;
+function header(){const has=!!P;$("#tabs").hidden=!has;$("#newBtn").hidden=!has;$("#saveBtnTop").hidden=!has;$("#genreChip").hidden=!has;
   $("#projName").textContent=has?P.titles.title:"";if(has)$("#genreChip").textContent=G().en}
 
 function renderHome(){show("home");header();document.querySelectorAll("#tabs button").forEach(b=>b.classList.remove("on"));
@@ -1182,6 +1455,13 @@ function renderHome(){show("home");header();document.querySelectorAll("#tabs but
   Object.entries(GENRES).filter(([id,g])=>!g.soon).forEach(([id,g])=>{const n=g.seq.filter(x=>x.s).length,T=g.seq.reduce((a,x)=>a+x.d,0);
     const b=document.createElement("button");b.className="genre";b.innerHTML=`${art(id)}<span class="live">READY</span><div class="meta"><span class="gt${id==="action"?" f-action":""}">${g.name}</span><span class="gd">${g.desc}</span><span class="gs">${n} SHOTS · ${tc(T).slice(0,5)}</span></div>`;
     b.onclick=()=>startGenre(id);el.appendChild(b)});
+  const sl=projList().filter(x=>!P||x.pid!==P.pid),sw=$("#savedWrap");sw.hidden=!sl.length;$("#savedCount").textContent=sl.length?sl.length+" שמורים":"";
+  const list=$("#savedList");list.innerHTML="";
+  sl.forEach(x=>{const d=document.createElement("div");d.className="sv";const g=GENRES[x.genre]||{name:""};const dt=new Date(x.savedAt);
+    d.innerHTML=`<div class="ct" style="${x.thumb?`background-image:url(${x.thumb})`:""}"></div><div style="min-width:0"><b>${esc(x.group)}</b><div class="note">${esc(x.title)} · ${g.name} · ${x.done}/${x.total} שוטים</div><div class="note mono" style="direction:ltr;text-align:right;font-size:11px">${dt.toLocaleDateString("he-IL")} ${dt.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}</div></div><div class="acts"><button class="btn sm pri" data-open>המשך</button><button class="ib sm" data-del aria-label="מחק פרויקט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button></div>`;
+    d.querySelector("[data-open]").onclick=()=>askSaveProject(()=>openProject(x.pid),"open");
+    d.querySelector("[data-del]").onclick=()=>askDeleteProject(x);
+    list.appendChild(d)});
   const cc=$("#contCard");cc.hidden=!P;
   if(P){const th=(P.shots.find(s=>s.has&&s.thumb)||{}).thumb;const done=P.shots.filter(s=>s.has).length;
     cc.innerHTML=`<div class="ct" style="${th?`background-image:url(${th})`:""}"></div><div style="min-width:0"><span class="eyebrow">המשך פרויקט</span><div style="font-size:17px;font-weight:700">${esc(P.titles.title)}</div><div class="note">${G().name} · ${done}/${P.shots.length} שוטים צולמו</div></div><span class="btn sm pri">המשך</span>`;
@@ -1426,17 +1706,38 @@ addEventListener("resize",()=>{if(!$("#trim").hidden)Trim.draw();if(P&&tab==="tr
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 $("#toTrailer").onclick=()=>setTab("trailer");
 $("#backHome").onclick=()=>{Player.stop();renderHome();$("#main").scrollTop=0};
-let pendingGenre=null;
-function startGenre(id){if(P){pendingGenre=id;$("#sheet").hidden=false;return}P=newProject(id);saveP();header();setTab("shots")}
-$("#newBtn").onclick=()=>{pendingGenre=null;$("#sheet").hidden=false};
-$("#sheetNo").onclick=()=>{pendingGenre=null;$("#sheet").hidden=true};
-$("#sheetYes").onclick=async()=>{$("#sheet").hidden=true;Player.stop();await clearClips();P=null;try{localStorage.removeItem(LS)}catch(e){}const g=pendingGenre;pendingGenre=null;if(g){P=newProject(g);saveP();header();setTab("shots")}else renderHome()};
+function startGenre(id){askSaveProject(async()=>{P=newProject(id);saveP();header();setTab("shots")},"new")}
+async function openProject(pid){let data=null;try{data=await IDB.get("proj:"+pid)}catch(e){}if(!data){alertBox("לא הצלחנו לפתוח את הפרויקט.");return}
+  P=data;if(!P.pid)P.pid=pid;for(const sh of P.shots){if(sh.has&&!(await getClip(sh.id))){sh.has=false;sh.thumb=null}}
+  try{localStorage.setItem(LS,JSON.stringify(P))}catch(e){}Player.vids.clear();musicBuf=null;header();setTab("shots")}
+/* ask whether to save the trailer, with the group's name, then continue */
+function closeCurrent(){Player.stop();P=null;Player.vids.clear();musicBuf=null;try{localStorage.removeItem(LS)}catch(e){}}
+function askSaveProject(next,why){if(!P){next();return}if(!isDirty()){closeCurrent();next();return}
+  const nextLabel=why==="exit"?"שמור וצא":"שמור והמשך";
+  info("לשמור את הטריילר?",`<p>שומרים את <b>${esc(P.titles.title)}</b> עם כל השוטים, הכותרות והמוזיקה. בפעם הבאה הוא יחכה במסך הבית, ותוכלו להמשיך לתקן.</p>
+    <label class="field2" for="grpName"><span class="note">שם הקבוצה</span><input id="grpName" maxlength="40" placeholder="למשל: קבוצת הנשרים" value="${esc(P.group||"")}"></label><span class="err" id="grpErr" hidden>כתבו שם קבוצה כדי לשמור.</span>
+    <div class="row"><button class="btn pri grow" id="svYes">${nextLabel}</button><button class="btn grow" id="svNo">${why==="exit"?"צא בלי לשמור":"אל תשמור"}</button></div>`);
+  setTimeout(()=>{try{$("#grpName").focus()}catch(e){}},80);
+  $("#grpName").onkeydown=e=>{if(e.key==="Enter")$("#svYes").click()};
+  $("#svYes").onclick=async()=>{const g=$("#grpName").value.trim();if(!g){$("#grpErr").hidden=false;return}await storeProject(g);$("#infoSheet").hidden=true;closeCurrent();toast("נשמר בשם "+g);next()};
+  $("#svNo").onclick=async()=>{$("#infoSheet").hidden=true;await leaveProject();next()}}
+function saveAndExit(){askSaveProject(()=>{renderHome();$("#main").scrollTop=0},"exit")}
+function askDeleteProject(x){info("למחוק את הפרויקט?",`<p>הפרויקט של <b>${esc(x.group)}</b> (${esc(x.title)}) יימחק, כולל השוטים שצולמו.</p><div class="row"><button class="btn pri grow" id="pdYes">מחק</button><button class="btn grow" id="pdNo">ביטול</button></div>`);
+  $("#pdNo").onclick=()=>{$("#infoSheet").hidden=true};
+  $("#pdYes").onclick=async()=>{$("#infoSheet").hidden=true;let data=null;try{data=await IDB.get("proj:"+x.pid)}catch(e){}await deleteProjectFiles(data);try{await IDB.del("proj:"+x.pid)}catch(e){}saveProjList(projList().filter(y=>y.pid!==x.pid));renderHome()}}
+function toast(t){let el=$("#toast");if(!el){el=document.createElement("div");el.id="toast";el.className="toast";document.body.appendChild(el)}el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),2600)}
+$("#newBtn").onclick=()=>askSaveProject(()=>{renderHome();$("#main").scrollTop=0},"new");
+$("#saveBtnTop").onclick=saveAndExit;
+
+
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="2.6";
+const VERSION="2.8";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["2.6","היום",["אלבום המעבדה: שירים שמייבאים נשמרים באפליקציה לכל הפרויקטים, ומשייכים אותם לז׳אנרים","וואשים ומעברים במקום בומים, עם אפשרות לכבות אותם בכל פסקול","קווי המסגור במצלמה דולקים תמיד בפתיחה. לחיצה על ההסבר או על הכפתור מסתירה אותם","סרט האסונות נסגר לעכשיו ויחזור בהמשך"]],
+  ["2.8","היום",["9 ז׳אנרים חדשים פתוחים: מרדף, מותחן, הרפתקה, מדע בדיוני, פנטזיה, מערבון, קומדיה, דרמה וספורט","לכל ז׳אנר רשימת שוטים, כותרות, צבע ופלטת כותרות משלו","5 פסקולים חדשים: פיציקטו מצחיק, מערבון, דרמה, המנון ספורט וחלל"]],
+  ["2.7","",["שמירה ויציאה: שומרים את הטריילר בשם הקבוצה וממשיכים בפעם הבאה","רשימת פרויקטים שמורים במסך הבית","כשמתחילים פרויקט חדש, האפליקציה שואלת אם לשמור את הנוכחי"]],
+  ["2.6","",["אלבום המעבדה: שירים שמייבאים נשמרים באפליקציה לכל הפרויקטים, ומשייכים אותם לז׳אנרים","וואשים ומעברים במקום בומים, עם אפשרות לכבות אותם בכל פסקול","קווי המסגור במצלמה דולקים תמיד בפתיחה. לחיצה על ההסבר או על הכפתור מסתירה אותם","סרט האסונות נסגר לעכשיו ויחזור בהמשך"]],
   ["2.5","",["ז׳אנר חדש: סרט אסונות על רעידת אדמה, עם 16 שוטים","9 פסקולים שונים, 4 לכל ז׳אנר: תיבת נגינה, פסנתר בחושך, ארפג׳יו סינתי, מקהלה, כלי קשת ועוד","פסקול האימה הישן בלי הצריחות","עד 3 קרדיטים נוספים עם כפתור +","רשימת השוטים בעמודה אחת וכפתור חזרה","ציר הזמן חזר משמאל לימין, כמו בתוכנות עריכה","איורים חדשים: סרט בנים, קליפ כיף וקליפ חגים"]],
   ["2.4","",["ציר הזמן ופס בחירת הקטע רצים מימין לשמאל"]],
   ["2.3","",["ציור מותאם לכל שוט: בית עם חלון מואר, יד על ידית, נדנדה, מכונית בלילה ועוד","Play ממשיך מאיפה שעצרת, וכפתור START מתחיל מההתחלה"]],
@@ -1459,7 +1760,8 @@ function copyLink(btn){const done=()=>{btn.textContent="הקישור הועתק"
 $("#drawer nav").addEventListener("click",async e=>{const b=e.target.closest("button[data-go]");if(!b)return;const go=b.dataset.go;menu(false);
   if(go==="home"){Player.stop();exitFs();renderHome();return}
   if(go==="shots"||go==="trailer"){if(P)setTab(go);else renderHome();return}
-  if(go==="new"){if(P){pendingGenre=null;$("#sheet").hidden=false}else renderHome();return}
+  if(go==="new"){askSaveProject(()=>{renderHome();$("#main").scrollTop=0},"new");return}
+  if(go==="save"){if(P)saveAndExit();else renderHome();return}
   if(go==="share"){try{if(navigator.share){await navigator.share({title:"Trailer Lab",text:"מצלמים טריילר קולנועי בטלפון:",url:APP_URL});return}}catch(err){if(err&&err.name==="AbortError")return}
     info("שיתוף האפליקציה",`<p>שלח את הקישור הזה לחברים. הוא נפתח בכל טלפון וטאבלט.</p><div class="linkbox">${APP_URL}</div><button class="btn pri" id="cpy">העתק קישור</button>`);$("#cpy").onclick=e2=>copyLink(e2.currentTarget);return}
   if(go==="install"){if(standalone()){info("הוספה למסך הבית","<p>האפליקציה כבר מותקנת ונפתחת מהאייקון שלה.</p>");return}
@@ -1474,7 +1776,7 @@ $("#drawer nav").addEventListener("click",async e=>{const b=e.target.closest("bu
 });
 if("serviceWorker" in navigator&&/github\.io$|^localhost$/.test(location.hostname)){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
 Player.init($("#screen"));
-(async()=>{const old=loadP();P=old?migrate(old):null;
+(async()=>{const old=loadP();P=old?migrate(old):null;if(P&&!P.pid)P.pid="p"+Date.now().toString(36);
   if(P){for(const sh of P.shots){if(sh.has&&!(await getClip(sh.id))){sh.has=false;sh.thumb=null}}if(P.music&&P.music.src==="file"){const ob=await getClip("music");if(ob){const id="t"+Date.now().toString(36);await putClip("track:"+id,ob);await delClip("music");P.projTrack=id;P.music.projName=P.music.name||"השיר שלי";P.music.src="track:"+id}else P.music={src:"auto",offset:0,hits:true,name:""}}
     if(curTrack()&&!(await loadMusicBuf()))P.music.src="auto";saveP();header();setTab("shots")}
   else renderHome()})();
