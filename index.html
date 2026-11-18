@@ -45,7 +45,8 @@ button{font:inherit;color:inherit}
 .logo{font-family:var(--brand);font-size:26px;letter-spacing:.06em;line-height:1;direction:ltr;white-space:nowrap}
 .logo b{font-weight:400;color:var(--accent)}
 .by{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.18em;direction:ltr}
-.proj{flex:1;min-width:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:22px;font-weight:800;line-height:1.1;color:var(--fg)}
+.proj{background:none;border:0;padding:0;cursor:pointer;flex:1;min-width:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:22px;font-weight:800;line-height:1.1;color:var(--fg)}
+#genreChip{background:none;cursor:pointer}
 .chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;border:1px solid var(--line2);border-radius:4px;padding:3px 7px;color:var(--dim);white-space:nowrap}
 .ib{width:36px;height:36px;flex:none;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);display:grid;place-items:center;cursor:pointer}
 .ib svg{width:18px;height:18px}
@@ -363,8 +364,8 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
   <header class="bar gut">
     <button class="ib" id="menuBtn" aria-label="תפריט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="row" style="gap:8px;flex-wrap:nowrap;flex:none"><span class="logo">TRAILER<b>LAB</b></span><span class="by">GZFILM</span></div>
-    <div class="proj" id="projName"></div>
-    <span class="chip" id="genreChip" hidden></span>
+    <button class="proj" id="projName" aria-label="חזרה לרשימת השוטים"></button>
+    <button class="chip" id="genreChip" hidden aria-label="חזרה לרשימת השוטים"></button>
     <button class="ib" id="saveBtnTop" title="שמירה ויציאה" aria-label="שמירה ויציאה" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg></button>
     <button class="ib" id="newBtn" title="פרויקט חדש" aria-label="פרויקט חדש" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
   </header>
@@ -1295,18 +1296,24 @@ function cueFile(X,A,at,buf){
   const off=clamp(P.music.offset||0,0,Math.max(0,buf.duration-1));g.gain.setValueAtTime(.0001,at(0));g.gain.exponentialRampToValueAtTime(.9,at(.5));g.gain.setValueAtTime(.9,at(A.T-1.6));g.gain.linearRampToValueAtTime(0,at(A.T));const st=Math.max(X.t0,X.ac.currentTime+.3);src.start(st,off+(st-X.t0));src.stop(at(A.T)+.05);
   A.C.forEach(c=>boom(X,at(c.t0),.45));boom(X,at(A.tT),.8)
 }
-const curTrack=()=>{const m=P&&P.music;return m&&m.src&&m.src.startsWith("track:")?m.src.slice(6):null};
-function currentCue(){const m=P.music||{src:"auto"};if(curTrack()&&musicBuf)return"file";if(m.src&&m.src.startsWith("lib:")){let id=m.src.slice(4);if(id==="horror")id="heart";if(CUELIB[id])return id}return G().cues[0]}
+/* built-in library: 3 tracks per genre, listed in music/library.json next to the app */
+let LIB={};const libReady=fetch("music/library.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).then(j=>{LIB=j||{}}).catch(()=>{LIB={}});
+const libTracks=g=>(LIB[g]||[]).filter(t=>t&&t.file);
+function resolveSrc(){const m=P&&P.music;if(!m)return"none";let s=m.src||"auto";if(s==="auto"||s.startsWith("lib:")){const f=libTracks(P.genre)[0];return f?"builtin:"+f.file:"none"}return s}
+const curTrack=()=>{const s=resolveSrc();return s.startsWith("track:")?s.slice(6):null};
+const curBuiltin=()=>{const s=resolveSrc();return s.startsWith("builtin:")?s.slice(8):null};
+function currentCue(){return (curTrack()||curBuiltin())&&musicBuf?"file":"none"}
 function buildScore(ac,out,S,t0,T){
   const comp=ac.createDynamicsCompressor();comp.threshold.value=-16;comp.knee.value=10;comp.ratio.value=5;comp.attack.value=.003;comp.release.value=.25;
   const mg=ac.createGain();mg.gain.value=.85;comp.connect(mg);const lim=ac.createDynamicsCompressor();lim.threshold.value=-4;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.001;lim.release.value=.12;mg.connect(lim);lim.connect(out);
   const rev=ac.createConvolver();rev.buffer=impulse(ac,3);const rg=ac.createGain();rg.gain.value=.32;rev.connect(rg);rg.connect(comp);
   const X={ac,bus:comp,rev,nb:noiseBuf(ac),t0,nofx:P.music&&P.music.hits===false},at=r=>Math.max(0,t0+r),A=anchors(S,T),cue=currentCue();
-  if(cue==="file")cueFile(X,A,at,musicBuf);else (CUELIB[cue]||CUELIB.action).fn(X,A,at);
+  if(cue==="file")cueFile(X,A,at,musicBuf);
   A.C.concat([A.title]).forEach(c=>whoosh(X,at(c.t0),.28));
 }
 async function trackBuf(id){if(bufs.has(id))return bufs.get(id);const b=await getClip("track:"+id);if(!b)return null;try{const buf=await audioCtx().decodeAudioData(await b.arrayBuffer());bufs.set(id,buf);return buf}catch(e){return null}}
-async function loadMusicBuf(){const id=curTrack();musicBuf=id?await trackBuf(id):null;return musicBuf}
+async function builtinBuf(file){const k="lib:"+file;if(bufs.has(k))return bufs.get(k);try{const r=await fetch(file);if(!r.ok)return null;const buf=await audioCtx().decodeAudioData(await r.arrayBuffer());bufs.set(k,buf);return buf}catch(e){return null}}
+async function loadMusicBuf(){await libReady;const id=curTrack(),f=curBuiltin();musicBuf=id?await trackBuf(id):f?await builtinBuf(f):null;return musicBuf}
 
 /* ============ PLAYER ============ */
 const Player={cv:null,ctx:null,vids:new Map(),run:null,
@@ -1518,7 +1525,7 @@ async function drawCardPreview(){await fontsReady;const S=segs(),k=cardKey==="re
 
 /* ---- trailer page ---- */
 let playing=false,selBlk=-1;
-function renderTrailer(){
+function renderTrailer(){libReady.then(()=>{if(tab==="trailer"&&P){loadMusicBuf().then(()=>{renderMusic();drawWave()})}});
   const S=segs(),T=total();$("#tcTot").textContent=tc(T);$("#specDur").textContent=tc(T);
   const lane=$("#laneV");lane.innerHTML="";
   S.forEach((s,i)=>{const b=document.createElement("div");b.style.flex=s.d;b.dataset.i=i;
@@ -1533,13 +1540,15 @@ function renderTrailer(){
   setHead(0);Player.still(0);
 }
 function activeGenres(){return Object.entries(GENRES).filter(([id,g])=>!g.soon)}
-function trackName(id){const t=album().find(x=>x.id===id);return t?t.name:(P.music.name||"השיר שלי")}
-function renderMusic(){const el=$("#mus"),m=P.music;el.innerHTML="";const cur=curTrack()?"track:"+curTrack():"lib:"+currentCue();const alb=album();
-  const opt=(val,label,sub,extra)=>{const row=document.createElement("div");row.className="mrow";const b=document.createElement("button");b.className="opt"+(cur===val?" on":"");b.innerHTML=`<i></i><span>${label}${sub?`<small>${sub}</small>`:""}</span>`;b.onclick=()=>selectMusic(val);row.appendChild(b);if(extra)row.appendChild(extra);el.appendChild(row);return row};
+function trackName(id){const t=album().find(x=>x.id===id);return t?t.name:(P.music.projName||P.music.name||"השיר שלי")}
+function curLabel(){const f=curBuiltin();if(f){const t=libTracks(P.genre).find(x=>x.file===f)||Object.values(LIB).flat().find(x=>x&&x.file===f);return t?t.name:"קטע מהספרייה"}const id=curTrack();return id?trackName(id):"בלי מוזיקה"}
+function renderMusic(){const el=$("#mus"),m=P.music;el.innerHTML="";const src=resolveSrc();const alb=album();
+  const opt=(val,label,sub,extra,disabled)=>{const row=document.createElement("div");row.className="mrow";const b=document.createElement("button");b.className="opt"+(src===val?" on":"");b.disabled=!!disabled;b.innerHTML=`<i></i><span>${label}${sub?`<small>${sub}</small>`:""}</span>`;if(!disabled)b.onclick=()=>selectMusic(val);row.appendChild(b);if(extra)row.appendChild(extra);el.appendChild(row);return row};
   const grp=t=>el.insertAdjacentHTML("beforeend",`<div class="mgrp">${t}</div>`);
-  grp("פסקולים ל"+G().name);
+  grp("מוזיקה ל"+G().name);
+  const lt=libTracks(P.genre);
+  for(let i=0;i<3;i++){const t=lt[i];if(t)opt("builtin:"+t.file,"♪ "+esc(t.name),"ספריית Trailer Lab");else opt("slot:"+i,`קטע ${i+1}`,"עוד לא הועלה",null,true)}
   alb.filter(t=>(t.genres||[]).includes(P.genre)).forEach(t=>opt("track:"+t.id,"♪ "+esc(t.name),"מאלבום המעבדה"));
-  G().cues.forEach((id,i)=>opt("lib:"+id,CUELIB[id].name,i===0?"ברירת המחדל":""));
   if(P.projTrack&&!inAlbum(P.projTrack)){grp("מוזיקה לפרויקט הזה");opt("track:"+P.projTrack,"♪ "+esc(P.music.projName||"השיר שלי"),"לא שמור באלבום")}
   grp(`אלבום המעבדה <span class="mono" style="direction:ltr;display:inline-block">(${alb.length})</span>`);
   if(!alb.length)el.insertAdjacentHTML("beforeend",'<p class="note" style="margin:2px 8px 6px">כאן נשמרים שירים שייבאת. הם נשארים באפליקציה לכל הפרויקטים, גם אחרי שסוגרים אותה.</p>');
@@ -1548,19 +1557,19 @@ function renderMusic(){const el=$("#mus"),m=P.music;el.innerHTML="";const cur=cu
     ex.querySelectorAll(".gchip").forEach(c=>c.onclick=()=>{const a=album(),x=a.find(y=>y.id===t.id);x.genres=x.genres||[];const g=c.dataset.g;x.genres=x.genres.includes(g)?x.genres.filter(y=>y!==g):x.genres.concat(g);saveAlbum(a);renderMusic()});
     ex.querySelector("[data-del]").onclick=()=>askDeleteTrack(t);
     opt("track:"+t.id,"♪ "+esc(t.name),"",ex)});
-  grp("עוד מהספרייה");
-  Object.keys(CUELIB).filter(id=>!G().cues.includes(id)).forEach(id=>opt("lib:"+id,CUELIB[id].name,""));
+  grp("אפשרות נוספת");
+  opt("none","בלי מוזיקה","רק וואשים ומעברים, אם הם דלוקים");
   const box=document.createElement("div");box.className="fileopts";
   let h=`<button class="btn sm" id="mImport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>ייבוא שיר מהמכשיר</button>`;
-  if(curTrack()){const dur=musicBuf?musicBuf.duration:0;h+=`<label class="note" for="mOff">השיר מתחיל מ־<b class="mono" id="mOffV" style="direction:ltr;display:inline-block">${tc(m.offset||0).slice(0,5)}</b></label><input type="range" id="mOff" min="0" max="${Math.max(1,Math.floor(dur-5))}" step="1" value="${Math.floor(m.offset||0)}">`}
+  if(curTrack()||curBuiltin()){const dur=musicBuf?musicBuf.duration:0;h+=`<label class="note" for="mOff">השיר מתחיל מ־<b class="mono" id="mOffV" style="direction:ltr;display:inline-block">${tc(m.offset||0).slice(0,5)}</b></label><input type="range" id="mOff" min="0" max="${Math.max(1,Math.floor(dur-5))}" step="1" value="${Math.floor(m.offset||0)}">`}
   h+=`<label class="chk"><input type="checkbox" id="mHits" ${m.hits!==false?"checked":""}>וואשים ומעברים של טריילר על הכותרות</label>`;
   box.innerHTML=h;el.appendChild(box);
   $("#mImport").onclick=()=>importMusic();
   if($("#mOff"))$("#mOff").oninput=e=>{m.offset=+e.target.value;$("#mOffV").textContent=tc(m.offset).slice(0,5);saveP();drawWave()};
-  $("#mHits").onchange=e=>{m.hits=e.target.checked;saveP()};
-  $("#cueName").textContent="♪ "+(curTrack()?trackName(curTrack()):CUELIB[currentCue()].name);
+  $("#mHits").onchange=e=>{m.hits=e.target.checked;saveP();drawWave()};
+  $("#cueName").textContent="♪ "+curLabel();
 }
-async function selectMusic(val){const m=P.music;if(val.startsWith("track:")){const id=val.slice(6);m.src=val;m.offset=0;m.name=trackName(id);await loadMusicBuf()}else{m.src=val;musicBuf=null}saveP();renderMusic();drawWave()}
+async function selectMusic(val){const m=P.music;m.src=val;m.offset=0;if(val.startsWith("track:"))m.name=trackName(val.slice(6));saveP();await loadMusicBuf();renderMusic();drawWave()}
 /* import: if this project has a track that is not in the album, ask first whether to keep it */
 function importMusic(){const pt=P.projTrack;if(pt&&!inAlbum(pt)){
     info("לפני שמחליפים",`<p>השיר <b>${esc(P.music.projName||"השיר שלי")}</b> שמור רק בפרויקט הזה. מה לעשות איתו?</p><div class="row"><button class="btn pri grow" id="kKeep">שמור באלבום המעבדה</button><button class="btn grow" id="kDrop">לא צריך</button></div>`);
@@ -1583,7 +1592,8 @@ function askDeleteTrack(t){info("למחוק מהאלבום?",`<p>השיר <b>${e
     if(curTrack()===t.id){P.projTrack=t.id;P.music.projName=t.name}else{await delClip("track:"+t.id);bufs.delete(t.id)}saveP();renderMusic()}}
 function drawWave(){const c=$("#wave"),r=c.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);c.width=Math.max(10,r.width*dpr);c.height=Math.max(10,r.height*dpr);const x=c.getContext("2d"),S=segs(),T=total();x.clearRect(0,0,c.width,c.height);x.fillStyle="rgba(58,168,148,.85)";
   const n=Math.floor(c.width/3);
-  if(curTrack()&&musicBuf){const d=musicBuf.getChannelData(0),sr=musicBuf.sampleRate,off=(P.music.offset||0)*sr,span=T*sr/n;for(let i=0;i<n;i++){let mxv=0;const a=Math.floor(off+i*span),b=Math.min(d.length,a+span);for(let k=a;k<b;k+=64)mxv=Math.max(mxv,Math.abs(d[k]||0));const h=Math.max(1,mxv*c.height*.9);x.fillRect(i*3,(c.height-h)/2,2,h)}return}
+  if((curTrack()||curBuiltin())&&musicBuf){const d=musicBuf.getChannelData(0),sr=musicBuf.sampleRate,off=(P.music.offset||0)*sr,span=T*sr/n;for(let i=0;i<n;i++){let mxv=0;const a=Math.floor(off+i*span),b=Math.min(d.length,a+span);for(let k=a;k<b;k+=64)mxv=Math.max(mxv,Math.abs(d[k]||0));const h=Math.max(1,mxv*c.height*.9);x.fillRect(i*3,(c.height-h)/2,2,h)}return}
+  if(!(curTrack()||curBuiltin())||!musicBuf){x.fillStyle="rgba(58,168,148,.35)";x.fillRect(0,c.height/2-1,c.width,2);if(P.music.hits!==false){x.fillStyle="rgba(58,168,148,.9)";S.filter(s=>s.c&&/^t\d$|^title$/.test(s.c)).forEach(s=>{const px=s.t0/T*c.width;x.fillRect(px-6,c.height*.25,12,c.height*.5)})}return}
   for(let i=0;i<n;i++){const t=i/n*T;let e=.25+.15*Math.sin(i*.7)*Math.sin(i*.13);S.forEach(s=>{if(s.c&&s.c!=="logo"&&s.c!=="filmby"){const d=t-s.t0;if(d>=0&&d<1.2)e+=.7*(1-d/1.2)}});e=clamp(e*(.6+.4*Math.abs(Math.sin(i*1.7))),.05,1);const h=e*c.height*.9;x.fillRect(i*3,(c.height-h)/2,2,h)}}
 let headT=0;
 function setHead(t){headT=t;const T=total(),tl=$("#tl"),lab=30,w=tl.clientWidth-lab;$("#head").style.left=(lab+clamp(t/T,0,1)*w)+"px";$("#tcCur").textContent=tc(t)}
@@ -1705,6 +1715,7 @@ addEventListener("resize",()=>{if(!$("#trim").hidden)Trim.draw();if(P&&tab==="tr
 /* ============ BOOT ============ */
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
 $("#toTrailer").onclick=()=>setTab("trailer");
+$("#projName").onclick=$("#genreChip").onclick=()=>{if(P)setTab("shots")};
 $("#backHome").onclick=()=>{Player.stop();renderHome();$("#main").scrollTop=0};
 function startGenre(id){askSaveProject(async()=>{P=newProject(id);saveP();header();setTab("shots")},"new")}
 async function openProject(pid){let data=null;try{data=await IDB.get("proj:"+pid)}catch(e){}if(!data){alertBox("לא הצלחנו לפתוח את הפרויקט.");return}
@@ -1732,10 +1743,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="2.8";
+const VERSION="2.9";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["2.8","היום",["9 ז׳אנרים חדשים פתוחים: מרדף, מותחן, הרפתקה, מדע בדיוני, פנטזיה, מערבון, קומדיה, דרמה וספורט","לכל ז׳אנר רשימת שוטים, כותרות, צבע ופלטת כותרות משלו","5 פסקולים חדשים: פיציקטו מצחיק, מערבון, דרמה, המנון ספורט וחלל"]],
+  ["2.9","היום",["לחיצה על שם הטריילר או הז׳אנר בבר העליון מחזירה לרשימת השוטים","המנגינות המסונתזות הוסרו. לכל ז׳אנר 3 מקומות לקטעי מוזיקה שיעלו לספרייה","ייבוא מהמכשיר ואלבום המעבדה נשארו","אפשרות לטריילר בלי מוזיקה, רק עם וואשים"]],
+  ["2.8","",["9 ז׳אנרים חדשים פתוחים: מרדף, מותחן, הרפתקה, מדע בדיוני, פנטזיה, מערבון, קומדיה, דרמה וספורט","לכל ז׳אנר רשימת שוטים, כותרות, צבע ופלטת כותרות משלו","5 פסקולים חדשים: פיציקטו מצחיק, מערבון, דרמה, המנון ספורט וחלל"]],
   ["2.7","",["שמירה ויציאה: שומרים את הטריילר בשם הקבוצה וממשיכים בפעם הבאה","רשימת פרויקטים שמורים במסך הבית","כשמתחילים פרויקט חדש, האפליקציה שואלת אם לשמור את הנוכחי"]],
   ["2.6","",["אלבום המעבדה: שירים שמייבאים נשמרים באפליקציה לכל הפרויקטים, ומשייכים אותם לז׳אנרים","וואשים ומעברים במקום בומים, עם אפשרות לכבות אותם בכל פסקול","קווי המסגור במצלמה דולקים תמיד בפתיחה. לחיצה על ההסבר או על הכפתור מסתירה אותם","סרט האסונות נסגר לעכשיו ויחזור בהמשך"]],
   ["2.5","",["ז׳אנר חדש: סרט אסונות על רעידת אדמה, עם 16 שוטים","9 פסקולים שונים, 4 לכל ז׳אנר: תיבת נגינה, פסנתר בחושך, ארפג׳יו סינתי, מקהלה, כלי קשת ועוד","פסקול האימה הישן בלי הצריחות","עד 3 קרדיטים נוספים עם כפתור +","רשימת השוטים בעמודה אחת וכפתור חזרה","ציר הזמן חזר משמאל לימין, כמו בתוכנות עריכה","איורים חדשים: סרט בנים, קליפ כיף וקליפ חגים"]],
@@ -1778,7 +1790,7 @@ if("serviceWorker" in navigator&&/github\.io$|^localhost$/.test(location.hostnam
 Player.init($("#screen"));
 (async()=>{const old=loadP();P=old?migrate(old):null;if(P&&!P.pid)P.pid="p"+Date.now().toString(36);
   if(P){for(const sh of P.shots){if(sh.has&&!(await getClip(sh.id))){sh.has=false;sh.thumb=null}}if(P.music&&P.music.src==="file"){const ob=await getClip("music");if(ob){const id="t"+Date.now().toString(36);await putClip("track:"+id,ob);await delClip("music");P.projTrack=id;P.music.projName=P.music.name||"השיר שלי";P.music.src="track:"+id}else P.music={src:"auto",offset:0,hits:true,name:""}}
-    if(curTrack()&&!(await loadMusicBuf()))P.music.src="auto";saveP();header();setTab("shots")}
+    if(curTrack()&&!(await loadMusicBuf()))P.music.src="auto";if(P.music.src&&P.music.src.startsWith("lib:"))P.music.src="auto";saveP();header();setTab("shots")}
   else renderHome()})();
 </script>
 <!--APP-END-->
