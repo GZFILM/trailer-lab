@@ -1517,7 +1517,7 @@ function renderHome(){show("home");header();document.querySelectorAll("#tabs but
     d.querySelector("[data-open]").onclick=()=>askSaveProject(()=>openProject(x.pid),"open");
     d.querySelector("[data-del]").onclick=()=>askDeleteProject(x);
     list.appendChild(d)});
-  const cc=$("#contCard");cc.hidden=!P;
+  const cc=$("#contCard");cc.hidden=true;if(false)
   if(P){const th=(P.shots.find(s=>s.has&&s.thumb)||{}).thumb;const done=P.shots.filter(s=>s.has).length;
     cc.innerHTML=`<div class="ct" style="${th?`background-image:url(${th})`:""}"></div><div style="min-width:0"><span class="eyebrow">המשך פרויקט</span><div style="font-size:17px;font-weight:700">${esc(P.titles.title)}</div><div class="note">${G().name} · ${done}/${P.shots.length} שוטים צולמו</div></div><span class="btn sm pri">המשך</span>`;
     cc.onclick=()=>setTab("shots")}
@@ -1863,7 +1863,7 @@ $("#saveBtnTop").onclick=saveAndExit;
 const VERSION="3.1";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["3.1","היום",["מסך הפתיחה: \"כל טלפון הוא מצלמת קולנוע\" מתחת ללוגו, ויותר זמן לקרוא","האפליקציה תמיד נפתחת במסך הבית, והפרויקט הפתוח מחכה בכרטיס \"המשך פרויקט\""]],
+  ["3.1","היום",["מסך הפתיחה: \"כל טלפון הוא מצלמת קולנוע\" מתחת ללוגו, ויותר זמן לקרוא","האפליקציה תמיד נפתחת במסך הבית. הפרויקט הפתוח זמין מהלשוניות למטה"]],
   ["3.0","",["דף פוסטר: פוסטר 2:3 ותמונה ממוזערת 16:9 מהשוטים שצילמתם, עם שמירה לטלפון","שמירה כקבוצה בבית ספר (בית ספר, כיתה, קבוצה) או כיחיד","הפרויקטים השמורים מופיעים מתחת לז׳אנרים, מהחדש לישן"]],
   ["2.9","",["לחיצה על שם הטריילר או הז׳אנר בבר העליון מחזירה לרשימת השוטים","המנגינות המסונתזות הוסרו. לכל ז׳אנר 3 מקומות לקטעי מוזיקה שיעלו לספרייה","ייבוא מהמכשיר ואלבום המעבדה נשארו","אפשרות לטריילר בלי מוזיקה, רק עם וואשים"]],
   ["2.8","",["9 ז׳אנרים חדשים פתוחים: מרדף, מותחן, הרפתקה, מדע בדיוני, פנטזיה, מערבון, קומדיה, דרמה וספורט","לכל ז׳אנר רשימת שוטים, כותרות, צבע ופלטת כותרות משלו","5 פסקולים חדשים: פיציקטו מצחיק, מערבון, דרמה, המנון ספורט וחלל"]],
