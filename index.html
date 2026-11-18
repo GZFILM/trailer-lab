@@ -640,7 +640,7 @@ document.documentElement.dir="rtl";document.documentElement.lang="he";
 /* ============ TEMPLATES ============ */
 const CREDITS_DEFAULT=[["הפקה","GZFILM"],["בימוי","גל זיו"],["תסריט","נועה לוי"],["צילום","איתי כהן"],["עריכה","מאיה פרץ"],["שחקנים","יונתן מזרחי, שירה אברהם"],["איפור ותלבושות","תמר ביטון"],["אפקטים","עומר דהן"]];
 const GENRES={
-  action:{name:"אקשן",en:"ACTION",font:"secular",cues:["action","chase","epic","tension"],
+  action:{name:"אקשן",en:"ACTION",posterTags:["הוא הגיע משום מקום","הייתה להם רק משימה אחת ולילה אחד בלי לישון","אין לו מה להפסיד","שום דבר לא יעצור אותו"],font:"secular",cues:["action","chase","epic","tension"],
     desc:"גיבור אחד, משימה אחת, ואין זמן לנשום.",
     defaults:{logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",t1:"הוא הגיע משום מקום",t2:"עם משימה אחת",t3:"ואין לו מה להפסיד",t4:"השנה",t5:"שום דבר",t6:"לא יעצור אותו",title:"מבצע לילה",release:"בקרוב"},
     seq:[
@@ -1689,7 +1689,7 @@ async function drawPoster(cv){await fontsReady;const o=posterOpts(),thumb=o.mode
     const g=ctx.createLinearGradient(0,0,0,CH);g.addColorStop(0,"rgba(0,0,0,.7)");g.addColorStop(.18,"rgba(0,0,0,0)");g.addColorStop(.5,"rgba(0,0,0,.05)");g.addColorStop(.72,"rgba(0,0,0,.82)");g.addColorStop(1,"rgba(0,0,0,.97)");ctx.fillStyle=g;ctx.fillRect(0,0,CW,CH);
     const by=(P.credits[0]&&P.credits[0].name)||"";ctx.font='500 34px Heebo';ctx.letterSpacing="8px";ctx.fillStyle="rgba(235,238,242,.9)";ctx.fillText(by+" מציגה",CW/2,110);ctx.letterSpacing="0px";
     const ty=o.credits?1030:1150;
-    const tag=posterTagline();if(tag){ctx.font='400 46px Heebo';ctx.fillStyle="rgba(235,238,242,.9)";ctx.shadowColor="rgba(0,0,0,.8)";ctx.shadowBlur=18;ctx.fillText(tag,CW/2,ty-150);ctx.shadowBlur=0}const sz=fitT(P.titles.title,190,CW*.9);ctx.save();ctx.translate(CW/2,ty);ctx.shadowColor=glow;ctx.shadowBlur=50;ctx.fillStyle=titleFill(sz);ctx.fillText(P.titles.title,0,0);ctx.restore();
+    const tag=posterTagline();if(tag){let tz=46;for(;tz>28;tz-=2){ctx.font=`400 ${tz}px Heebo`;if(ctx.measureText(tag).width<=CW*.82)break}ctx.fillStyle="rgba(235,238,242,.9)";ctx.shadowColor="rgba(0,0,0,.8)";ctx.shadowBlur=18;ctx.fillText(tag,CW/2,ty-150);ctx.shadowBlur=0}const sz=fitT(P.titles.title,190,CW*.9);ctx.save();ctx.translate(CW/2,ty);ctx.shadowColor=glow;ctx.shadowBlur=50;ctx.fillStyle=titleFill(sz);ctx.fillText(P.titles.title,0,0);ctx.restore();
     ctx.font=`${f.w} ${Math.round(70*(f.big||1))}px ${f.fam}`;ctx.fillStyle=accent;ctx.shadowColor=glow;ctx.shadowBlur=24;ctx.fillText(P.titles.release||"",CW/2,ty+150);ctx.shadowBlur=0;
     if(o.credits){ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(CW*.15,ty+230);ctx.lineTo(CW*.85,ty+230);ctx.stroke();billing(ctx,ty+290,CW*.86,horror,1,CW/2,.95)}
     drawLogoMark(ctx,CW/2,CH-70,44,.5,horror);
@@ -1870,10 +1870,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.1";
+const VERSION="4.2";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["4.1","היום",["פוסטר מרדף: \"כולם אמרו לו בלתי אפשרי. הוא ידע אחרת\" ו\"יש לו 90 דקות\""]],
+  ["4.2","היום",["פוסטר אקשן: משפטים חדשים, ו\"שום דבר לא יעצור אותו\" במשפט אחד"]],
+  ["4.1","",["פוסטר מרדף: \"כולם אמרו לו בלתי אפשרי. הוא ידע אחרת\" ו\"יש לו 90 דקות\""]],
   ["4.0","",["מצלמה: קווי הקומפוזיציה (שליש) כבויים, ויש כפתור להדליק אותם"]],
   ["3.9","",["פוסטר אימה: משפטים חדשים, \"אף אחד לא הצליח לעלות לשם\" ו\"מי שם צועק?\""]],
   ["3.8","",["מוזיקה מקורית של אריק דרעי (Arik Deri): שני קטעים בדרמה וקטע באקשן","בחלונית המוזיקה מופיעים כל הקטעים של הז׳אנר, עם שם היוצר"]],
