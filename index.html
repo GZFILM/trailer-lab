@@ -156,8 +156,12 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .transport{display:flex;align-items:center;gap:10px;padding:8px 10px;border-top:1px solid var(--line);background:var(--panel)}
 .play{width:42px;height:42px;flex:none;border-radius:50%;border:0;background:var(--fg);color:var(--bg);display:grid;place-items:center;cursor:pointer}
 .play svg{width:18px;height:18px}
+#startBtn{direction:ltr;font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:0 10px}
+#startBtn svg{width:14px;height:14px}
 .tcbig{font-family:var(--mono);font-size:17px;font-variant-numeric:tabular-nums;direction:ltr;letter-spacing:.02em;flex:1;text-align:center}
 .tcbig span{color:var(--faint)}
+.tcbig{white-space:nowrap;min-width:0}
+@media(max-width:480px){.tcbig{font-size:13.5px}#fsBtn .lbl{display:none}#fsBtn{padding:0 10px}}
 .tl{direction:ltr;position:relative;padding:8px 0 10px;user-select:none;touch-action:none;cursor:pointer}
 .ruler{position:relative;height:18px;margin-inline-start:30px;border-bottom:1px solid var(--line)}
 .ruler span{position:absolute;bottom:2px;font-family:var(--mono);font-size:9px;color:var(--faint);transform:translateX(-50%)}
@@ -382,12 +386,13 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
         <div class="panel" style="overflow:hidden">
           <div class="monitor" id="mon" style="border:0;border-radius:0">
             <canvas id="screen" width="1280" height="720"></canvas>
-            <div class="fsui"><button id="fsExit" aria-label="יציאה ממסך מלא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button id="fsPlay" aria-label="נגן"></button></div>
+            <div class="fsui"><button id="fsExit" aria-label="יציאה ממסך מלא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button id="fsPlay" aria-label="נגן"></button><button id="fsStart" aria-label="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="2.6" height="14" rx="1"/><path d="M19 5.5v13L9 12z"/></svg></button></div>
           </div>
           <div class="transport">
             <button class="play" id="playBtn" aria-label="נגן"></button>
+            <button class="btn sm" id="startBtn" aria-label="ניגון מההתחלה" title="ניגון מההתחלה"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="2.6" height="14" rx="1"/><path d="M19 5.5v13L9 12z"/></svg>START</button>
             <div class="tcbig"><b id="tcCur">00:00:00</b> <span>/ <span id="tcTot">00:00:00</span></span></div>
-            <button class="btn sm" id="fsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>מסך מלא</button>
+            <button class="btn sm" id="fsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lbl">מסך מלא</span></button>
           </div>
           <div class="tl" id="tl">
             <div class="ruler" id="ruler"></div>
@@ -563,18 +568,18 @@ const GENRES={
     desc:"גיבור אחד, משימה אחת, ואין זמן לנשום.",
     defaults:{logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",t1:"הוא הגיע משום מקום",t2:"עם משימה אחת",t3:"ואין לו מה להפסיד",t4:"השנה",t5:"שום דבר",t6:"לא יעצור אותו",title:"מבצע לילה",release:"בקרוב"},
     seq:[
-      {s:1,tag:"OPEN",type:"שוט פתיחה",label:"רגע מהסיפור",hint:"שוט אווירה שמרמז על הסיפור: מכונית בלילה, תיק שנזרק על הרצפה, טלפון שמצלצל.",d:2.6},
+      {s:1,art:"car_night",tag:"OPEN",type:"שוט פתיחה",label:"רגע מהסיפור",hint:"שוט אווירה שמרמז על הסיפור: מכונית בלילה, תיק שנזרק על הרצפה, טלפון שמצלצל.",d:2.6},
       {c:"logo",d:3.0},
       {s:1,tag:"INS",type:"אינסרט",label:"רמז ראשון",hint:"תקריב על חפץ חשוב בסיפור: מפה, שעון, מפתח או תמונה.",d:2.0},
       {c:"filmby",d:2.4},
-      {s:1,tag:"ELS",type:"רחב מאוד",label:"העולם מלמעלה",hint:"שוט רחב מאוד מגבוה: גג, גבעה או חלון גבוה. הרבה שמיים ועולם.",d:2.6},
-      {s:1,tag:"WS",type:"שוט רחב",label:"שוט רחב של המקום",hint:"המקום שבו הכול קורה: רחוב, חצר או בניין. מצלמה יציבה.",d:2.2},
+      {s:1,art:"city_els",tag:"ELS",type:"רחב מאוד",label:"העולם מלמעלה",hint:"שוט רחב מאוד מגבוה: גג, גבעה או חלון גבוה. הרבה שמיים ועולם.",d:2.6},
+      {s:1,art:"street_ws",tag:"WS",type:"שוט רחב",label:"שוט רחב של המקום",hint:"המקום שבו הכול קורה: רחוב, חצר או בניין. מצלמה יציבה.",d:2.2},
       {s:1,tag:"LOW",type:"זווית נמוכה",label:"הגיבור נכנס לפריים",hint:"מצלמה נמוכה, הגיבור נכנס מהצד או מתקרב מהעומק. ככה הוא נראה גדול וחזק.",d:2.0},
       {c:"t1",d:2.2},
       {s:1,tag:"CU",type:"קלוז אפ",label:"קלוז אפ על הגיבור",hint:"הפנים ממלאות את הפריים. מבט חד אל מחוץ למצלמה, בלי חיוך.",d:1.8},
       {s:1,tag:"OTS",type:"מעבר לכתף",label:"מה הוא רואה",hint:"מצלמים מאחורי הכתף של הגיבור אל מה שהוא רואה: יריב, דלת, מטרה.",d:1.8},
       {c:"t2",d:2.0},
-      {s:1,tag:"INS",type:"אינסרט",label:"ידיים בפעולה",hint:"קושר נעליים, טוען ציוד, סוגר רוכסן. פעולה אחת ברורה.",d:1.5},
+      {s:1,art:"hands_shoe",tag:"INS",type:"אינסרט",label:"ידיים בפעולה",hint:"קושר נעליים, טוען ציוד, סוגר רוכסן. פעולה אחת ברורה.",d:1.5},
       {s:1,tag:"PAN",type:"פאן",label:"מישהו צופה",hint:"סיבוב איטי של המצלמה מצד לצד, עד שמגלים מישהו שמסתכל.",d:1.8},
       {c:"t3",d:2.0},
       {s:1,tag:"POV",type:"נקודת מבט",label:"דרך העיניים",hint:"המצלמה היא העיניים של הגיבור: הולכת, מחפשת, מסתכלת סביב.",d:1.5},
@@ -597,25 +602,25 @@ const GENRES={
     desc:"משהו מחכה בחושך. אל תפתחו את הדלת.",
     defaults:{logo:"TRAILER LAB",filmby:"סרטם של גל זיו והצוות",t1:"הם חשבו שהם לבד",t2:"הם טעו",t3:"הלילה",t4:"משהו מתעורר",title:"הקומה השלישית",release:"בקרוב"},
     seq:[
-      {s:1,tag:"OPEN",type:"שוט פתיחה",label:"רגע מהסיפור",hint:"שוט אווירה שמרמז על הסיפור: נדנדה שזזה לבד, טלפון עם שיחה שלא נענתה, דלת פתוחה.",d:2.8},
+      {s:1,art:"swing",tag:"OPEN",type:"שוט פתיחה",label:"רגע מהסיפור",hint:"שוט אווירה שמרמז על הסיפור: נדנדה שזזה לבד, טלפון עם שיחה שלא נענתה, דלת פתוחה.",d:2.8},
       {c:"logo",d:3.2},
       {s:1,tag:"INS",type:"אינסרט",label:"רמז ראשון",hint:"תקריב על חפץ: מפתח ישן, תמונה קרועה, צעצוע על הרצפה.",d:2.4},
       {c:"filmby",d:2.6},
-      {s:1,tag:"ELS",type:"רחב מאוד",label:"הבית מבחוץ",hint:"שוט רחב וסטטי של בית, חדר מדרגות או דלת. הכי טוב בשעת דמדומים.",d:3.0},
-      {s:1,tag:"WS",type:"שוט רחב",label:"לבד בחדר",hint:"הדמות קטנה בתוך הפריים, מוקפת חושך ומקום ריק.",d:2.6},
+      {s:1,art:"house",tag:"ELS",type:"רחב מאוד",label:"הבית מבחוץ",hint:"שוט רחב וסטטי של בית, חדר מדרגות או דלת. הכי טוב בשעת דמדומים.",d:3.0},
+      {s:1,art:"room_alone",tag:"WS",type:"שוט רחב",label:"לבד בחדר",hint:"הדמות קטנה בתוך הפריים, מוקפת חושך ומקום ריק.",d:2.6},
       {c:"t1",d:2.4},
       {s:1,tag:"POV",type:"נקודת מבט",label:"מסדרון חשוך",hint:"תנועה איטית קדימה לתוך מסדרון או דלת פתוחה למחצה.",d:2.4},
       {s:1,tag:"HIGH",type:"זווית גבוהה",label:"קטנה ובודדה",hint:"מצלמה גבוהה מעל הדמות. היא נראית קטנה וחסרת אונים.",d:2.0},
       {s:1,tag:"ECU",type:"תקריב קיצוני",label:"עיניים מפוחדות",hint:"קלוז אפ קיצוני על העיניים. הדמות שומעת משהו.",d:1.8},
       {c:"t2",d:2.2},
       {s:1,tag:"OTS",type:"מעבר לכתף",label:"מה היא רואה",hint:"מאחורי הדמות, אל עבר מה שהיא רואה: פתח, חלון, חושך.",d:2.0},
-      {s:1,tag:"MS",type:"שוט בינוני",label:"צל עובר",hint:"משהו חולף ברקע או מאחורי הדמות. שבקושי יראו אותו.",d:1.6},
-      {s:1,tag:"INS",type:"אינסרט",label:"יד על הידית",hint:"יד מתקרבת לאט לידית של דלת.",d:1.8},
+      {s:1,art:"shadow_pass",tag:"MS",type:"שוט בינוני",label:"צל עובר",hint:"משהו חולף ברקע או מאחורי הדמות. שבקושי יראו אותו.",d:1.6},
+      {s:1,art:"door_handle",tag:"INS",type:"אינסרט",label:"יד על הידית",hint:"יד מתקרבת לאט לידית של דלת.",d:1.8},
       {c:"t3",d:1.8},
       {s:1,tag:"LOW",type:"זווית נמוכה",label:"משהו מתקרב",hint:"מצלמה על הרצפה, משהו מתקרב מהעומק לאט.",d:1.6},
       {c:"t4",d:1.8},
       {s:1,tag:"DOLLY",type:"דולי אין",label:"קפואה במקום",hint:"תנועה איטית פנימה אל הדמות שקופאת במקום.",d:1.6},
-      {s:1,tag:"CU",type:"קלוז אפ",k:"scream",label:"צעקה",hint:"הדמות מסתובבת בבהלה או צועקת. תנועה חדה ומהירה.",d:1.0},
+      {s:1,art:"scream",tag:"CU",type:"קלוז אפ",k:"scream",label:"צעקה",hint:"הדמות מסתובבת בבהלה או צועקת. תנועה חדה ומהירה.",d:1.0},
       {s:1,tag:"GLM",type:"הצצה",k:"glimpse",label:"הדבר",hint:"הצצה של רגע: דמות בפתח, צללית, משהו שלא אמור להיות שם.",d:0.8},
       {c:"title",d:4.5},
       {c:"credits",d:6.0}
@@ -888,7 +893,7 @@ function cueEpic(X,A,at){
 }
 function cueFile(X,A,at,buf){
   const src=X.ac.createBufferSource();src.buffer=buf;const g=X.ac.createGain();src.connect(g);g.connect(X.bus);
-  const off=clamp(P.music.offset||0,0,Math.max(0,buf.duration-1));g.gain.setValueAtTime(.0001,at(0));g.gain.exponentialRampToValueAtTime(.9,at(.5));g.gain.setValueAtTime(.9,at(A.T-1.6));g.gain.linearRampToValueAtTime(0,at(A.T));src.start(at(0),off);src.stop(at(A.T)+.05);
+  const off=clamp(P.music.offset||0,0,Math.max(0,buf.duration-1));g.gain.setValueAtTime(.0001,at(0));g.gain.exponentialRampToValueAtTime(.9,at(.5));g.gain.setValueAtTime(.9,at(A.T-1.6));g.gain.linearRampToValueAtTime(0,at(A.T));const st=Math.max(X.t0,X.ac.currentTime+.3);src.start(st,off+(st-X.t0));src.stop(at(A.T)+.05);
   if(P.music.hits){A.C.forEach(c=>boom(X,at(c.t0),.5));boom(X,at(A.tT),.8)}
 }
 function currentCue(){const m=P.music||{src:"auto"};if(m.src==="file"&&musicBuf)return"file";if(m.src&&m.src.startsWith("lib:"))return m.src.slice(4);return G().cue}
@@ -896,7 +901,7 @@ function buildScore(ac,out,S,t0,T){
   const comp=ac.createDynamicsCompressor();comp.threshold.value=-16;comp.knee.value=10;comp.ratio.value=5;comp.attack.value=.003;comp.release.value=.25;
   const mg=ac.createGain();mg.gain.value=.95;comp.connect(mg);mg.connect(out);
   const rev=ac.createConvolver();rev.buffer=impulse(ac,3);const rg=ac.createGain();rg.gain.value=.32;rev.connect(rg);rg.connect(comp);
-  const X={ac,bus:comp,rev,nb:noiseBuf(ac)},at=r=>t0+r,A=anchors(S,T),cue=currentCue();
+  const X={ac,bus:comp,rev,nb:noiseBuf(ac),t0},at=r=>Math.max(0,t0+r),A=anchors(S,T),cue=currentCue();
   if(cue==="file")cueFile(X,A,at,musicBuf);else ({action:cueAction,horror:cueHorror,tension:cueTension,epic:cueEpic}[cue]||cueAction)(X,A,at);
 }
 async function loadMusicBuf(){if(musicBuf)return musicBuf;try{const b=await getClip("music");if(!b)return null;const ab=await b.arrayBuffer();musicBuf=await audioCtx().decodeAudioData(ab);return musicBuf}catch(e){return null}}
@@ -910,14 +915,16 @@ const Player={cv:null,ctx:null,vids:new Map(),run:null,
   segAt(S,t){for(let i=S.length-1;i>=0;i--)if(t>=S[i].t0)return i;return 0},
   async still(t){const S=segs(),s=S[this.segAt(S,t)];let v=null;if(s.shot&&s.shot.has){v=await this.prepShot(s.shot);if(v)await seek(v,(s.shot.start||0)+clamp(t-s.t0,0,s.d))}await fontsReady;STILL=true;drawSeg(this.ctx,s,t-s.t0,v);STILL=false},
   stop(){if(this.run)this.run.stop()},
-  async play({record=false,onTime}={}){
+  async play({record=false,onTime,from=0}={}){
     this.stop();await fontsReady;await this.prep();if(P.music&&P.music.src==="file")await loadMusicBuf();
     const ac=audioCtx();try{await ac.resume()}catch(e){}
     const S=segs(),T=total(),ctx=this.ctx;
-    const master=ac.createGain();master.connect(ac.destination);
+    if(from>=T-.1||from<0)from=0;
+    {const s0=S[this.segAt(S,from)];if(s0.shot&&s0.shot.has){const v0=this.vids.get(s0.shot.id);if(v0)await seek(v0,(s0.shot.start||0)+(from-s0.t0))}}
+    const master=ac.createGain();master.connect(ac.destination);master.gain.setValueAtTime(0,ac.currentTime);master.gain.linearRampToValueAtTime(1,ac.currentTime+.32);
     let rec=null,chunks=[],mime="";
     if(record){const dest=ac.createMediaStreamDestination();master.connect(dest);const vs=this.cv.captureStream(30);const ms=new MediaStream([...vs.getVideoTracks(),...dest.stream.getAudioTracks()]);mime=pickMime(true);rec=new MediaRecorder(ms,mime?{mimeType:mime,videoBitsPerSecond:6e6,audioBitsPerSecond:160000}:{});rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)}}
-    const t0=ac.currentTime+.3;buildScore(ac,master,S,t0,T);
+    const t0=ac.currentTime+.3-from;buildScore(ac,master,S,t0,T);
     if(rec)rec.start(1000);
     let cur=-1,curV=null,stopped=false,id=0;
     return new Promise(res=>{
@@ -926,7 +933,7 @@ const Player={cv:null,ctx:null,vids:new Map(),run:null,
       this.run={stop:()=>end(false)};
       const loop=()=>{if(stopped)return;const t=ac.currentTime-t0;
         if(t>=T){const L=S[S.length-1];drawSeg(ctx,L,L.d-.001,null);onTime&&onTime(T,T);end(true);return}
-        if(t<0){ctx.fillStyle="#000";ctx.fillRect(0,0,W,H);id=requestAnimationFrame(loop);return}
+        if(t<from){if(from<=0){ctx.fillStyle="#000";ctx.fillRect(0,0,W,H)}id=requestAnimationFrame(loop);return}
         const i=this.segAt(S,t),s=S[i];
         if(i!==cur){if(curV)curV.pause();curV=null;if(s.shot&&s.shot.has){curV=this.vids.get(s.shot.id)||null;if(curV)curV.play().catch(()=>{})}cur=i}
         drawSeg(ctx,s,t-s.t0,curV);onTime&&onTime(t,T);id=requestAnimationFrame(loop)};
@@ -989,7 +996,17 @@ const SHOT_ART={
   ACT:GROUND+pers(80,74,1.15,"f",1)+'<path class="a" d="M40 28l-10-7M38 44H24M42 60l-10 7M120 28l10-7M122 44h14M118 60l10 7"/>',
   DOLLY:pers(80,268,5)+'<path class="a" d="M8 8l16 10M152 8l-16 10M8 82l16-10M152 82l-16-10"/>',
   SIL:'<circle class="lt" cx="80" cy="46" r="32"/>'+GROUND+pers(80,82,1.15,"k"),
-  GLM:GROUND+'<rect class="d" x="60" y="12" width="40" height="64"/>'+pers(80,76,1,"k")
+  GLM:GROUND+'<rect class="d" x="60" y="12" width="40" height="64"/>'+pers(80,76,1,"k"),
+  house:GROUND+'<circle class="d" cx="134" cy="18" r="7"/><path class="d" d="M18 76V50M9 60l9-10 9 10"/><path class="f" d="M48 76V44L80 22 112 44V76Z"/><rect class="lt" x="70" y="47" width="20" height="16"/><path class="d" d="M70 55H90M80 47V63"/><rect class="d" x="56" y="58" width="10" height="18"/>',
+  door_handle:'<rect class="d" x="104" y="-2" width="60" height="94"/><path class="f" d="M114 40h26a4 4 0 0 1 0 8h-26z"/><circle class="f" cx="116" cy="44" r="7"/><path class="f" d="M-2 52L42 46Q54 44 64 40L86 38Q93 38 93 42Q93 45 87 45L72 46 89 47Q95 48 94 52Q93 55 87 54L72 53 85 56Q90 57 89 61Q87 64 82 63L67 60Q59 66 43 66L-2 70Z"/><path class="a" d="M98 44h6"/>',
+  swing:GROUND+'<circle class="d" cx="132" cy="18" r="7"/><path class="d" d="M40 76L56 14H104L120 76"/><path class="f" d="M74 14L64 58M90 14L84 58"/><rect class="f" x="58" y="57" width="32" height="4"/><path class="a" d="M98 62q8-6 10-16M104 68q13-8 15-26"/>',
+  room_alone:'<path class="d" d="M0 8L40 22H120L160 8M0 86L40 70H120L160 86M40 22V70M120 22V70"/><rect class="d" x="50" y="30" width="22" height="18"/><path class="d" d="M61 30V48M50 39H72"/>'+pers(94,70,.48),
+  shadow_pass:pers(116,124,1.7,"k")+'<path class="d" d="M140 40h14M138 52h18M142 64h12"/>'+pers(54,166,3),
+  scream:pers(80,268,5)+'<ellipse class="k" cx="80" cy="50" rx="6" ry="9"/><circle class="k" cx="70" cy="31" r="3"/><circle class="k" cx="90" cy="31" r="3"/><path class="a" d="M112 30l12-6M114 44h14M112 58l12 6M48 30l-12-6M46 44H32M48 58l-12 6"/>',
+  car_night:GROUND+'<circle class="d" cx="22" cy="18" r="6"/><path class="d" d="M128 76V16H112"/><path class="lt" d="M112 18L96 76H136Z"/><path class="f" d="M28 70q2-14 16-16l10-10h28l12 10q14 2 16 16v4H28z"/><circle class="k" cx="48" cy="74" r="6"/><circle class="k" cx="94" cy="74" r="6"/>',
+  city_els:'<path class="d" d="M0 56h14V40h12v16h10V30h16v26h12V44h14v12h16V34h14v22h14V46h10v10h18"/><path class="d" d="M8 46h2M42 38h2M90 42h2M118 52h2"/><path class="f" d="M0 76H160V92H0Z"/>'+pers(118,76,.3),
+  street_ws:'<path class="d" d="M0 18H32V76M0 38h32M0 58h32M128 76V24h32M128 44h32M128 62h32M32 76L58 52H102L128 76"/>'+GROUND+pers(80,72,.8),
+  hands_shoe:'<path class="f" d="M28 72q0-18 18-22l26-4q8 0 12 8l8 10q30 2 40 8v6H28z"/><path class="d" d="M58 54l10 8M64 50l10 8M70 48l10 8"/><path class="f" d="M48 32q10-8 22-4l6 14-14 4z"/><path class="f" d="M98 30q-10-6-20 0l-2 14 14 2z"/>'
 };
 function shotArt(tag,mode){const id="sa"+(saN++);return `<svg class="sa ${mode||"thumb"}" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><clipPath id="${id}"><rect width="160" height="90"/></clipPath></defs><g clip-path="url(#${id})">${SHOT_ART[tag]||SHOT_ART.WS}</g></svg>`}
 
@@ -1028,7 +1045,7 @@ function renderShots(){
       li.innerHTML=`<div class="cth" style='${ff}'>${esc(txt)}</div><div class="dim" style="font-size:12.5px">${FIELD_LABEL[s.c]} <span class="mono" style="direction:ltr;display:inline-block">· ${sec(s.d)}</span></div><span class="edit">עריכה</span>`;
       li.onclick=()=>{cardKey=s.c;setTab("titles")};li.onkeydown=e=>{if(e.key==="Enter")li.onclick()}}
     else{const sh=s.shot;li.className="it";
-      li.innerHTML=`<div class="th">${sh.has&&sh.thumb?`<img alt="" src="${sh.thumb}">`:`<div class="board">${shotArt(s.tag)}</div>`}<span class="tag">${s.tag}</span><span class="num">${String(s.si+1).padStart(2,"0")}</span></div>
+      li.innerHTML=`<div class="th">${sh.has&&sh.thumb?`<img alt="" src="${sh.thumb}">`:`<div class="board">${shotArt(s.art||s.tag)}</div>`}<span class="tag">${s.tag}</span><span class="num">${String(s.si+1).padStart(2,"0")}</span></div>
       <div class="bd"><div class="tt"><b>${esc(s.label)}</b><span class="stype">${esc(s.type)}</span>${sh.has?'<span class="st ok">צולם</span>':'<span class="st no">חסר</span>'}</div>
       <div class="mono dim" style="font-size:11px;direction:ltr;text-align:end">${tc(s.t0)} · ${sec(s.d)}</div>
       <div class="hint">${esc(s.hint)}</div>
@@ -1073,7 +1090,7 @@ function renderTrailer(){
   const miss=P.shots.filter(s=>!s.has).length;const w=$("#missWarn");w.hidden=!miss;w.textContent=miss?`${miss} שוטים עדיין לא צולמו. הם יופיעו בטריילר כקלאפר.`:"";
   const m=pickMime(true);$("#fmtChip").textContent=m===null?"N/A":(m.includes("mp4")?"MP4":"WEBM");
   setPlayIcon(false);
-  const title=S.find(s=>s.c==="title");Player.still(title.t0+1.5).then(()=>setHead(title.t0+1.5));
+  setHead(0);Player.still(0);
 }
 function renderMusic(){const el=$("#mus"),m=P.music;el.innerHTML="";
   const opt=(val,label,sub)=>{const b=document.createElement("button");b.className="opt"+(m.src===val?" on":"");b.innerHTML=`<i></i><span>${label}${sub?`<small>${sub}</small>`:""}</span>`;b.onclick=()=>{if(val==="file"&&!m.name){$("#musicFile").click();return}m.src=val;saveP();renderMusic();drawWave()};el.appendChild(b)};
@@ -1092,11 +1109,13 @@ function drawWave(){const c=$("#wave"),r=c.getBoundingClientRect(),dpr=Math.min(
   const n=Math.floor(c.width/3);
   if(P.music.src==="file"&&musicBuf){const d=musicBuf.getChannelData(0),sr=musicBuf.sampleRate,off=(P.music.offset||0)*sr,span=T*sr/n;for(let i=0;i<n;i++){let mxv=0;const a=Math.floor(off+i*span),b=Math.min(d.length,a+span);for(let k=a;k<b;k+=64)mxv=Math.max(mxv,Math.abs(d[k]||0));const h=Math.max(1,mxv*c.height*.9);x.fillRect(i*3,(c.height-h)/2,2,h)}return}
   for(let i=0;i<n;i++){const t=i/n*T;let e=.25+.15*Math.sin(i*.7)*Math.sin(i*.13);S.forEach(s=>{if(s.c&&s.c!=="logo"&&s.c!=="filmby"){const d=t-s.t0;if(d>=0&&d<1.2)e+=.7*(1-d/1.2)}});e=clamp(e*(.6+.4*Math.abs(Math.sin(i*1.7))),.05,1);const h=e*c.height*.9;x.fillRect(i*3,(c.height-h)/2,2,h)}}
-function setHead(t){const T=total(),tl=$("#tl"),lab=30,w=tl.clientWidth-lab;$("#head").style.left=(lab+clamp(t/T,0,1)*w)+"px";$("#tcCur").textContent=tc(t)}
+let headT=0;
+function setHead(t){headT=t;const T=total(),tl=$("#tl"),lab=30,w=tl.clientWidth-lab;$("#head").style.left=(lab+clamp(t/T,0,1)*w)+"px";$("#tcCur").textContent=tc(t)}
 const PLAY_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5l11 7-11 7z"/></svg>',STOP_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>';
 function setPlayIcon(on){[$("#playBtn"),$("#fsPlay")].forEach(b=>{b.innerHTML=on?STOP_SVG:PLAY_SVG;b.setAttribute("aria-label",on?"עצור":"נגן")})}
-async function togglePlay(){if(playing){Player.stop();return}playing=true;setPlayIcon(true);await Player.play({onTime:t=>setHead(t)});playing=false;setPlayIcon(false)}
-$("#playBtn").onclick=togglePlay;$("#fsPlay").onclick=togglePlay;
+async function togglePlay(from){if(playing){Player.stop();return}playing=true;setPlayIcon(true);await Player.play({from:typeof from==="number"?from:headT,onTime:t=>setHead(t)});playing=false;setPlayIcon(false)}
+async function playFromStart(){if(playing){Player.stop();await new Promise(r=>setTimeout(r,60))}setHead(0);togglePlay(0)}
+$("#playBtn").onclick=()=>togglePlay();$("#fsPlay").onclick=()=>togglePlay();$("#startBtn").onclick=playFromStart;$("#fsStart").onclick=playFromStart;
 async function enterFs(){const m=$("#mon");m.classList.add("fs");try{if(m.requestFullscreen)await m.requestFullscreen({navigationUI:"hide"});try{await screen.orientation.lock("landscape")}catch(e){}}catch(e){}if(!playing)togglePlay()}
 function exitFs(){const m=$("#mon");if(!m.classList.contains("fs"))return;m.classList.remove("fs");try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}try{screen.orientation.unlock()}catch(e){}}
 $("#fsBtn").onclick=enterFs;$("#fsExit").onclick=()=>{Player.stop();exitFs()};
@@ -1134,7 +1153,7 @@ $("#saveBtn").onclick=async()=>{const msg=$("#doneMsg");if(!lastBlob)return;
 
 /* ============ CAMERA ============ */
 const Cam={si:0,stream:null,facing:"environment",rec:null,
-  async open(si){Player.stop();exitFs();this.si=si;const s=shotSeg(si);$("#camEyebrow").textContent=`SHOT ${String(si+1).padStart(2,"0")} / ${String(P.shots.length).padStart(2,"0")} · ${s.tag}`;$("#camTitle").textContent=`${s.label} · ${s.type}`;$("#camHint").innerHTML=`<b>${esc(s.label)}:</b> ${esc(s.hint)}`;$("#camGuide").innerHTML=shotArt(s.tag,"guide");guideUI();
+  async open(si){Player.stop();exitFs();this.si=si;const s=shotSeg(si);$("#camEyebrow").textContent=`SHOT ${String(si+1).padStart(2,"0")} / ${String(P.shots.length).padStart(2,"0")} · ${s.tag}`;$("#camTitle").textContent=`${s.label} · ${s.type}`;$("#camHint").innerHTML=`<b>${esc(s.label)}:</b> ${esc(s.hint)}`;$("#camGuide").innerHTML=shotArt(s.art||s.tag,"guide");guideUI();
     $("#cam").hidden=false;$("#camErr").hidden=true;this.state("STBY");$("#camTc").textContent="00:00:00";$("#shutter").style.setProperty("--p",0);await this.start()},
   async start(){this.stopStream();
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return this.fail("הדפדפן לא מאפשר גישה למצלמה.");
@@ -1204,7 +1223,7 @@ $("#trimPlay").onclick=()=>Trim.play();
 $("#trimOk").onclick=()=>Trim.ok();
 $("#trimClose").onclick=()=>Trim.ok();
 $("#trimRetake").onclick=()=>{$("#trimVideo").pause();$("#trim").hidden=true;Cam.open(Trim.si)};
-addEventListener("resize",()=>{if(!$("#trim").hidden)Trim.draw();if(P&&tab==="trailer"&&!$("#v-trailer").hidden){drawWave();setHead(0)}});
+addEventListener("resize",()=>{if(!$("#trim").hidden)Trim.draw();if(P&&tab==="trailer"&&!$("#v-trailer").hidden){drawWave();setHead(headT)}});
 
 /* ============ BOOT ============ */
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
@@ -1216,10 +1235,11 @@ $("#sheetNo").onclick=()=>{pendingGenre=null;$("#sheet").hidden=true};
 $("#sheetYes").onclick=async()=>{$("#sheet").hidden=true;Player.stop();await clearClips();P=null;try{localStorage.removeItem(LS)}catch(e){}const g=pendingGenre;pendingGenre=null;if(g){P=newProject(g);saveP();header();setTab("shots")}else renderHome()};
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="2.2";
+const VERSION="2.3";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["2.2","היום",["ציור סטוריבורד לכל סוג שוט ברשימת השוטים","קווי מסגור על המצלמה שמראים איפה להעמיד את הדמות, עם כפתור הדלקה וכיבוי","ההסבר על השוט עבר אל מתחת לפריים"]],
+  ["2.3","היום",["ציור מותאם לכל שוט: בית עם חלון מואר, יד על ידית, נדנדה, מכונית בלילה ועוד","Play ממשיך מאיפה שעצרת, וכפתור START מתחיל מההתחלה"]],
+  ["2.2","",["ציור סטוריבורד לכל סוג שוט ברשימת השוטים","קווי מסגור על המצלמה שמראים איפה להעמיד את הדמות, עם כפתור הדלקה וכיבוי","ההסבר על השוט עבר אל מתחת לפריים"]],
   ["2.1","",["אייקון להתקנה במסך הבית","מסך פתיחה עם הלוגו","תפריט צד: בית, שיתוף, התקנה, מה חדש ואודות"]],
   ["2.0","",["טריילר אקשן של 55 שניות עם 17 שוטים שמכסים את כל סוגי הצילום","לוגו חברת הפקה, כרטיס ׳סרטם של׳ ו-6 כותרות","׳בקרוב׳ ובלוק קרדיטים של 8 אנשי צוות","8 פונטים לכותרות, 6 בעברית ו-2 באנגלית","ספריית מוזיקה וייבוא שיר מהמכשיר","תצוגה במסך מלא","18 ז׳אנרים עם איורים"]],
   ["1.0","",["אקשן ואימה","מצלמה, בחירת קטע לפי תנועה, כרטיסי כותרת, מוזיקה מקורית וייצוא MP4"]]
