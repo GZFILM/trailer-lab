@@ -1500,7 +1500,9 @@ const art=id=>`<svg class="art" viewBox="0 0 200 266" preserveAspectRatio="xMidY
 
 /* ============ UI ============ */
 let tab="shots",cardKey="t1";
-function show(id){["home","shots","titles","trailer","poster"].forEach(v=>$("#v-"+v).hidden=v!==id)}
+function closeDone(){const d=$("#done");if(d&&!d.hidden){d.hidden=true;try{$("#doneVideo").pause()}catch(e){}}}
+function show(id){closeDone();["home","shots","titles","trailer","poster"].forEach(v=>$("#v-"+v).hidden=v!==id)}
+let awayAt=0;document.addEventListener("visibilitychange",()=>{if(document.hidden){awayAt=Date.now();try{$("#doneVideo").pause()}catch(e){}try{Player.stop()}catch(e){}}else if(awayAt&&Date.now()-awayAt>20000)closeDone()});
 function setTab(t){Player.stop();exitFs();tab=t;show(t);document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));$("#main").scrollTop=0;
   if(t==="shots")renderShots();if(t==="titles")renderTitles();if(t==="trailer")renderTrailer();if(t==="poster")renderPoster()}
 function header(){const has=!!P;$("#tabs").hidden=!has;$("#newBtn").hidden=!has;$("#saveBtnTop").hidden=!has;$("#genreChip").hidden=!has;
@@ -1861,10 +1863,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="3.2";
+const VERSION="3.3";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["3.2","היום",["סוג שוט חדש: לונג שוט (LS), רואים את כל הגוף מהראש עד הרגליים","באקשן: לונג שוט ושוט בינוני (MS) בתחילת הטריילר","ציור חדש לשוט קשירת הנעליים, עם ידיים אמיתיות"]],
+  ["3.3","היום",["חלון \"הטריילר מוכן\" נסגר לבד כשממשיכים לעבוד או חוזרים לאפליקציה, והטריילר לא ממשיך להתנגן ברקע"]],
+  ["3.2","",["סוג שוט חדש: לונג שוט (LS), רואים את כל הגוף מהראש עד הרגליים","באקשן: לונג שוט ושוט בינוני (MS) בתחילת הטריילר","ציור חדש לשוט קשירת הנעליים, עם ידיים אמיתיות"]],
   ["3.1","",["מסך הפתיחה: \"כל טלפון הוא מצלמת קולנוע\" מתחת ללוגו, ויותר זמן לקרוא","האפליקציה תמיד נפתחת במסך הבית. הפרויקט הפתוח זמין מהלשוניות למטה"]],
   ["3.0","",["דף פוסטר: פוסטר 2:3 ותמונה ממוזערת 16:9 מהשוטים שצילמתם, עם שמירה לטלפון","שמירה כצוות צילום (עם בית ספר וכיתה, לא חובה) או כקולנוען","הפרויקטים השמורים מופיעים מתחת לז׳אנרים, מהחדש לישן"]],
   ["2.9","",["לחיצה על שם הטריילר או הז׳אנר בבר העליון מחזירה לרשימת השוטים","המנגינות המסונתזות הוסרו. לכל ז׳אנר 3 מקומות לקטעי מוזיקה שיעלו לספרייה","ייבוא מהמכשיר ואלבום המעבדה נשארו","אפשרות לטריילר בלי מוזיקה, רק עם וואשים"]],
