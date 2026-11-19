@@ -438,7 +438,8 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
         <div class="mcol">
           <div class="seg" id="pMode" style="grid-template-columns:1fr 1fr"><button data-m="poster">פוסטר 2:3</button><button data-m="thumb">תמונה ממוזערת 16:9</button></div>
           <div class="pstage" id="pStage"><canvas id="posterCanvas" width="1080" height="1620"></canvas></div>
-          <button class="btn pri" id="posterSave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>שמור לטלפון</button>
+          <button class="btn pri" id="posterSave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>שמירה בטלפון…</button>
+          <button class="btn" id="posterShare">שיתוף</button>
           <span class="note" id="posterMsg"></span>
         </div>
         <div class="fcol panel fields">
@@ -588,7 +589,8 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
     <video id="doneVideo" controls playsinline></video>
     <div class="row" style="justify-content:space-between"><span class="note" id="doneInfo"></span></div>
     <span class="note" id="doneMsg"></span>
-    <div class="row"><button class="btn pri grow" id="saveBtn">שמור לטלפון</button><button class="btn grow" id="doneClose">סגור</button></div>
+    <div class="row"><button class="btn pri grow" id="saveBtn">שמירה בטלפון…</button><button class="btn grow" id="shareBtn">שיתוף</button></div>
+    <button class="btn ghost" id="doneClose">סגור</button>
   </div>
 </div>
 
@@ -1720,8 +1722,9 @@ $("#pMode").addEventListener("click",e=>{const b=e.target.closest("button");if(!
 $("#pPos").oninput=e=>{posterOpts().pos=+e.target.value;saveP();redrawPoster()};
 $("#pTagline").oninput=e=>{const o=posterOpts();o.custom=e.target.value;o.tag=e.target.value?"custom":"t1";saveP();document.querySelectorAll("#pTags .gchip").forEach(c=>c.classList.remove("on"));redrawPoster()};
 $("#pCredits").onchange=e=>{posterOpts().credits=e.target.checked;saveP();redrawPoster()};
-$("#posterSave").onclick=async()=>{const cv=$("#posterCanvas");await drawPoster(cv);const blob=await new Promise(r=>cv.toBlob(r,"image/png"));if(!blob)return;const o=posterOpts();
-  const name=`${(P.titles.title||"trailer").replace(/[\\/:*?"<>|]/g,"").trim()} - ${o.mode==="thumb"?"thumbnail":"poster"}.png`;await saveFile(blob,name,$("#posterMsg"))};
+async function posterOut(mode){const cv=$("#posterCanvas");await drawPoster(cv);const blob=await new Promise(r=>cv.toBlob(r,"image/png"));if(!blob)return;const o=posterOpts();
+  const name=`${(P.titles.title||"trailer").replace(/[\\/:*?"<>|]/g,"").trim()} - ${o.mode==="thumb"?"thumbnail":"poster"}.png`;await saveFile(blob,name,$("#posterMsg"),mode)}
+$("#posterSave").onclick=()=>posterOut("save");
 
 /* ============ EXPORT ============ */
 let lastBlob=null,lastName="",wake=null;
@@ -1741,11 +1744,18 @@ $("#exportBtn").onclick=async()=>{
   $("#doneInfo").textContent=`${ext.toUpperCase()} · 1280×720 · ${(r.blob.size/1048576).toFixed(1)} MB`;$("#doneMsg").textContent="";$("#done").hidden=false;
 };
 $("#doneClose").onclick=()=>{$("#done").hidden=true;$("#doneVideo").pause()};
-async function saveFile(blob,name,msg){
+async function saveFile(blob,name,msg,mode){mode=mode||"save";msg.textContent="";
   try{if(window.claude&&window.claude.use){const d=await window.claude.use("downloads");if(d){try{await d.save({filename:name,data:blob});msg.textContent="נשמר.";return}catch(e){if(e&&e.code==="declined"){msg.textContent="השמירה בוטלה.";return}}}}}catch(e){}
-  try{const f=new File([blob],name,{type:blob.type});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:P?P.titles.title:"Trailer Lab"});msg.textContent="נשלח לשיתוף. בחר שמירה בגלריה או אפליקציה אחרת.";return}}catch(e){if(e&&e.name==="AbortError"){msg.textContent="השיתוף בוטל.";return}}
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();msg.textContent="הקובץ ירד לתיקיית ההורדות."}
-$("#saveBtn").onclick=async()=>{if(!lastBlob)return;await saveFile(lastBlob,lastName,$("#doneMsg"))};
+  if(mode==="share"){try{const f=new File([blob],name,{type:blob.type});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:P?P.titles.title:"Trailer Lab"});msg.textContent="נשלח. אפשר לבחור וואטסאפ, דרייב, גלריה או כל אפליקציה אחרת.";return}}catch(e){if(e&&e.name==="AbortError"){msg.textContent="השיתוף בוטל.";return}}
+    msg.textContent="השיתוף לא נתמך בדפדפן הזה, אז שומרים במקום זה.";}
+  if(window.showSaveFilePicker){try{const ext=(name.split(".").pop()||"").toLowerCase();const mime=blob.type.split(";")[0]||"application/octet-stream";
+      const h=await showSaveFilePicker({suggestedName:name,types:[{description:ext==="png"?"תמונה":"וידאו",accept:{[mime]:["."+ext]}}]});const w=await h.createWritable();await w.write(blob);await w.close();msg.textContent="נשמר בתיקייה שבחרת: "+h.name;return}
+    catch(e){if(e&&e.name==="AbortError"){msg.textContent="השמירה בוטלה.";return}}}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+  msg.innerHTML="נשמר בתיקיית <b>ההורדות (Downloads)</b> בטלפון.<br>מוצאים אותו באפליקציית <b>הקבצים</b> או בגלריה, בשם: "+esc(name)}
+$("#saveBtn").onclick=async()=>{if(!lastBlob)return;await saveFile(lastBlob,lastName,$("#doneMsg"),"save")};
+$("#shareBtn").onclick=async()=>{if(!lastBlob)return;await saveFile(lastBlob,lastName,$("#doneMsg"),"share")};
+$("#posterShare").onclick=()=>posterOut("share");
 
 /* ============ CAMERA ============ */
 const Cam={si:0,stream:null,facing:"environment",rec:null,
@@ -1870,10 +1880,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.2";
+const VERSION="4.3";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["4.2","היום",["פוסטר אקשן: משפטים חדשים, ו\"שום דבר לא יעצור אותו\" במשפט אחד"]],
+  ["4.3","היום",["אחרי הייצוא: \"שמירה בטלפון\" פותח חלון לבחירת התיקייה (בטלפונים שתומכים), אחרת שומר בהורדות ואומר איפה למצוא","כפתור \"שיתוף\" נפרד לוואטסאפ, דרייב וגלריה","אותו דבר בפוסטר"]],
+  ["4.2","",["פוסטר אקשן: משפטים חדשים, ו\"שום דבר לא יעצור אותו\" במשפט אחד"]],
   ["4.1","",["פוסטר מרדף: \"כולם אמרו לו בלתי אפשרי. הוא ידע אחרת\" ו\"יש לו 90 דקות\""]],
   ["4.0","",["מצלמה: קווי הקומפוזיציה (שליש) כבויים, ויש כפתור להדליק אותם"]],
   ["3.9","",["פוסטר אימה: משפטים חדשים, \"אף אחד לא הצליח לעלות לשם\" ו\"מי שם צועק?\""]],

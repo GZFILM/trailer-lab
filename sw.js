@@ -1,5 +1,5 @@
 /* Trailer Lab service worker: network first, cached copy when offline. */
-const CACHE = "trailerlab-v4.2";
+const CACHE = "trailerlab-v4.3";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
 self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))); });
 self.addEventListener("activate", e => {
