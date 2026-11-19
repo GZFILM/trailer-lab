@@ -171,16 +171,17 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .fields .chk{display:flex;gap:8px;align-items:center;font-size:13px}
 .fields .chk input,#pPos{accent-color:var(--accent)}
 .field .vo{display:flex;gap:6px;align-items:center;margin-top:6px}
-.vbtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:32px;min-width:84px;padding:0 10px;border-radius:6px;border:1.5px solid #e5484d;background:rgba(229,72,77,.08);color:#ffb4b6;font:700 12.5px/1 Heebo,sans-serif;cursor:pointer;white-space:nowrap;flex:none}
+.vbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:26px;min-width:64px;padding:0 8px;border-radius:5px;border:1.5px solid #e5484d;background:rgba(229,72,77,.08);color:#ffb4b6;font:700 11.5px/1 Heebo,sans-serif;cursor:pointer;white-space:nowrap;flex:none}
 .vbtn i{width:10px;height:10px;border-radius:50%;background:#e5484d;flex:none}
 .vbtn.rec{background:rgba(229,72,77,.25);color:#fff;animation:vorec 1s infinite;font-family:var(--mono)}.vbtn.rec i{background:#fff}
 @keyframes vorec{50%{background:rgba(229,72,77,.45)}}
 .vbtn.has{border-color:#2fb36b;background:rgba(47,179,107,.18);color:#bff0d2}
 .vbtn.arm{border-color:#e5484d;background:#e5484d;color:#fff}
 .vhint{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
-.vx{width:32px;height:32px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--dim);display:grid;place-items:center;cursor:pointer}.vx svg{width:14px;height:14px}
+.vx{width:26px;height:26px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--dim);display:grid;place-items:center;cursor:pointer}.vx svg{width:14px;height:14px}
 .vx.arm{border-color:#e5484d;color:#fff;background:rgba(229,72,77,.3)}
-.fields .vofx{display:flex;gap:8px;align-items:center;font-size:13px;padding:10px 12px}.fields .vofx input{accent-color:var(--accent)}
+.fields .vofx{display:flex;gap:8px;align-items:center;font-size:13px;padding:10px 12px}.field .vo.off,.fields .vofx.off{opacity:.35;filter:grayscale(1);pointer-events:none}
+.fields .vofx.sub{padding-top:0;font-size:12px;color:var(--dim);padding-inline-start:30px}.fields .vofx input{accent-color:var(--accent)}
 .fonts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .fonts button{background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:8px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
 .fonts button span{font-size:22px;line-height:1.1;white-space:nowrap}
@@ -1367,7 +1368,7 @@ const curTrack=()=>{const s=resolveSrc();return s.startsWith("track:")?s.slice(6
 const curBuiltin=()=>{const s=resolveSrc();return s.startsWith("builtin:")?s.slice(8):null};
 function currentCue(){return (curTrack()||curBuiltin())&&musicBuf?"file":"none"}
 /* ============ VOICE-OVER ============ */
-const VO_MAX=4,VO_GENRES=["action","horror"],voOn=()=>!!P&&VO_GENRES.includes(P.genre),voOK=k=>voOn()&&(/^t\d$/.test(k)||k==="title");let voBufs=new Map();
+const VO_MAX=4,VO_GENRES=["action","horror"],voOn=()=>!!P&&VO_GENRES.includes(P.genre),voUse=()=>voOn()&&(P.voUse===undefined?!!(P.vo&&Object.keys(P.vo).length):!!P.voUse),voOK=k=>voOn()&&(/^t\d$/.test(k)||k==="title");let voBufs=new Map();
 const voKey=k=>"vo:"+P.pid+":"+k;
 async function voBuf(k){const v=P.vo&&P.vo[k];if(!v)return null;const ck=voKey(k)+":"+(v.at||0);if(bufs.has(ck))return bufs.get(ck);const b=await getClip(voKey(k));if(!b)return null;try{const buf=voTrim(await audioCtx().decodeAudioData(await b.arrayBuffer()));bufs.set(ck,buf);return buf}catch(e){return null}}
 /* cut the silence before the first word (and after the last) so the voice lands right on the title */
@@ -1375,7 +1376,7 @@ function voTrim(b){const sr=b.sampleRate,n=b.length,ch=b.numberOfChannels;let pk
   const th=Math.max(.012,pk*.1),win=Math.round(sr*.01);const loud=i=>{for(let c=0;c<ch;c++){const d=b.getChannelData(c);let m=0;for(let j=i;j<Math.min(n,i+win);j++)m=Math.max(m,Math.abs(d[j]));if(m>th)return true}return false};
   let a=0;while(a<n&&!loud(a))a+=win;let z=n;while(z>a&&!loud(Math.max(0,z-win)))z-=win;a=Math.max(0,a-Math.round(sr*.04));z=Math.min(n,z+Math.round(sr*.12));if(z-a<sr*.15)return b;
   const o=new AudioBuffer({length:z-a,numberOfChannels:ch,sampleRate:sr});for(let c=0;c<ch;c++)o.copyToChannel(b.getChannelData(c).subarray(a,z),c);return o}
-async function loadVoBufs(){voBufs=new Map();if(!voOn())return;for(const k in (P.vo||{})){const b=await voBuf(k);if(b)voBufs.set(k,b)}}
+async function loadVoBufs(){voBufs=new Map();if(!voUse())return;for(const k in (P.vo||{})){const b=await voBuf(k);if(b)voBufs.set(k,b)}}
 function voChain(ac,dest,rev){const hp=ac.createBiquadFilter();hp.type="highpass";hp.frequency.value=90;let last=hp;
   if(P.voFx){const lo=ac.createBiquadFilter();lo.type="lowshelf";lo.frequency.value=220;lo.gain.value=5;const pr=ac.createBiquadFilter();pr.type="peaking";pr.frequency.value=3000;pr.Q.value=.8;pr.gain.value=2.5;hp.connect(lo);lo.connect(pr);last=pr}
   const c=ac.createDynamicsCompressor();c.threshold.value=-26;c.ratio.value=4;c.attack.value=.004;c.release.value=.2;const g=ac.createGain();g.gain.value=P.voFx?1.5:1.35;last.connect(c);c.connect(g);g.connect(dest);
@@ -1395,7 +1396,7 @@ async function voRecord(k){if(voRec){voRec.stop();return}
   mr.onstop=async()=>{clearInterval(iv);clearTimeout(to);st.getTracks().forEach(t=>t.stop());voRec=null;
     const blob=new Blob(ch,{type:mr.mimeType||mt||"audio/webm"});if(blob.size<800){renderTitles();return}
     P.vo=P.vo||{};P.vo[k]={at:Date.now()};await putClip(voKey(k),blob);const b=await voBuf(k);if(b)P.vo[k].dur=+b.duration.toFixed(2);saveP();renderTitles();voPlay(k)};
-  mr.start();if(btn){btn.classList.remove("has","arm");btn.classList.add("rec");const ii=btn.querySelector("i");if(!ii)btn.insertAdjacentHTML("afterbegin","<i></i>")}
+  mr.start();if(btn){btn.classList.remove("has","arm");btn.classList.add("rec")}
   iv=setInterval(()=>{const left=Math.max(0,VO_MAX-(performance.now()-t0)/1000);if(btn)btn.querySelector("span").textContent=left.toFixed(1)},100);
   to=setTimeout(()=>voRec&&voRec.stop(),VO_MAX*1000)}
 let voSrc=null;
@@ -1403,11 +1404,11 @@ async function voPlay(k){try{voSrc&&voSrc.stop()}catch(e){}const b=await voBuf(k
   const src=ac.createBufferSource();src.buffer=b;src.playbackRate.value=P.voFx?.94:1;const rev=ac.createConvolver();rev.buffer=impulse(ac,2);const rg=ac.createGain();rg.gain.value=.6;rev.connect(rg);rg.connect(ac.destination);
   const inp=voChain(ac,ac.destination,rev);src.connect(inp);src.start();voSrc=src}
 async function voDelete(k){if(P.vo&&P.vo[k]){delete P.vo[k];await delClip(voKey(k));saveP();renderTitles()}}
-function voRow(k){const v=P.vo&&P.vo[k];const r=document.createElement("div");r.className="vo";r.dataset.vo=k;
+function voRow(k){const v=P.vo&&P.vo[k];const r=document.createElement("div");r.className="vo"+(voUse()?"":" off");r.dataset.vo=k;
   const okTxt=()=>`✓ ${(v.dur||0).toFixed(1)} שנ׳`;
   r.innerHTML=v?`<button class="vbtn vrec has" aria-label="קריינות מוקלטת, לחיצה חוזרת מקליטה שוב"><span>${okTxt()}</span></button><small class="vhint">לחיצה חוזרת: הקלטה מחדש</small><button class="vx vdel" aria-label="מחק קריינות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 7l10 10M17 7L7 17"/></svg></button>`
-    :`<button class="vbtn vrec" aria-label="הקלט קריינות, עד ${VO_MAX} שניות"><i></i><span>${VO_MAX} שנ׳</span></button><small class="vhint">קריינות</small>`;
-  const rc=r.querySelector(".vrec"),sp=rc.querySelector("span");
+    :`<button class="vbtn vrec" aria-label="הקלט קריינות, עד ${VO_MAX} שניות"><span>הקלט ${VO_MAX} שנ׳</span></button>`;
+  const rc=r.querySelector(".vrec"),sp=rc.querySelector("span");if(!voUse()){r.querySelectorAll("button").forEach(b=>b.disabled=true);return r}
   if(v){let armed=false,tm=null;rc.onclick=()=>{if(voRec||armed){clearTimeout(tm);armed=false;voRecord(k);return}armed=true;rc.classList.remove("has");rc.classList.add("arm");sp.textContent="לחץ שוב";tm=setTimeout(()=>{armed=false;rc.classList.remove("arm");rc.classList.add("has");sp.textContent=okTxt()},3500)}}
   else rc.onclick=()=>voRecord(k);
   const dl=r.querySelector(".vdel");if(dl){let armed=false,tm=null;dl.onclick=()=>{if(armed){clearTimeout(tm);voDelete(k);return}armed=true;dl.classList.add("arm");tm=setTimeout(()=>{armed=false;dl.classList.remove("arm")},3500)}}
@@ -1631,8 +1632,8 @@ function renderTitles(){
   const addField=(k,label,tcv)=>{const d=document.createElement("div");d.className="field"+(k===cardKey?" on":"");d.dataset.k=k;
     d.innerHTML=`<label for="f-${k}">${label}<span class="tc">${tc(tcv)}</span></label><input id="f-${k}" maxlength="40" value="${esc(P.titles[k]||"")}">`;
     const inp=d.querySelector("input");inp.addEventListener("focus",()=>focusField(k,d));inp.addEventListener("input",()=>{P.titles[k]=inp.value;saveP();header();drawCardPreview()});if(voOK(k))d.appendChild(voRow(k));f.appendChild(d)};
-  f.insertAdjacentHTML("beforeend",'<div class="fgroup">כרטיסים לפי הסדר בטריילר</div>'+(voOn()?'<label class="chk vofx"><input type="checkbox" id="voFx"> קול טריילר לקריינות: עמוק יותר, עם הד</label>':''));
-  if(voOn()){const fx=$("#voFx");fx.checked=!!P.voFx;fx.onchange=()=>{P.voFx=fx.checked;saveP()}}
+  f.insertAdjacentHTML("beforeend",'<div class="fgroup">כרטיסים לפי הסדר בטריילר</div>'+(voOn()?'<label class="chk vofx"><input type="checkbox" id="voUse"> קריינות</label>'+'<label class="chk vofx sub'+(voUse()?'':' off')+'"><input type="checkbox" id="voFx"'+(voUse()?'':' disabled')+'> קול טריילר: עמוק יותר, עם הד</label>':''));
+  if(voOn()){const u=$("#voUse");u.checked=voUse();u.onchange=()=>{P.voUse=u.checked;saveP();renderTitles()};{const fx=$("#voFx");fx.checked=!!P.voFx;fx.onchange=()=>{P.voFx=fx.checked;saveP()}}}
   keys.forEach(k=>{const seg=S.find(s=>s.c===k)||S.find(s=>s.c==="credits");addField(k,FIELD_LABEL[k],seg.t0)});
   f.insertAdjacentHTML("beforeend",'<div class="fgroup">קרדיטים · אנשי הצוות</div>');
   P.credits.forEach((c,i)=>{const d=document.createElement("div");d.className="field cr"+(cardKey==="credits"&&i===0?" on":"");d.dataset.k="credits";
@@ -1946,10 +1947,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.8.1";
+const VERSION="4.9";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["4.8","היום",["כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות","הוסר קוד המחיקה מאלבום המעבדה, חזרה לאישור פשוט"]],
+  ["4.9","היום",["קריינות נדלקת בתיבת סימון \"קריינות\" בדף הכותרות, כדי שלא ילחצו בטעות","כפתור קריינות קטן יותר"]],
+  ["4.8","",["כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות","הוסר קוד המחיקה מאלבום המעבדה, חזרה לאישור פשוט"]],
   ["4.6","",["קריינות: השקט שלפני המילה הראשונה נחתך אוטומטית, והקול נופל בדיוק על הכותרת","כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות. הקלטה מחדש ומחיקה דורשות לחיצה שנייה"]],
   ["4.5","",["הסאונד מוכן מראש לפני הניגון והייצוא, בלי עיוותים בוואשים","וואשים קצת יותר רכים"]],
   ["4.4","",["קריינות באקשן ובאימה: מקליטים קול לכל כותרת ולשם הסרט, עד 4 שניות לכל משפט. הכותרות נשארות על המסך","המוזיקה יורדת לבד כשמדברים","אפשרות \"קול טריילר\": עמוק יותר, עם הד"]],
