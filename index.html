@@ -170,14 +170,15 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .pchips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px}
 .fields .chk{display:flex;gap:8px;align-items:center;font-size:13px}
 .fields .chk input,#pPos{accent-color:var(--accent)}
-.field .vo{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap}
-.field .vo .btn{gap:6px}
-.field .vo.has{border:1.5px solid var(--accent);background:rgba(240,165,64,.1);border-radius:10px;padding:8px}
-.field .vo .vbadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--accent);margin-inline-end:4px}
-.field .vo .vbadge i{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
-.field .vo .vdel.arm{border-color:#e5484d;color:#fff;background:rgba(229,72,77,.3)}.field .vo svg{width:15px;height:15px}
-.field .vo .vrec.rec{border-color:#e5484d;color:#fff;background:rgba(229,72,77,.25);animation:vorec 1s infinite}
-@keyframes vorec{50%{background:rgba(229,72,77,.45)}}
+.field .vo{display:flex;gap:6px;align-items:center;margin-top:6px}
+.vbtn{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--line2);background:var(--panel2);color:var(--fg,#e8e8ea);font:600 12.5px/1 Heebo,sans-serif;cursor:pointer}
+.vbtn i{width:10px;height:10px;border-radius:50%;background:#e5484d;flex:none}
+.vbtn.rec{border-color:#e5484d;background:rgba(229,72,77,.22);animation:vorec 1s infinite}.vbtn.rec i{background:#fff}
+@keyframes vorec{50%{background:rgba(229,72,77,.42)}}
+.vbtn.has{border-color:#2fb36b;background:rgba(47,179,107,.16);color:#bff0d2}.vbtn.has i{background:#2fb36b;box-shadow:0 0 6px #2fb36b}
+.vbtn.has.arm{border-color:var(--accent);background:rgba(240,165,64,.18);color:#fff}
+.vx{width:32px;height:32px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--dim);display:grid;place-items:center;cursor:pointer}.vx svg{width:14px;height:14px}
+.vx.arm{border-color:#e5484d;color:#fff;background:rgba(229,72,77,.3)}
 .fields .vofx{display:flex;gap:8px;align-items:center;font-size:13px;padding:10px 12px}.fields .vofx input{accent-color:var(--accent)}
 .fonts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .fonts button{background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:8px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
@@ -1393,7 +1394,7 @@ async function voRecord(k){if(voRec){voRec.stop();return}
   mr.onstop=async()=>{clearInterval(iv);clearTimeout(to);st.getTracks().forEach(t=>t.stop());voRec=null;
     const blob=new Blob(ch,{type:mr.mimeType||mt||"audio/webm"});if(blob.size<800){renderTitles();return}
     P.vo=P.vo||{};P.vo[k]={at:Date.now()};await putClip(voKey(k),blob);const b=await voBuf(k);if(b)P.vo[k].dur=+b.duration.toFixed(2);saveP();renderTitles();voPlay(k)};
-  mr.start();if(btn){btn.classList.add("rec")}
+  mr.start();if(btn){btn.classList.remove("has","arm");btn.classList.add("rec")}
   iv=setInterval(()=>{const left=Math.max(0,VO_MAX-(performance.now()-t0)/1000);if(btn)btn.querySelector("span").textContent="עצור · "+left.toFixed(1)},100);
   to=setTimeout(()=>voRec&&voRec.stop(),VO_MAX*1000)}
 let voSrc=null;
@@ -1401,11 +1402,13 @@ async function voPlay(k){try{voSrc&&voSrc.stop()}catch(e){}const b=await voBuf(k
   const src=ac.createBufferSource();src.buffer=b;src.playbackRate.value=P.voFx?.94:1;const rev=ac.createConvolver();rev.buffer=impulse(ac,2);const rg=ac.createGain();rg.gain.value=.6;rev.connect(rg);rg.connect(ac.destination);
   const inp=voChain(ac,ac.destination,rev);src.connect(inp);src.start();voSrc=src}
 async function voDelete(k){if(P.vo&&P.vo[k]){delete P.vo[k];await delClip(voKey(k));saveP();renderTitles()}}
-function voRow(k){const v=P.vo&&P.vo[k];const r=document.createElement("div");r.className="vo"+(v?" has":"");r.dataset.vo=k;
-  r.innerHTML=v?`<span class="vbadge"><i></i>יש קריינות</span><button class="btn sm vplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>קריינות · ${(v.dur||0).toFixed(1)} שנ׳</button><button class="btn sm ghost vrec"><span>הקלט שוב</span></button><button class="btn sm ghost vdel" aria-label="מחק קריינות"><span>מחק</span></button>`
-    :`<button class="btn sm ghost vrec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>הקלט קריינות · עד ${VO_MAX} שנ׳</span></button>`;
-  r.querySelector(".vrec").onclick=()=>voRecord(k);const pl=r.querySelector(".vplay");if(pl)pl.onclick=()=>voPlay(k);const dl=r.querySelector(".vdel");if(dl){let armed=false,tm=null;dl.onclick=()=>{if(armed){clearTimeout(tm);voDelete(k);return}armed=true;dl.classList.add("arm");dl.querySelector("span").textContent="בטוח? לחצו שוב למחיקה";tm=setTimeout(()=>{armed=false;dl.classList.remove("arm");dl.querySelector("span").textContent="מחק"},3500)}}
-  const rc=r.querySelector(".vrec");if(v){let armed=false,tm=null;rc.onclick=()=>{if(voRec||armed){clearTimeout(tm);armed=false;voRecord(k);return}armed=true;rc.querySelector("span").textContent="להקליט מעל? לחצו שוב";tm=setTimeout(()=>{armed=false;rc.querySelector("span").textContent="הקלט שוב"},3500)}}
+function voRow(k){const v=P.vo&&P.vo[k];const r=document.createElement("div");r.className="vo";r.dataset.vo=k;
+  r.innerHTML=v?`<button class="vbtn vrec has"><i></i><span>יש קריינות · ${(v.dur||0).toFixed(1)} שנ׳</span></button><button class="vx vdel" aria-label="מחק קריינות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 7l10 10M17 7L7 17"/></svg></button>`
+    :`<button class="vbtn vrec"><i></i><span>הקלט קריינות · עד ${VO_MAX} שנ׳</span></button>`;
+  const rc=r.querySelector(".vrec");
+  if(v){let armed=false,tm=null;rc.onclick=()=>{if(voRec||armed){clearTimeout(tm);armed=false;voRecord(k);return}armed=true;rc.classList.add("arm");rc.querySelector("span").textContent="להקליט מחדש? לחצו שוב";tm=setTimeout(()=>{armed=false;rc.classList.remove("arm");rc.querySelector("span").textContent=`יש קריינות · ${(v.dur||0).toFixed(1)} שנ׳`},3500)}}
+  else rc.onclick=()=>voRecord(k);
+  const dl=r.querySelector(".vdel");if(dl){let armed=false,tm=null;dl.onclick=()=>{if(armed){clearTimeout(tm);voDelete(k);return}armed=true;dl.classList.add("arm");rc.querySelector("span").textContent="למחוק? לחצו שוב על ✕";tm=setTimeout(()=>{armed=false;dl.classList.remove("arm");rc.querySelector("span").textContent=`יש קריינות · ${(v.dur||0).toFixed(1)} שנ׳`},3500)}}
   return r}
 /* the whole soundtrack is rendered once, offline, then played as one file: no crackle when the phone is busy */
 let scoreCache={sig:null,buf:null};
@@ -1944,11 +1947,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.7";
+const VERSION="4.7.1";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
   ["4.7","היום",["מחיקת שיר מאלבום המעבדה דורשת קוד מחיקה. בפעם הראשונה בוחרים קוד למכשיר"]],
-  ["4.6","",["קריינות: השקט שלפני המילה הראשונה נחתך אוטומטית, והקול נופל בדיוק על הכותרת","כותרת עם קריינות מסומנת במסגרת כתומה, ומחיקה או הקלטה מחדש דורשות לחיצה שנייה"]],
+  ["4.6","",["קריינות: השקט שלפני המילה הראשונה נחתך אוטומטית, והקול נופל בדיוק על הכותרת","כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות. הקלטה מחדש ומחיקה דורשות לחיצה שנייה"]],
   ["4.5","",["הסאונד מוכן מראש לפני הניגון והייצוא, בלי עיוותים בוואשים","וואשים קצת יותר רכים"]],
   ["4.4","",["קריינות באקשן ובאימה: מקליטים קול לכל כותרת ולשם הסרט, עד 4 שניות לכל משפט. הכותרות נשארות על המסך","המוזיקה יורדת לבד כשמדברים","אפשרות \"קול טריילר\": עמוק יותר, עם הד"]],
   ["4.3","",["טיפ בחלון הייצוא: אפשר להוריד גם דרך ⋮ בנגן","אחרי הייצוא: \"שמירה בטלפון\" פותח חלון לבחירת התיקייה (בטלפונים שתומכים), אחרת שומר בהורדות ואומר איפה למצוא","כפתור \"שיתוף\" נפרד לוואטסאפ, דרייב וגלריה","אותו דבר בפוסטר"]],
