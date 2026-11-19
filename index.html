@@ -1708,12 +1708,9 @@ function askSave(id,name){let pick=new Set([P.genre]);
     if(keep){const a=album();a.push({id,name,genres:[...pick]});saveAlbum(a);P.projTrack=null}else{P.projTrack=id;P.music.projName=name}
     P.music.src="track:"+id;P.music.offset=0;P.music.name=name;saveP();await loadMusicBuf();renderMusic();drawWave()};
   $("#aYes").onclick=()=>done(true);$("#aNo").onclick=()=>done(false)}
-function devCode(){try{return localStorage.getItem("trailerlab.delcode")||""}catch(e){return""}}
-function askDeleteTrack(t){info("למחוק מהאלבום?",`<p>השיר <b>${esc(t.name)}</b> יימחק מאלבום המעבדה.</p><label class="field2" for="dCode"><span class="note">${devCode()?"קוד מחיקה":"בחרו קוד מחיקה למכשיר הזה: אות או מספר אחד. מעכשיו רק מי שיודע אותו יוכל למחוק שירים"}</span><input id="dCode" maxlength="4" autocomplete="off" autocapitalize="characters" style="text-align:center;letter-spacing:.3em;font-weight:700"></label><span class="err" id="dErr" hidden>קוד לא נכון. השיר לא נמחק.</span><div class="row"><button class="btn pri grow" id="dYes">מחק</button><button class="btn grow" id="dNo">ביטול</button></div>`);
+function askDeleteTrack(t){info("למחוק מהאלבום?",`<p>השיר <b>${esc(t.name)}</b> יימחק מאלבום המעבדה.</p><div class="row"><button class="btn pri grow" id="dYes">מחק</button><button class="btn grow" id="dNo">ביטול</button></div>`);
   $("#dNo").onclick=()=>{$("#infoSheet").hidden=true};
-  $("#dCode").onkeydown=e=>{if(e.key==="Enter")$("#dYes").click()};setTimeout(()=>{try{$("#dCode").focus()}catch(e){}},80);
-  $("#dYes").onclick=async()=>{const v=($("#dCode").value||"").trim().toUpperCase();if(!devCode()){if(!v){$("#dErr").textContent="בחרו קוד כדי למחוק.";$("#dErr").hidden=false;return}try{localStorage.setItem("trailerlab.delcode",v)}catch(e){}}
-    else if(v!==devCode()&&v!=="G"){$("#dErr").textContent="קוד לא נכון. השיר לא נמחק.";$("#dErr").hidden=false;$("#dCode").select();return}$("#infoSheet").hidden=true;saveAlbum(album().filter(x=>x.id!==t.id));
+  $("#dYes").onclick=async()=>{$("#infoSheet").hidden=true;saveAlbum(album().filter(x=>x.id!==t.id));
     if(curTrack()===t.id){P.projTrack=t.id;P.music.projName=t.name}else{await delClip("track:"+t.id);bufs.delete(t.id)}saveP();renderMusic()}}
 function drawWave(){const c=$("#wave"),r=c.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);c.width=Math.max(10,r.width*dpr);c.height=Math.max(10,r.height*dpr);const x=c.getContext("2d"),S=segs(),T=total();x.clearRect(0,0,c.width,c.height);x.fillStyle="rgba(58,168,148,.85)";
   const n=Math.floor(c.width/3);
@@ -1947,10 +1944,10 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.7.1";
+const VERSION="4.8";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["4.7","היום",["מחיקת שיר מאלבום המעבדה דורשת קוד מחיקה. בפעם הראשונה בוחרים קוד למכשיר"]],
+  ["4.8","היום",["כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות","הוסר קוד המחיקה מאלבום המעבדה, חזרה לאישור פשוט"]],
   ["4.6","",["קריינות: השקט שלפני המילה הראשונה נחתך אוטומטית, והקול נופל בדיוק על הכותרת","כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות. הקלטה מחדש ומחיקה דורשות לחיצה שנייה"]],
   ["4.5","",["הסאונד מוכן מראש לפני הניגון והייצוא, בלי עיוותים בוואשים","וואשים קצת יותר רכים"]],
   ["4.4","",["קריינות באקשן ובאימה: מקליטים קול לכל כותרת ולשם הסרט, עד 4 שניות לכל משפט. הכותרות נשארות על המסך","המוזיקה יורדת לבד כשמדברים","אפשרות \"קול טריילר\": עמוק יותר, עם הד"]],
