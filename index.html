@@ -171,7 +171,11 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .fields .chk{display:flex;gap:8px;align-items:center;font-size:13px}
 .fields .chk input,#pPos{accent-color:var(--accent)}
 .field .vo{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap}
-.field .vo .btn{gap:6px}.field .vo svg{width:15px;height:15px}
+.field .vo .btn{gap:6px}
+.field .vo.has{border:1.5px solid var(--accent);background:rgba(240,165,64,.1);border-radius:10px;padding:8px}
+.field .vo .vbadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--accent);margin-inline-end:4px}
+.field .vo .vbadge i{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.field .vo .vdel.arm{border-color:#e5484d;color:#fff;background:rgba(229,72,77,.3)}.field .vo svg{width:15px;height:15px}
 .field .vo .vrec.rec{border-color:#e5484d;color:#fff;background:rgba(229,72,77,.25);animation:vorec 1s infinite}
 @keyframes vorec{50%{background:rgba(229,72,77,.45)}}
 .fields .vofx{display:flex;gap:8px;align-items:center;font-size:13px;padding:10px 12px}.fields .vofx input{accent-color:var(--accent)}
@@ -1363,13 +1367,18 @@ function currentCue(){return (curTrack()||curBuiltin())&&musicBuf?"file":"none"}
 /* ============ VOICE-OVER ============ */
 const VO_MAX=4,VO_GENRES=["action","horror"],voOn=()=>!!P&&VO_GENRES.includes(P.genre),voOK=k=>voOn()&&(/^t\d$/.test(k)||k==="title");let voBufs=new Map();
 const voKey=k=>"vo:"+P.pid+":"+k;
-async function voBuf(k){const v=P.vo&&P.vo[k];if(!v)return null;const ck=voKey(k)+":"+(v.at||0);if(bufs.has(ck))return bufs.get(ck);const b=await getClip(voKey(k));if(!b)return null;try{const buf=await audioCtx().decodeAudioData(await b.arrayBuffer());bufs.set(ck,buf);return buf}catch(e){return null}}
+async function voBuf(k){const v=P.vo&&P.vo[k];if(!v)return null;const ck=voKey(k)+":"+(v.at||0);if(bufs.has(ck))return bufs.get(ck);const b=await getClip(voKey(k));if(!b)return null;try{const buf=voTrim(await audioCtx().decodeAudioData(await b.arrayBuffer()));bufs.set(ck,buf);return buf}catch(e){return null}}
+/* cut the silence before the first word (and after the last) so the voice lands right on the title */
+function voTrim(b){const sr=b.sampleRate,n=b.length,ch=b.numberOfChannels;let pk=0;for(let c=0;c<ch;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++){const a=Math.abs(d[i]);if(a>pk)pk=a}}
+  const th=Math.max(.012,pk*.1),win=Math.round(sr*.01);const loud=i=>{for(let c=0;c<ch;c++){const d=b.getChannelData(c);let m=0;for(let j=i;j<Math.min(n,i+win);j++)m=Math.max(m,Math.abs(d[j]));if(m>th)return true}return false};
+  let a=0;while(a<n&&!loud(a))a+=win;let z=n;while(z>a&&!loud(Math.max(0,z-win)))z-=win;a=Math.max(0,a-Math.round(sr*.04));z=Math.min(n,z+Math.round(sr*.12));if(z-a<sr*.15)return b;
+  const o=new AudioBuffer({length:z-a,numberOfChannels:ch,sampleRate:sr});for(let c=0;c<ch;c++)o.copyToChannel(b.getChannelData(c).subarray(a,z),c);return o}
 async function loadVoBufs(){voBufs=new Map();if(!voOn())return;for(const k in (P.vo||{})){const b=await voBuf(k);if(b)voBufs.set(k,b)}}
 function voChain(ac,dest,rev){const hp=ac.createBiquadFilter();hp.type="highpass";hp.frequency.value=90;let last=hp;
   if(P.voFx){const lo=ac.createBiquadFilter();lo.type="lowshelf";lo.frequency.value=220;lo.gain.value=5;const pr=ac.createBiquadFilter();pr.type="peaking";pr.frequency.value=3000;pr.Q.value=.8;pr.gain.value=2.5;hp.connect(lo);lo.connect(pr);last=pr}
   const c=ac.createDynamicsCompressor();c.threshold.value=-26;c.ratio.value=4;c.attack.value=.004;c.release.value=.2;const g=ac.createGain();g.gain.value=P.voFx?1.5:1.35;last.connect(c);c.connect(g);g.connect(dest);
   if(P.voFx&&rev){const s=ac.createGain();s.gain.value=.22;g.connect(s);s.connect(rev)}return hp}
-function voEvents(S,T){const out=[];S.forEach(s=>{if(s.c&&voBufs.has(s.c))out.push({k:s.c,s:s.t0+.12,buf:voBufs.get(s.c)})});
+function voEvents(S,T){const out=[];S.forEach(s=>{if(s.c&&voBufs.has(s.c))out.push({k:s.c,s:s.t0+.05,buf:voBufs.get(s.c)})});
   const rate=P.voFx?.94:1;out.forEach((e,i)=>{const nx=out[i+1]?out[i+1].s-.06:T;e.rate=rate;e.e=Math.min(e.s+e.buf.duration/rate,nx,T)});return out}
 function scheduleVo(X,at,ev){const ac=X.ac,now=ac.currentTime;const inp=voChain(ac,X.bus,X.rev);
   ev.forEach(e=>{const st=X.t0+e.s;if(st<now-.01&&X.t0+e.e<now)return;const src=ac.createBufferSource();src.buffer=e.buf;src.playbackRate.value=e.rate;const g=ac.createGain();src.connect(g);g.connect(inp);
@@ -1392,10 +1401,12 @@ async function voPlay(k){try{voSrc&&voSrc.stop()}catch(e){}const b=await voBuf(k
   const src=ac.createBufferSource();src.buffer=b;src.playbackRate.value=P.voFx?.94:1;const rev=ac.createConvolver();rev.buffer=impulse(ac,2);const rg=ac.createGain();rg.gain.value=.6;rev.connect(rg);rg.connect(ac.destination);
   const inp=voChain(ac,ac.destination,rev);src.connect(inp);src.start();voSrc=src}
 async function voDelete(k){if(P.vo&&P.vo[k]){delete P.vo[k];await delClip(voKey(k));saveP();renderTitles()}}
-function voRow(k){const v=P.vo&&P.vo[k];const r=document.createElement("div");r.className="vo";r.dataset.vo=k;
-  r.innerHTML=v?`<button class="btn sm vplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>קריינות · ${(v.dur||0).toFixed(1)} שנ׳</button><button class="btn sm ghost vrec"><span>הקלט שוב</span></button><button class="ib sm vdel" aria-label="מחק קריינות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`
+function voRow(k){const v=P.vo&&P.vo[k];const r=document.createElement("div");r.className="vo"+(v?" has":"");r.dataset.vo=k;
+  r.innerHTML=v?`<span class="vbadge"><i></i>יש קריינות</span><button class="btn sm vplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>קריינות · ${(v.dur||0).toFixed(1)} שנ׳</button><button class="btn sm ghost vrec"><span>הקלט שוב</span></button><button class="btn sm ghost vdel" aria-label="מחק קריינות"><span>מחק</span></button>`
     :`<button class="btn sm ghost vrec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>הקלט קריינות · עד ${VO_MAX} שנ׳</span></button>`;
-  r.querySelector(".vrec").onclick=()=>voRecord(k);const pl=r.querySelector(".vplay");if(pl)pl.onclick=()=>voPlay(k);const dl=r.querySelector(".vdel");if(dl)dl.onclick=()=>voDelete(k);return r}
+  r.querySelector(".vrec").onclick=()=>voRecord(k);const pl=r.querySelector(".vplay");if(pl)pl.onclick=()=>voPlay(k);const dl=r.querySelector(".vdel");if(dl){let armed=false,tm=null;dl.onclick=()=>{if(armed){clearTimeout(tm);voDelete(k);return}armed=true;dl.classList.add("arm");dl.querySelector("span").textContent="בטוח? לחצו שוב למחיקה";tm=setTimeout(()=>{armed=false;dl.classList.remove("arm");dl.querySelector("span").textContent="מחק"},3500)}}
+  const rc=r.querySelector(".vrec");if(v){let armed=false,tm=null;rc.onclick=()=>{if(voRec||armed){clearTimeout(tm);armed=false;voRecord(k);return}armed=true;rc.querySelector("span").textContent="להקליט מעל? לחצו שוב";tm=setTimeout(()=>{armed=false;rc.querySelector("span").textContent="הקלט שוב"},3500)}}
+  return r}
 /* the whole soundtrack is rendered once, offline, then played as one file: no crackle when the phone is busy */
 let scoreCache={sig:null,buf:null};
 async function renderScore(S,T){const sig=JSON.stringify([P.genre,P.music,P.voFx,P.vo,resolveSrc(),S.map(x=>[x.c||"",+x.d.toFixed(3)]),musicBuf?musicBuf.duration:0,[...voBufs.keys()]]);
@@ -1930,10 +1941,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.5";
+const VERSION="4.6";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["4.5","היום",["הסאונד מוכן מראש לפני הניגון והייצוא, בלי עיוותים בוואשים","וואשים קצת יותר רכים"]],
+  ["4.6","היום",["קריינות: השקט שלפני המילה הראשונה נחתך אוטומטית, והקול נופל בדיוק על הכותרת","כותרת עם קריינות מסומנת במסגרת כתומה, ומחיקה או הקלטה מחדש דורשות לחיצה שנייה"]],
+  ["4.5","",["הסאונד מוכן מראש לפני הניגון והייצוא, בלי עיוותים בוואשים","וואשים קצת יותר רכים"]],
   ["4.4","",["קריינות באקשן ובאימה: מקליטים קול לכל כותרת ולשם הסרט, עד 4 שניות לכל משפט. הכותרות נשארות על המסך","המוזיקה יורדת לבד כשמדברים","אפשרות \"קול טריילר\": עמוק יותר, עם הד"]],
   ["4.3","",["טיפ בחלון הייצוא: אפשר להוריד גם דרך ⋮ בנגן","אחרי הייצוא: \"שמירה בטלפון\" פותח חלון לבחירת התיקייה (בטלפונים שתומכים), אחרת שומר בהורדות ואומר איפה למצוא","כפתור \"שיתוף\" נפרד לוואטסאפ, דרייב וגלריה","אותו דבר בפוסטר"]],
   ["4.2","",["פוסטר אקשן: משפטים חדשים, ו\"שום דבר לא יעצור אותו\" במשפט אחד"]],
