@@ -590,6 +590,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
     <div class="row" style="justify-content:space-between"><span class="note" id="doneInfo"></span></div>
     <span class="note" id="doneMsg"></span>
     <div class="row"><button class="btn pri grow" id="saveBtn">שמירה בטלפון…</button><button class="btn grow" id="shareBtn">שיתוף</button></div>
+    <span class="note" style="font-size:12px">לא נפתח כלום? אפשר תמיד ללחוץ על <b>⋮</b> בפינת הנגן למעלה ולבחור <b>הורדה</b>.</span>
     <button class="btn ghost" id="doneClose">סגור</button>
   </div>
 </div>
@@ -1880,10 +1881,10 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.3";
+const VERSION="4.3.1";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["4.3","היום",["אחרי הייצוא: \"שמירה בטלפון\" פותח חלון לבחירת התיקייה (בטלפונים שתומכים), אחרת שומר בהורדות ואומר איפה למצוא","כפתור \"שיתוף\" נפרד לוואטסאפ, דרייב וגלריה","אותו דבר בפוסטר"]],
+  ["4.3","היום",["טיפ בחלון הייצוא: אפשר להוריד גם דרך ⋮ בנגן","אחרי הייצוא: \"שמירה בטלפון\" פותח חלון לבחירת התיקייה (בטלפונים שתומכים), אחרת שומר בהורדות ואומר איפה למצוא","כפתור \"שיתוף\" נפרד לוואטסאפ, דרייב וגלריה","אותו דבר בפוסטר"]],
   ["4.2","",["פוסטר אקשן: משפטים חדשים, ו\"שום דבר לא יעצור אותו\" במשפט אחד"]],
   ["4.1","",["פוסטר מרדף: \"כולם אמרו לו בלתי אפשרי. הוא ידע אחרת\" ו\"יש לו 90 דקות\""]],
   ["4.0","",["מצלמה: קווי הקומפוזיציה (שליש) כבויים, ויש כפתור להדליק אותם"]],
