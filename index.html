@@ -173,12 +173,14 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .field .vo{display:flex;gap:6px;align-items:center;margin-top:6px}
 .vbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:26px;min-width:64px;padding:0 8px;border-radius:5px;border:1.5px solid #e5484d;background:rgba(229,72,77,.08);color:#ffb4b6;font:700 11.5px/1 Heebo,sans-serif;cursor:pointer;white-space:nowrap;flex:none}
 .vbtn i{width:10px;height:10px;border-radius:50%;background:#e5484d;flex:none}
+.vx.rec{background:#e5484d;color:#fff;animation:vorec 1s infinite}.vx.rec span{display:none}
 .vbtn.rec{background:rgba(229,72,77,.25);color:#fff;animation:vorec 1s infinite;font-family:var(--mono)}.vbtn.rec i{background:#fff}
 @keyframes vorec{50%{background:rgba(229,72,77,.45)}}
 .vbtn.has{border-color:#2fb36b;background:rgba(47,179,107,.18);color:#bff0d2}
 .vbtn.arm{border-color:#e5484d;background:#e5484d;color:#fff}
 .vhint{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
 .vx{width:26px;height:26px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--dim);display:grid;place-items:center;cursor:pointer}.vx svg{width:14px;height:14px}
+.vx.again{border-color:#e5484d;color:#ff8a8d}.vbtn.playing{background:rgba(47,179,107,.4);color:#fff}
 .vx.arm{border-color:#e5484d;color:#fff;background:rgba(229,72,77,.3)}
 .fields .vofx{display:flex;gap:8px;align-items:center;font-size:13px;padding:10px 12px}.field .vo.off,.fields .vofx.off{opacity:.35;filter:grayscale(1);pointer-events:none}
 .fields .vofx.sub{padding-top:0;font-size:12px;color:var(--dim);padding-inline-start:30px}.fields .vofx input{accent-color:var(--accent)}
@@ -661,7 +663,7 @@ const GENRES={
     seq:[
       {s:1,art:"car_night",tag:"OPEN",type:"שוט פתיחה",label:"רגע מהסיפור",hint:"שוט אווירה שמרמז על הסיפור: מכונית בלילה, תיק שנזרק על הרצפה, טלפון שמצלצל.",d:2.6},
       {c:"logo",d:3.0},
-      {s:1,tag:"INS",type:"אינסרט",label:"רמז ראשון",hint:"תקריב על חפץ חשוב בסיפור: מפה, שעון, מפתח או תמונה.",d:2.0},
+      {s:1,art:"map",tag:"INS",type:"אינסרט",label:"רמז ראשון",hint:"תקריב על חפץ חשוב בסיפור: מפה, שעון, מפתח או תמונה.",d:2.0},
       {c:"filmby",d:2.4},
       {s:1,art:"city_els",tag:"ELS",type:"רחב מאוד",label:"העולם מלמעלה",hint:"שוט רחב מאוד מגבוה: גג, גבעה או חלון גבוה. הרבה שמיים ועולם.",d:2.6},
       {s:1,tag:"LS",type:"לונג שוט",label:"הגיבור מכף רגל ועד ראש",hint:"רואים את כל הגוף, מהראש עד הנעליים, ועוד קצת מהמקום. הגיבור עומד או הולך. מצלמה יציבה.",d:2.2},
@@ -781,7 +783,7 @@ Object.assign(GENRES,{
     defaults:{...BASE_T,t1:"כולם שומרים סוד",t2:"מישהו יודע את האמת",t3:"ומישהו לא רוצה שהיא תצא",t4:"למי אפשר להאמין?",t5:"אף אחד לא מה שהוא נראה",title:"הסוד שבמגירה"},
     seq:frame([
       sh("OPEN","מכתב בלי שם","מעטפה מונחת מול הדלת. אף אחד לא ראה מי השאיר אותה.",2.6,"envelope"),
-      sh("INS","המגירה נפתחת","יד פותחת לאט מגירה ומוצאת משהו.",2.0),
+      sh("INS","המגירה נפתחת","יד פותחת לאט מגירה ומוצאת משהו.",2.0,"drawer"),
       sh("ELS","הבית בלילה","שוט רחב של בית או בניין בחושך, חלון אחד מואר.",2.6,"house"),
       sh("MS","מקשיבה בדלת","הדמות צמודה לדלת ומקשיבה, לא זזה.",2.0),
       sh("OTS","מישהו עוקב","מעבר לכתף של מישהו שמסתכל על הגיבורה מרחוק.",1.8),
@@ -832,14 +834,14 @@ Object.assign(GENRES,{
     defaults:{...BASE_T,t1:"בממלכה רחוקה",t2:"קסם עתיק התעורר",t3:"רק אחת יכולה לעצור אותו",t4:"האומץ הוא הקסם האמיתי",t5:"האגדה מתחילה",title:"שומרת הממלכה"},
     seq:frame([
       sh("OPEN","הספר נפתח","ספר ישן נפתח, עמודים מתהפכים ברוח.",2.6,"book"),
-      sh("INS","החפץ הקסום","תקריב על שרשרת, טבעת או אבן נוצצת.",1.8),
+      sh("INS","החפץ הקסום","תקריב על שרשרת, טבעת או אבן נוצצת.",1.8,"gem"),
       sh("ELS","הממלכה","שוט רחב מאוד של נוף בשקיעה, עם הרבה שמיים.",2.6,"castle"),
       sh("WS","בשער","הגיבורה עומדת מול שער, גדר או דלת גדולה.",2.0),
       sh("LOW","הגיבורה","מצלמה נמוכה, גלימה או שמיכה על הכתפיים, רוח בשיער.",1.8),
       sh("CU","מבט אמיץ","קלוז אפ: מבט ישר קדימה.",1.6),
       sh("PAN","יער קסום","פאן איטי בין עצים עם אור שמש בין העלים.",1.8),
       sh("OTS","הדרקון","מעבר לכתף אל צל גדול על קיר או בשמיים.",1.8,"dragon"),
-      sh("INS","הלהבה","נר, פנס או אש קטנה קרובה לעדשה.",1.4),
+      sh("INS","הלהבה","נר, פנס או אש קטנה קרובה לעדשה.",1.4,"candle"),
       sh("ACT","הקסם משתחרר","תנועה חזקה עם הידיים, כאילו יוצא קסם.",1.2),
       sh("HIGH","מוקפת","מצלמה גבוהה, הגיבורה קטנה באמצע.",1.4),
       sh("DOLLY","ההחלטה","מתקרבים לאט לפנים שמחליטות להילחם.",1.6),
@@ -849,7 +851,7 @@ Object.assign(GENRES,{
     defaults:{...BASE_T,t1:"עיר קטנה",t2:"שריף אחד",t3:"ובצהריים, מישהו יגיע",t4:"רק אחד יישאר",t5:"השעה שתים עשרה",title:"דו-קרב בצהריים"},
     seq:frame([
       sh("OPEN","רוח במדבר","אבק, עלים או שקית שהרוח מעיפה על הכביש.",2.6,"tumbleweed"),
-      sh("INS","המגפיים","תקריב על נעליים שצועדות לאט על חול או אבנים.",1.8),
+      sh("INS","המגפיים","תקריב על נעליים שצועדות לאט על חול או אבנים.",1.8,"boots"),
       sh("ELS","העיר המאובקת","שוט רחב מאוד של רחוב ריק בשמש.",2.6,"street_ws"),
       sh("WS","השריף מגיע","הדמות הולכת לאט לעבר המצלמה, כובע על הראש.",2.0),
       sh("LOW","מתחת לכובע","מצלמה נמוכה, השמש מאחורי הכובע.",1.6),
@@ -875,7 +877,7 @@ Object.assign(GENRES,{
       sh("2S","שתיקה מביכה","שתי דמויות מסתכלות אחת על השנייה ולא אומרות כלום.",1.8),
       sh("DOLLY","הבנה איטית","מתקרבים לאט לפנים שמבינות שהכול השתבש.",1.6),
       sh("TRK","בורחים","כולם רצים ומתנגשים זה בזה.",1.2),
-      sh("INS","הקמח","קמח, מים או נוצות עפים לכיוון המצלמה.",1.0),
+      sh("INS","הקמח","קמח, מים או נוצות עפים לכיוון המצלמה.",1.0,"flour"),
       sh("HIGH","מתגלגלים מצחוק","מצלמה גבוהה על כולם שוכבים על הרצפה וצוחקים.",1.6),
       sh("WS","תמונה קבוצתית","כולם בשורה, מלוכלכים ומחייכים למצלמה.",2.4)],[2.0,1.8,2.2,1.4,1.6]),
     look:{grade:"saturate(1.3) brightness(1.06)",tint:"rgba(255,220,80,.12)",vig:.3,grain:.02,flash:false,flicker:false,pal:{bg:"#2a1446",fill:"#ffe14d",glow:"rgba(255,90,170,.5)",accent:"#ff7ab8",bounce:1}}},
@@ -1397,7 +1399,7 @@ async function voRecord(k){if(voRec){voRec.stop();return}
     const blob=new Blob(ch,{type:mr.mimeType||mt||"audio/webm"});if(blob.size<800){renderTitles();return}
     P.vo=P.vo||{};P.vo[k]={at:Date.now()};await putClip(voKey(k),blob);const b=await voBuf(k);if(b)P.vo[k].dur=+b.duration.toFixed(2);saveP();renderTitles();voPlay(k)};
   mr.start();if(btn){btn.classList.remove("has","arm");btn.classList.add("rec")}
-  iv=setInterval(()=>{const left=Math.max(0,VO_MAX-(performance.now()-t0)/1000);if(btn)btn.querySelector("span").textContent=left.toFixed(1)},100);
+  iv=setInterval(()=>{const left=Math.max(0,VO_MAX-(performance.now()-t0)/1000);{const sp=btn&&btn.querySelector("span");if(sp)sp.textContent=left.toFixed(1)}},100);
   to=setTimeout(()=>voRec&&voRec.stop(),VO_MAX*1000)}
 let voSrc=null;
 async function voPlay(k){try{voSrc&&voSrc.stop()}catch(e){}const b=await voBuf(k);if(!b)return;const ac=audioCtx();try{await ac.resume()}catch(e){}
@@ -1405,12 +1407,11 @@ async function voPlay(k){try{voSrc&&voSrc.stop()}catch(e){}const b=await voBuf(k
   const inp=voChain(ac,ac.destination,rev);src.connect(inp);src.start();voSrc=src}
 async function voDelete(k){if(P.vo&&P.vo[k]){delete P.vo[k];await delClip(voKey(k));saveP();renderTitles()}}
 function voRow(k){const v=P.vo&&P.vo[k];const r=document.createElement("div");r.className="vo"+(voUse()?"":" off");r.dataset.vo=k;
-  const okTxt=()=>`✓ ${(v.dur||0).toFixed(1)} שנ׳`;
-  r.innerHTML=v?`<button class="vbtn vrec has" aria-label="קריינות מוקלטת, לחיצה חוזרת מקליטה שוב"><span>${okTxt()}</span></button><small class="vhint">לחיצה חוזרת: הקלטה מחדש</small><button class="vx vdel" aria-label="מחק קריינות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 7l10 10M17 7L7 17"/></svg></button>`
+  r.innerHTML=v?`<button class="vbtn vplay has" aria-label="האזנה לקריינות"><span>▶ ${(v.dur||0).toFixed(1)} שנ׳</span></button><button class="vx vrec again" aria-label="הקלטה מחדש" title="הקלטה מחדש"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button><button class="vx vdel" aria-label="מחק קריינות" title="מחיקה (לחיצה כפולה)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 7l10 10M17 7L7 17"/></svg></button>`
     :`<button class="vbtn vrec" aria-label="הקלט קריינות, עד ${VO_MAX} שניות"><span>הקלט ${VO_MAX} שנ׳</span></button>`;
-  const rc=r.querySelector(".vrec"),sp=rc.querySelector("span");if(!voUse()){r.querySelectorAll("button").forEach(b=>b.disabled=true);return r}
-  if(v){let armed=false,tm=null;rc.onclick=()=>{if(voRec||armed){clearTimeout(tm);armed=false;voRecord(k);return}armed=true;rc.classList.remove("has");rc.classList.add("arm");sp.textContent="לחץ שוב";tm=setTimeout(()=>{armed=false;rc.classList.remove("arm");rc.classList.add("has");sp.textContent=okTxt()},3500)}}
-  else rc.onclick=()=>voRecord(k);
+  if(!voUse()){r.querySelectorAll("button").forEach(b=>b.disabled=true);return r}
+  const rc=r.querySelector(".vrec");rc.onclick=()=>voRecord(k);
+  const pl=r.querySelector(".vplay");if(pl)pl.onclick=()=>{pl.classList.add("playing");voPlay(k);setTimeout(()=>pl.classList.remove("playing"),Math.max(600,((v.dur||1)/(P.voFx?.94:1))*1000))};
   const dl=r.querySelector(".vdel");if(dl){let armed=false,tm=null;dl.onclick=()=>{if(armed){clearTimeout(tm);voDelete(k);return}armed=true;dl.classList.add("arm");tm=setTimeout(()=>{armed=false;dl.classList.remove("arm")},3500)}}
   return r}
 /* the whole soundtrack is rendered once, offline, then played as one file: no crackle when the phone is busy */
@@ -1527,6 +1528,12 @@ const SHOT_ART={
   DOLLY:pers(80,268,5)+'<path class="a" d="M8 8l16 10M152 8l-16 10M8 82l16-10M152 82l-16-10"/>',
   SIL:'<circle class="lt" cx="80" cy="46" r="32"/>'+GROUND+pers(80,82,1.15,"k"),
   GLM:GROUND+'<rect class="d" x="60" y="12" width="40" height="64"/>'+pers(80,76,1,"k"),
+
+  drawer:'<rect class="d" x="34" y="10" width="92" height="76"/><path class="d" d="M34 34H126"/><path class="f" d="M24 46H136L130 70H30Z"/><path class="a" d="M70 58H90"/><circle class="lt" cx="80" cy="46" r="7"/>',
+  gem:'<circle class="lt" cx="80" cy="46" r="30" style="opacity:.45"/><path class="f" d="M68 30H92L102 42 80 74 58 42Z"/><path class="d" d="M58 42H102M68 30L74 42 80 74 86 42 92 30"/><path class="a" d="M122 20l3 6 6 3-6 3-3 6-3-6-6-3 6-3zM38 58l2 4 4 2-4 2-2 4-2-4-4-2 4-2z"/>',
+  candle:'<circle class="lt" cx="80" cy="34" r="26" style="opacity:.4"/><path class="lt" d="M80 14Q94 32 80 42Q66 32 80 14Z"/><path class="a" d="M80 42V48"/><rect class="f" x="69" y="48" width="22" height="34" rx="2"/><path class="d" d="M50 84H110"/>',
+  boots:'<path class="d" d="M0 82H160"/><path class="f" d="M34 16H58V56Q76 58 90 66V80H34Z"/><path class="f" d="M96 22H118V58Q134 60 146 68V80H96Z"/><path class="d" d="M34 70H90M96 72H146"/><g class="a"><circle cx="20" cy="78" r="1.5"/><circle cx="152" cy="76" r="1.5"/><circle cx="74" cy="84" r="1.5"/></g>',
+  flour:'<path class="a" d="M80 48L36 18M80 48L124 16M80 48L26 58M80 48L136 62M80 48L58 86M80 48L106 86"/><g class="f"><circle cx="50" cy="28" r="5"/><circle cx="112" cy="26" r="7"/><circle cx="40" cy="58" r="4"/><circle cx="124" cy="60" r="6"/><circle cx="66" cy="76" r="5"/><circle cx="100" cy="78" r="4"/><circle cx="80" cy="48" r="9"/></g>',
   house:GROUND+'<circle class="d" cx="134" cy="18" r="7"/><path class="d" d="M18 76V50M9 60l9-10 9 10"/><path class="f" d="M48 76V44L80 22 112 44V76Z"/><rect class="lt" x="70" y="47" width="20" height="16"/><path class="d" d="M70 55H90M80 47V63"/><rect class="d" x="56" y="58" width="10" height="18"/>',
   door_handle:'<rect class="d" x="104" y="-2" width="60" height="94"/><path class="f" d="M114 40h26a4 4 0 0 1 0 8h-26z"/><circle class="f" cx="116" cy="44" r="7"/><path class="f" d="M-2 52L42 46Q54 44 64 40L86 38Q93 38 93 42Q93 45 87 45L72 46 89 47Q95 48 94 52Q93 55 87 54L72 53 85 56Q90 57 89 61Q87 64 82 63L67 60Q59 66 43 66L-2 70Z"/><path class="a" d="M98 44h6"/>',
   swing:GROUND+'<circle class="d" cx="132" cy="18" r="7"/><path class="d" d="M40 76L56 14H104L120 76"/><path class="f" d="M74 14L64 58M90 14L84 58"/><rect class="f" x="58" y="57" width="32" height="4"/><path class="a" d="M98 62q8-6 10-16M104 68q13-8 15-26"/>',
@@ -1947,10 +1954,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="4.9";
+const VERSION="5.0";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["4.9","היום",["קריינות נדלקת בתיבת סימון \"קריינות\" בדף הכותרות, כדי שלא ילחצו בטעות","כפתור קריינות קטן יותר"]],
+  ["5.0","היום",["קריינות: לחיצה על הכפתור הירוק משמיעה, ↻ מקליט מחדש בלחיצה אחת","ציורים חדשים לשוטי אינסרט: מפה, מגירה, אבן קסומה, נר, מגפיים ופיצוץ קמח, במקום המפתח שחזר יותר מדי"]],
+  ["4.9","",["קריינות נדלקת בתיבת סימון \"קריינות\" בדף הכותרות, כדי שלא ילחצו בטעות","כפתור קריינות קטן יותר: ירוק = האזנה, ↻ = הקלטה מחדש"]],
   ["4.8","",["כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות","הוסר קוד המחיקה מאלבום המעבדה, חזרה לאישור פשוט"]],
   ["4.6","",["קריינות: השקט שלפני המילה הראשונה נחתך אוטומטית, והקול נופל בדיוק על הכותרת","כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות. הקלטה מחדש ומחיקה דורשות לחיצה שנייה"]],
   ["4.5","",["הסאונד מוכן מראש לפני הניגון והייצוא, בלי עיוותים בוואשים","וואשים קצת יותר רכים"]],
