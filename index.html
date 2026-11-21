@@ -1135,6 +1135,17 @@ function creditsCard(ctx,lt,seg,horror){
   const b=STILL?1:clamp((lt-.5)/.6,0,1)*a;billing(ctx,BAR+268,W*.78,horror,b);
   ctx.globalAlpha=b*.9;drawLogoMark(ctx,W/2,H-BAR-40,38,.5,horror);ctx.globalAlpha=1;
   grainFx(ctx,horror?.08:.03);letterbox(ctx);
+  musicCredit(ctx,b);
+}
+/* music credit in the bottom bar of the end card (CC BY 4.0 needs it inside the video itself) */
+function musicCredit(ctx,alpha){
+  const f=curBuiltin();if(!f||!alpha)return;
+  const t=Object.values(LIB).flat().find(x=>x&&x.file===f);if(!t)return;
+  const arik=t.by==="Arik Deri";
+  const txt=arik?"מוזיקה מקורית: אריק דרעי · Arik Deri":`Music: "${t.name}" by Kevin MacLeod (incompetech.com) · Licensed under CC BY 4.0`;
+  ctx.save();ctx.globalAlpha=alpha*.75;ctx.direction=arik?"rtl":"ltr";ctx.textAlign="center";ctx.textBaseline="middle";ctx.letterSpacing="0px";
+  ctx.font=arik?'400 17px Heebo':'400 15px "IBM Plex Mono",monospace';ctx.fillStyle="#8a919b";
+  ctx.fillText(txt,W/2,H-BAR/2,W*.9);ctx.restore();
 }
 
 /* ============ SCORE (original, synthesized) ============ */
@@ -1869,9 +1880,18 @@ $("#camImport").onclick=$("#camGallery").onclick=()=>{if(Cam.rec)return;pickFile
 
 let fileFor=0;
 function pickFile(si){fileFor=si;const f=$("#file");f.value="";f.click()}
-$("#file").onchange=async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;Cam.stopStream();$("#cam").hidden=true;
+/* gallery clips: up to 5 seconds (small margin for phones that save 5.0x s) */
+const MAX_CLIP=5.5;
+function clipDur(file){return new Promise(res=>{const v=document.createElement("video"),u=URL.createObjectURL(file);let done=false;
+  const fin=d=>{if(done)return;done=true;URL.revokeObjectURL(u);v.removeAttribute("src");res(d)};
+  v.preload="metadata";v.muted=true;v.onloadedmetadata=()=>fin(isFinite(v.duration)?v.duration:null);v.onerror=()=>fin(null);setTimeout(()=>fin(null),8000);v.src=u})}
+$("#file").onchange=async e=>{const file=e.target.files&&e.target.files[0];e.target.value="";if(!file)return;
+  const tooLong=d=>alertBox(`עד 5 שניות וידאו. הקליפ הזה ארוך ${Math.round(d)} שניות: קצרו אותו בגלריה ונסו שוב.`);
+  const d=await clipDur(file);
+  if(d&&d>MAX_CLIP){tooLong(d);return}
+  Cam.stopStream();$("#cam").hidden=true;
   busy(true,{eyebrow:"ייבוא",title:"מנתח את התנועה בקליפ",note:"מחפש את הרגע הכי חזק"});
-  try{const r=await analyzeBlob(file,p=>$("#busyBar").style.width=(p*100)+"%");const sh=P.shots[fileFor];await putClip(sh.id,file);Object.assign(sh,{has:true,dur:r.dur,motion:r.motion,mode:"motion",thumb:null});busy(false);Trim.open(fileFor)}
+  try{const r=await analyzeBlob(file,p=>$("#busyBar").style.width=(p*100)+"%");if(!d&&r.dur>MAX_CLIP){busy(false);tooLong(r.dur);return}const sh=P.shots[fileFor];await putClip(sh.id,file);Object.assign(sh,{has:true,dur:r.dur,motion:r.motion,mode:"motion",thumb:null});busy(false);Trim.open(fileFor)}
   catch(err){busy(false);alertBox("לא הצלחנו לקרוא את הקליפ. נסה קובץ וידאו אחר.")}};
 
 /* ============ TRIM ============ */
@@ -1954,10 +1974,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="5.0";
+const VERSION="5.1";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["5.0","היום",["קריינות: לחיצה על הכפתור הירוק משמיעה, ↻ מקליט מחדש בלחיצה אחת","ציורים חדשים לשוטי אינסרט: מפה, מגירה, אבן קסומה, נר, מגפיים ופיצוץ קמח, במקום המפתח שחזר יותר מדי"]],
+  ["5.1","היום",["קרדיט למוזיקה בסוף הטריילר: שם הקטע והיוצר מופיעים בפס התחתון של כרטיס הסיום","ייבוא מהגלריה: עד 5 שניות וידאו לכל שוט. קליפ ארוך יותר לא נכנס, ומופיעה הודעה"]],
+  ["5.0","",["קריינות: לחיצה על הכפתור הירוק משמיעה, ↻ מקליט מחדש בלחיצה אחת","ציורים חדשים לשוטי אינסרט: מפה, מגירה, אבן קסומה, נר, מגפיים ופיצוץ קמח, במקום המפתח שחזר יותר מדי"]],
   ["4.9","",["קריינות נדלקת בתיבת סימון \"קריינות\" בדף הכותרות, כדי שלא ילחצו בטעות","כפתור קריינות קטן יותר: ירוק = האזנה, ↻ = הקלטה מחדש"]],
   ["4.8","",["כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות","הוסר קוד המחיקה מאלבום המעבדה, חזרה לאישור פשוט"]],
   ["4.6","",["קריינות: השקט שלפני המילה הראשונה נחתך אוטומטית, והקול נופל בדיוק על הכותרת","כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות. הקלטה מחדש ומחיקה דורשות לחיצה שנייה"]],
