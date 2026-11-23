@@ -347,7 +347,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 .splash .mark b{font-weight:400;color:var(--accent)}
 .splash .tagline{font-size:clamp(20px,5.4vw,32px);font-weight:500;color:#e7e9ec;text-align:center;margin-top:18px;animation:fade .9s 1.4s both}
 .splash .lockup{display:flex;flex-direction:column;align-items:flex-end;direction:ltr}
-.splash .soon{font-family:"Secular One",var(--ui);font-size:clamp(22px,5.6vw,36px);line-height:1;color:var(--accent);margin-top:-.15em;margin-right:.1em;animation:fade .8s .9s both}
+.splash .soon{font-family:"Secular One",var(--ui);font-size:clamp(17px,4.4vw,28px);line-height:1;direction:rtl;color:#0E1114;background:linear-gradient(180deg,#F6B862,#E99A38);padding:.28em .6em .32em;border-radius:4px;margin-top:.35em;margin-right:.1em;box-shadow:0 0 26px rgba(240,165,64,.28);animation:fade .8s .9s both}
 .splash .copy{font-size:11.5px;color:var(--faint);letter-spacing:.04em;animation:fade .8s 1.5s both;text-align:center}
 .splash .copy span{direction:ltr;display:inline-block;font-family:var(--mono);letter-spacing:.12em}
 @keyframes rise{from{opacity:0;transform:scale(1.08)}to{opacity:1;transform:none}}
@@ -618,7 +618,7 @@ h1,h2,h3{margin:0;font-weight:700;text-wrap:balance}
 </div>
 
 <div class="splash" id="splash" aria-label="Trailer Lab">
-  <div class="lockup"><div class="mark">TRAILER<b>LAB</b></div><div class="soon">בקרוב</div></div>
+  <div class="lockup"><div class="mark">TRAILER<b>LAB</b></div><div class="soon">בקרוב בבתי הקולנוע</div></div>
   <div class="tagline">כל טלפון הוא מצלמת קולנוע</div>
   <div class="copy">© כל הזכויות שמורות · <span>G.Z MOTION LAB</span></div>
 </div>
@@ -1974,10 +1974,11 @@ $("#saveBtnTop").onclick=saveAndExit;
 
 
 /* ============ SPLASH, MENU, ABOUT ============ */
-const VERSION="5.1";
+const VERSION="5.2";
 const APP_URL="https://gzfilm.github.io/trailer-lab/";
 const UPDATES=[
-  ["5.1","היום",["קרדיט למוזיקה בסוף הטריילר: שם הקטע והיוצר מופיעים בפס התחתון של כרטיס הסיום","ייבוא מהגלריה: עד 5 שניות וידאו לכל שוט. קליפ ארוך יותר לא נכנס, ומופיעה הודעה"]],
+  ["5.2","היום",["מסך הפתיחה: \"בקרוב בבתי הקולנוע\" על אריח ענבר, בצבעי האייקון"]],
+  ["5.1","",["קרדיט למוזיקה בסוף הטריילר: שם הקטע והיוצר מופיעים בפס התחתון של כרטיס הסיום","ייבוא מהגלריה: עד 5 שניות וידאו לכל שוט. קליפ ארוך יותר לא נכנס, ומופיעה הודעה"]],
   ["5.0","",["קריינות: לחיצה על הכפתור הירוק משמיעה, ↻ מקליט מחדש בלחיצה אחת","ציורים חדשים לשוטי אינסרט: מפה, מגירה, אבן קסומה, נר, מגפיים ופיצוץ קמח, במקום המפתח שחזר יותר מדי"]],
   ["4.9","",["קריינות נדלקת בתיבת סימון \"קריינות\" בדף הכותרות, כדי שלא ילחצו בטעות","כפתור קריינות קטן יותר: ירוק = האזנה, ↻ = הקלטה מחדש"]],
   ["4.8","",["כפתור קריינות פשוט: אדום להקלטה, ירוק כשיש קריינות","הוסר קוד המחיקה מאלבום המעבדה, חזרה לאישור פשוט"]],
