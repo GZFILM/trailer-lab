@@ -167,5 +167,20 @@
       "file": "music/sports/3.mp3",
       "name": "Motherlode"
     }
+  ],
+  "holidays": [
+    {
+      "file": "music/fantasy/2.mp3",
+      "name": "Magic Forest"
+    },
+    {
+      "file": "music/comedy/1.mp3",
+      "name": "Sergio's Magic Dustbin"
+    },
+    {
+      "file": "music/drama/ad-piano-elegant-theme.mp3",
+      "name": "Piano Elegant Theme",
+      "by": "Arik Deri"
+    }
   ]
 }
